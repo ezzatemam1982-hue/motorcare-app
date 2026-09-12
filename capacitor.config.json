@@ -1,0 +1,6 @@
+{
+  "appId": "com.motorcare.app",
+  "appName": "MotorCare",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
