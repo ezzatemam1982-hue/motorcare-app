@@ -1,0 +1,93 @@
+{
+  "name": "MotorCare - نظام إدارة وصيانة السيارات",
+  "short_name": "MotorCare",
+  "description": "تطبيق ذكي وشامل لإدارة ومتابعة صيانة ومصاريف وفحص السيارات بدقة واحترافية",
+  "id": "./index.html",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#070a13",
+  "theme_color": "#070a13",
+  "dir": "rtl",
+  "lang": "ar",
+  "categories": [
+    "utilities",
+    "productivity",
+    "business"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "ss-1.png",
+      "sizes": "990x842",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "واجهة تطبيق موتور كير الرئيسية للهواتف"
+    },
+    {
+      "src": "ss-2.png",
+      "sizes": "1347x852",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "لوحة إدارة ومتابعة صيانة السيارات للكمبيوتر"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "إضافة صيانة جديدة",
+      "short_name": "صيانة جديدة",
+      "description": "تسجيل موعد أو صيانة دورية جديدة",
+      "url": "./index.html#maintenance",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "سجل المصروفات",
+      "short_name": "المصروفات",
+      "description": "استعراض تقارير ومصروفات السيارة",
+      "url": "./index.html#expenses",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
