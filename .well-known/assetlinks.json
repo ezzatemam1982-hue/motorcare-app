@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.ezzatemam1982_hue.twa",
+      "sha256_cert_fingerprints": [
+        "70:69:36:88:9C:BD:FC:7D:FB:15:65:29:63:B6:D1:A9:6C:6C:62:D6:8A:2B:06:AE:17:E4:E3:2D:23:45:72:D0"
+      ]
+    }
+  }
+]
