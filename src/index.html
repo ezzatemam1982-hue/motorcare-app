@@ -1993,12 +1993,12 @@ ${verifyUrl}
 
     <!-- ================= 2. واجهة التطبيق الرئيسية ================= -->
     <div id="mainAppContainer" style="display: none;" class="flex-1 flex flex-col min-h-screen">
-        <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 px-3 sm:px-4 py-2 sm:py-2.5 shadow-xs">
-            <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+        <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 px-2.5 sm:px-4 py-2 shadow-xs">
+            <div class="max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-3">
                 <!-- 1. الملف الشخصي السريع (User Profile) + جرس الإشعارات الذكي (Smart Notifications) -->
-                <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                     <!-- كرت الملف الشخصي المباشر في الهيدر العلوي -->
-                    <button type="button" onclick="openAccountCenter()" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer shadow-2xs active:scale-95 text-start shrink-0" title="الملف الشخصي وإدارة الحساب">
+                    <button type="button" onclick="openAccountCenter()" class="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer shadow-2xs active:scale-95 text-start shrink-0" title="الملف الشخصي وإدارة الحساب">
                         <div class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-sky-500/20 to-indigo-500/20 p-0.5 border border-sky-400/40 shadow-2xs shrink-0">
                             <img id="headerUserAvatarImg" src="https://api.dicebear.com/7.x/bottts/svg?seed=ezzat" alt="Avatar" class="w-full h-full rounded-[10px] object-cover">
                             <!-- نقطة المزامنة الخضراء الحية -->
@@ -2033,35 +2033,34 @@ ${verifyUrl}
                     </div>
                 </div>
 
-                <!-- 2. أزرار الإجراءات العلوية المباشرة (المظهر + اللغة + طوارئ الطريق + الخدمات والمزيد ☰) -->
-                <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 relative">
-                    <!-- زر تبديل المظهر (نهاري / ليلي) - مباشر في الهيدر -->
-                    <button onclick="toggleDarkMode()" class="p-2 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-400 rounded-xl text-xs sm:text-sm cursor-pointer border border-slate-200 dark:border-slate-700 transition-all shadow-2xs active:scale-95" title="تبديل المظهر (Dark/Light)">
+                <!-- 2. أزرار الإجراءات العلوية المباشرة (طوارئ SOS + اللغة + المظهر + القائمة ☰) -->
+                <div class="flex items-center gap-1 sm:gap-2 shrink-0 relative">
+                    <!-- زر طوارئ الطريق (SOS) السريع المضغوط والأنيق بدون إهدار مساحة -->
+                    <button onclick="openEmergencyModal()" class="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 rounded-xl text-xs font-black border border-rose-200 dark:border-rose-800/80 cursor-pointer transition-all flex items-center gap-1 shrink-0 shadow-2xs active:scale-95" title="طوارئ الطريق السريعة (SOS)">
+                        <i class="fa-solid fa-truck-medical text-rose-500 text-xs"></i>
+                        <span class="text-[11px] font-black">SOS</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                    </button>
+
+                    <!-- زر تبديل اللغة (عربي / EN) -->
+                    <button onclick="toggleLanguage()" class="px-2 py-1 sm:px-2.5 sm:py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-pointer transition-all shadow-2xs active:scale-95 flex items-center gap-1 shrink-0" title="Language">
+                        <i class="fa-solid fa-globe text-sky-500 text-[11px]"></i>
+                        <span id="langBtnText" class="text-[11px] font-bold">EN</span>
+                    </button>
+
+                    <!-- زر تبديل المظهر (نهاري / ليلي) -->
+                    <button onclick="toggleDarkMode()" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-400 rounded-xl text-xs sm:text-sm cursor-pointer border border-slate-200 dark:border-slate-700 transition-all shadow-2xs active:scale-95 shrink-0" title="تبديل المظهر (Dark/Light)">
                         <i class="fa-solid fa-moon dark:hidden"></i>
                         <i class="fa-solid fa-sun hidden dark:inline"></i>
                     </button>
 
-                    <!-- زر تبديل اللغة (عربي / EN) - مباشر في الهيدر -->
-                    <button onclick="toggleLanguage()" class="px-2 py-1.5 sm:px-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-pointer transition-all shadow-2xs active:scale-95 flex items-center gap-1" title="Language">
-                        <i class="fa-solid fa-globe text-sky-500"></i>
-                        <span id="langBtnText">EN</span>
-                    </button>
-
-                    <!-- زر طوارئ الطريق (SOS) السريع المباشر -->
-                    <button onclick="openEmergencyModal()" class="px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-rose-50 to-red-50 hover:from-rose-100 hover:to-red-100 dark:from-rose-950/50 dark:to-red-950/40 text-rose-700 dark:text-rose-300 rounded-xl text-xs font-bold border border-rose-200 dark:border-rose-800/80 cursor-pointer transition-all flex items-center gap-1.5 shrink-0 shadow-2xs active:scale-95" title="طوارئ الطريق السريعة (SOS)">
-                        <i class="fa-solid fa-truck-medical text-rose-500 animate-pulse"></i>
-                        <span class="text-[11px] sm:text-xs font-black">طوارئ الطريق</span>
-                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-                    </button>
-
-                    <!-- زر القائمة المنسدلة الموحدة (الخدمات والمزيد ☰) -->
-                    <button onclick="toggleTopHeaderMenu(event)" id="topHeaderMenuBtn" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-xl text-xs font-black cursor-pointer border border-slate-200 dark:border-slate-700 transition-all shadow-2xs active:scale-95 shrink-0" title="الخدمات والمزيد">
-                        <span class="text-xs">الخدمات والمزيد</span>
-                        <i class="fa-solid fa-bars-staggered text-sky-500 text-xs"></i>
+                    <!-- زر القائمة المنسدلة الموحدة (أيقونة فقط بدون نصوص لضمان توفير المساحة) -->
+                    <button onclick="toggleTopHeaderMenu(event)" id="topHeaderMenuBtn" class="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-xl text-xs cursor-pointer border border-slate-200 dark:border-slate-700 transition-all shadow-2xs active:scale-95 shrink-0" title="الخدمات والمزيد">
+                        <i class="fa-solid fa-bars-staggered text-sky-500 text-xs sm:text-sm"></i>
                     </button>
 
                     <!-- القائمة المنسدلة الموحدة الذكية (Services & More Dropdown Menu) -->
-                    <div id="topHeaderDropdownMenu" class="hidden absolute top-full end-0 mt-2 w-72 sm:w-80 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl z-50 p-3 space-y-2 backdrop-blur-md transition-all">
+                    <div id="topHeaderDropdownMenu" class="hidden absolute top-full end-0 mt-2 w-72 sm:w-80 max-w-[calc(100vw-20px)] bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl z-50 p-3 space-y-2 backdrop-blur-md transition-all">
                         <!-- بطاقة المستخدم السريعة والإشعارات -->
                         <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2.5 min-w-0 cursor-pointer" onclick="openAccountCenter(); closeTopHeaderMenu();">
@@ -2264,26 +2263,73 @@ ${verifyUrl}
 
                     <!-- المحتوى النشط للوحة القيادة عند وجود سيارة -->
                     <div id="dashboardActiveContent" class="space-y-6">
-                    <div class="rounded-3xl bg-slate-900 p-5 sm:p-7 text-white border border-slate-800 shadow-xl">
-                        <!-- شريط بيانات السيارة الحالي وإدارتها في لوحة التحكم -->
-                        <div class="flex items-center justify-between gap-3 pb-4 mb-5 border-b border-slate-800/80">
-                            <div class="flex items-center gap-3 min-w-0">
-                                <div id="dashHeroCarLogoContainer" class="w-12 h-12 rounded-2xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center p-2 shadow-md shrink-0"></div>
-                                <div class="min-w-0">
-                                    <div class="flex items-center gap-2">
-                                        <h3 id="dashHeroCarName" class="text-base sm:text-xl font-black text-white truncate">سيارتي</h3>
-                                        <button type="button" onclick="openEditCarModal()" class="w-6 h-6 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs cursor-pointer transition-colors shrink-0" title="تعديل بيانات السيارة">
-                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
-                                        </button>
+                    <div class="rounded-3xl bg-slate-900 p-4 sm:p-7 text-white border border-slate-800 shadow-xl">
+                        <!-- شريط بيانات ومواصفات السيارة وإدارتها في لوحة التحكم -->
+                        <div class="space-y-3 pb-4 mb-5 border-b border-slate-800/80">
+                            <!-- السطر الأول: شعار الماركة + الاسم + أزرار التحكم (إضافة سيارة + الكراج + تعديل) -->
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                                    <div id="dashHeroCarLogoContainer" class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center p-2 shadow-md shrink-0"></div>
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <h3 id="dashHeroCarName" class="text-base sm:text-xl font-black text-white leading-tight">سيارتي</h3>
+                                            <span id="dashHeroCarYearBadge" class="px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[11px] font-bold"></span>
+                                        </div>
+                                        <p id="dashHeroCarSubtitle" class="text-[11px] text-slate-400 mt-0.5 truncate"></p>
                                     </div>
-                                    <p id="currentCarEngineInfo" class="text-xs text-slate-400 mt-0.5 truncate"></p>
+                                </div>
+
+                                <!-- أزرار التحكم: إضافة سيارة جديدة + الكراج + تعديل -->
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    <!-- زر إضافة سيارة جديدة المباشر والواضح جداً للمستخدم -->
+                                    <button type="button" onclick="openAddNewCarModal()" class="px-2.5 py-1.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black flex items-center gap-1 shadow-md shadow-sky-600/30 cursor-pointer transition-all shrink-0" title="إضافة سيارة جديدة للكراج">
+                                        <i class="fa-solid fa-circle-plus text-xs"></i>
+                                        <span class="text-[11px] font-bold">إضافة</span>
+                                    </button>
+
+                                    <!-- زر إدارة الكراج والتبديل مع عداد السيارات -->
+                                    <button type="button" onclick="openGarageModal()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 rounded-xl text-xs font-bold shrink-0 flex items-center gap-1 transition-all cursor-pointer shadow-2xs" title="إدارة الكراج وتبديل السيارة">
+                                        <i class="fa-solid fa-warehouse text-xs"></i>
+                                        <span id="dashGarageCountBadge" class="px-1.5 py-0.2 bg-sky-500/20 text-sky-300 rounded-md text-[10px] font-black">1</span>
+                                        <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
+                                    </button>
+
+                                    <!-- زر تعديل بيانات السيارة الحالية -->
+                                    <button type="button" onclick="openEditCarModal()" class="w-8 h-8 flex items-center justify-center bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white rounded-xl text-xs cursor-pointer border border-slate-700 transition-colors shrink-0" title="تعديل بيانات السيارة">
+                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <button type="button" onclick="openGarageModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 rounded-xl text-xs font-bold shrink-0 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs" title="إدارة الكراج وتبديل السيارة">
-                                <i class="fa-solid fa-warehouse text-xs"></i>
-                                <span class="hidden sm:inline" data-i18n="garageBtn">الكراج</span>
-                                <i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i>
-                            </button>
+
+                            <!-- السطر الثاني: شريط بيانات ومواصفات السيارة التفصيلية في شارات أنيقة متجاوبة لا تنقطع أبداً -->
+                            <div id="dashHeroSpecsContainer" class="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-0.5">
+                                <!-- شارة المحرك -->
+                                <div id="dashSpecEngineBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-800/90 border border-slate-700/70 text-slate-200 text-[11px] font-semibold shadow-2xs">
+                                    <i class="fa-solid fa-gears text-sky-400 text-xs"></i>
+                                    <span id="dashSpecEngineText">المحرك: --</span>
+                                </div>
+
+                                <!-- شارة سنة الصنع -->
+                                <div id="dashSpecYearBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-800/90 border border-slate-700/70 text-slate-200 text-[11px] font-semibold shadow-2xs">
+                                    <i class="fa-solid fa-calendar text-indigo-400 text-xs"></i>
+                                    <span id="dashSpecYearText">سنة الصنع: --</span>
+                                </div>
+
+                                <!-- شارة رقم اللوحة (إذا كان مسجلاً) -->
+                                <div id="dashSpecPlateBadge" class="hidden inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-800/90 border border-slate-700/70 text-slate-200 text-[11px] font-semibold shadow-2xs">
+                                    <i class="fa-solid fa-id-card text-emerald-400 text-xs"></i>
+                                    <span id="dashSpecPlateText">اللوحة: --</span>
+                                </div>
+
+                                <!-- شارة لون السيارة أو الشاسيه (إذا كان مسجلاً) -->
+                                <div id="dashSpecColorBadge" class="hidden inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-800/90 border border-slate-700/70 text-slate-200 text-[11px] font-semibold shadow-2xs">
+                                    <i class="fa-solid fa-palette text-amber-400 text-xs"></i>
+                                    <span id="dashSpecColorText">اللون: --</span>
+                                </div>
+                            </div>
+
+                            <!-- عنصر مخفي للحفاظ على التوافق مع أي كود يستدعي currentCarEngineInfo -->
+                            <p id="currentCarEngineInfo" class="hidden"></p>
                         </div>
 
                         <!-- عداد الكيلومترات وزر التحديث السريع -->
@@ -2734,6 +2780,12 @@ ${verifyUrl}
                     <span class="flex items-center gap-2"><i class="fa-solid fa-bell text-sky-500"></i> <span>مركز إشعارات الصيانة والموبايل</span></span>
                     <span id="drawerNotificationBadge" class="hidden px-2 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-black">0</span>
                 </button>
+                <!-- إضافة سيارة جديدة للكراج مباشرة من القائمة -->
+                <button onclick="openAddNewCarModal(); closeMobileMoreDrawer();" class="w-full py-2.5 px-3.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs font-black flex items-center justify-between cursor-pointer shadow-md shadow-sky-600/30">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle-plus text-sm"></i> <span>إضافة سيارة جديدة للكراج</span></span>
+                    <i class="fa-solid fa-chevron-left text-white/80 text-xs rtl:rotate-0 ltr:rotate-180"></i>
+                </button>
+
                 <button onclick="openGarageModal(); closeMobileMoreDrawer();" class="w-full py-2.5 px-3.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer">
                     <span class="flex items-center gap-2"><i class="fa-solid fa-warehouse text-sky-500"></i> <span data-i18n="clickManageGarage">إدارة سيارات الكراج</span></span>
                     <i class="fa-solid fa-chevron-left text-slate-400 text-xs rtl:rotate-0 ltr:rotate-180"></i>
@@ -16157,12 +16209,63 @@ ${verifyUrl}
             const carMeta = document.getElementById('headerCarMeta');
             if (carMeta) carMeta.innerText = isEn ? `${Number(car.odometer).toLocaleString()} km` : `${Number(car.odometer).toLocaleString()} كم`;
 
+            // 1. تحديث اسم الموديل وشارة السنة بدون اقتطاع
             const heroCarName = document.getElementById('dashHeroCarName');
             if (heroCarName) {
-                heroCarName.innerText = `${car.brand} ${car.model} (${car.year || ''})`;
+                heroCarName.innerText = `${car.brand} ${car.model}`;
+            }
+            const heroYearBadge = document.getElementById('dashHeroCarYearBadge');
+            if (heroYearBadge) {
+                heroYearBadge.innerText = car.year || '';
+                heroYearBadge.style.display = car.year ? 'inline-block' : 'none';
+            }
+            const heroSubtitle = document.getElementById('dashHeroCarSubtitle');
+            if (heroSubtitle) {
+                heroSubtitle.innerText = isEn 
+                    ? `Catalog: ${car.catalog?.length || 0} maintenance items active` 
+                    : `جدول الصيانة: يتضمن ${car.catalog?.length || 0} فحص وبند معتمد`;
             }
 
-            // تحديث شعار ماركة السيارة في اللوحة الرئيسية
+            // 2. تحديث عداد السيارات في شارة الكراج
+            const garageCountBadge = document.getElementById('dashGarageCountBadge');
+            if (garageCountBadge) {
+                garageCountBadge.innerText = (appState.cars && appState.cars.length) ? appState.cars.length : 1;
+            }
+
+            // 3. تحديث شارات المواصفات التفصيلية (المحرك، سنة الصنع، اللوحة، اللون)
+            const specEngineText = document.getElementById('dashSpecEngineText');
+            if (specEngineText) {
+                specEngineText.innerText = isEn ? `Engine: ${car.engine || '--'}` : `المحرك: ${car.engine || '--'}`;
+            }
+
+            const specYearText = document.getElementById('dashSpecYearText');
+            if (specYearText) {
+                specYearText.innerText = isEn ? `Year: ${car.year || '--'}` : `سنة الصنع: ${car.year || '--'}`;
+            }
+
+            const specPlateBadge = document.getElementById('dashSpecPlateBadge');
+            const specPlateText = document.getElementById('dashSpecPlateText');
+            if (specPlateBadge && specPlateText) {
+                if (car.license && car.license.trim()) {
+                    specPlateText.innerText = isEn ? `Plate: ${car.license}` : `اللوحة: ${car.license}`;
+                    specPlateBadge.classList.remove('hidden');
+                } else {
+                    specPlateBadge.classList.add('hidden');
+                }
+            }
+
+            const specColorBadge = document.getElementById('dashSpecColorBadge');
+            const specColorText = document.getElementById('dashSpecColorText');
+            if (specColorBadge && specColorText) {
+                if (car.color && car.color.trim()) {
+                    specColorText.innerText = isEn ? `Color: ${car.color}` : `اللون: ${car.color}`;
+                    specColorBadge.classList.remove('hidden');
+                } else {
+                    specColorBadge.classList.add('hidden');
+                }
+            }
+
+            // 4. تحديث شعار ماركة السيارة في اللوحة الرئيسية
             const heroLogo = document.getElementById('dashHeroCarLogoContainer');
             if (heroLogo) {
                 heroLogo.innerHTML = getCarBrandLogoHtml(car.brand, 'w-9 h-9 sm:w-10 sm:h-10', 'bg-transparent');
