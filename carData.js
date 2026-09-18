@@ -2,7 +2,8 @@
 // قاعدة بيانات السيارات والمواصفات القياسية للمصنع (Offline-First OEM Specifications)
 // تشمل كتالوج شامل لـ 40 ماركة و 285 جيلاً ومواصفات المحرك والسيور والزيوت
 
-export const BRAND_GROUPS = {
+const _targetScope = (typeof window !== 'undefined') ? window : ((typeof globalThis !== 'undefined') ? globalThis : this);
+_targetScope.BRAND_GROUPS = {
   "السيارات اليابانية والكورية الأكثر انتشاراً": [
     "Hyundai",
     "Kia",
@@ -54,7 +55,7 @@ export const BRAND_GROUPS = {
   ]
 };
 
-export const CAR_BRANDS_CATALOG = {
+_targetScope.CAR_BRANDS_CATALOG = {
     "Hyundai": {
         "models": {
             "Elantra": {
@@ -7362,3 +7363,7 @@ export const CAR_BRANDS_CATALOG = {
         }
     }
 };
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { BRAND_GROUPS: _targetScope.BRAND_GROUPS, CAR_BRANDS_CATALOG: _targetScope.CAR_BRANDS_CATALOG };
+}
