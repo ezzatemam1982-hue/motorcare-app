@@ -1,60 +1,4 @@
-// MotorCare Offline OEM Car Database v1.8.0
-// قاعدة بيانات السيارات والمواصفات القياسية للمصنع (Offline-First OEM Specifications)
-// تشمل كتالوج شامل لـ 40 ماركة و 285 جيلاً ومواصفات المحرك والسيور والزيوت
-
-export const BRAND_GROUPS = {
-  "السيارات اليابانية والكورية الأكثر انتشاراً": [
-    "Hyundai",
-    "Kia",
-    "Toyota",
-    "Nissan",
-    "Mitsubishi",
-    "Honda",
-    "Mazda",
-    "Subaru",
-    "Suzuki"
-  ],
-  "السيارات الصينية (الجيل الحديث الأكثر مبيعاً)": [
-    "MG",
-    "Chery",
-    "BYD",
-    "Geely",
-    "Changan",
-    "Haval",
-    "Jetour",
-    "Baic",
-    "DFSK"
-  ],
-  "السيارات الأوروبية (الفاخرة والاقتصادية)": [
-    "Skoda",
-    "Volkswagen",
-    "Peugeot",
-    "Renault",
-    "Seat",
-    "Opel",
-    "Fiat",
-    "Mercedes-Benz",
-    "BMW",
-    "Audi",
-    "Volvo"
-  ],
-  "السيارات الأمريكية": [
-    "Chevrolet",
-    "Ford",
-    "Jeep",
-    "Dodge"
-  ],
-  "السيارات الاقتصادية والمحلية الكلاسيكية": [
-    "Lada",
-    "Proton",
-    "Daewoo",
-    "Nasr",
-    "Speranza",
-    "ماركة أخرى (Custom Car)"
-  ]
-};
-
-export const CAR_BRANDS_CATALOG = {
+{
     "Hyundai": {
         "models": {
             "Elantra": {
@@ -7361,4 +7305,4 @@ export const CAR_BRANDS_CATALOG = {
             }
         }
     }
-};
+}
