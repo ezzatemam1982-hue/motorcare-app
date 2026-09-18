@@ -3,7 +3,7 @@
 // نظام إشعارات الموبايل لمواعيد الصيانة الدورية والطارئة (Mobile Push & Local Notifications)
 // استراتيجية التخزين: Cache First, then Network لملفات الواجهة الثابتة لضمان الفتح الفوري بدون إنترنت
 
-const CACHE_NAME = 'motorcare-cache-v1.9.9';
+const CACHE_NAME = 'motorcare-cache-v2.0.0';
 
 // 1. قائمة الأصول الثابتة الأساسية للتطبيق (Core Static Assets)
 const PRECACHE_ASSETS = [
@@ -101,6 +101,27 @@ self.addEventListener('fetch', (event) => {
           headers: { 'Content-Type': 'application/json' }
         });
       })
+    );
+    return;
+  }
+
+  // بالنسبة لصفحة HTML الرئيسية (Navigation requests):
+  // استراتيجية Network First مع السقوط الآمن للكاش (Network First, Cache Fallback)
+  // هذا يضمن أن المستخدم يرى دائماً آخر التحديثات فوراً عند اتصاله بالإنترنت، مع الحفاظ على العمل أوفلاين 100%
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(event.request)
+            .then(cached => cached || caches.match('./index.html') || caches.match('./'));
+        })
     );
     return;
   }
