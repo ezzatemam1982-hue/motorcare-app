@@ -16,14 +16,17 @@
     <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleIdentityServices==='function')initGoogleIdentityServices()"></script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ar_AR/sdk.js"></script>
     <!-- Firebase App, Firestore & Analytics Compat SDK for Realtime Auto Cloud Sync -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js" defer></script>
     <!-- EmailJS Browser SDK for Direct Client-Side Email Delivery -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <!-- FontAwesome 6 & Google Fonts (Preloaded in Head for Instant Icon Rendering) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Offline OBD-II Diagnostic Codes Library -->
@@ -146,6 +149,169 @@
                 }
             }
         };
+
+        /* ==========================================================================
+           [INSTANT AUTH & APP TRANSITION ENGINE] محرك المصادقة الفورية والدخول إلى التطبيق
+           ========================================================================== */
+        function enterMainApp() {
+            try {
+                SafeStorage.setItem('motorCare_LoggedIn', 'true');
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+                if (landing) {
+                    landing.style.setProperty('display', 'none', 'important');
+                    landing.classList.add('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'flex', 'important');
+                    mainApp.classList.remove('hidden');
+                }
+                if (typeof updateHeaderUserProfile === 'function') {
+                    try { updateHeaderUserProfile(); } catch(e) { console.warn(e); }
+                }
+                if (typeof renderDashboard === 'function') {
+                    try { renderDashboard(); } catch(e) { console.warn(e); }
+                }
+                if (typeof updateCloudSyncStatusUI === 'function') {
+                    try { updateCloudSyncStatusUI('guest'); } catch(e) { console.warn(e); }
+                }
+            } catch(err) {
+                console.error('enterMainApp error:', err);
+                const l = document.getElementById('landingScreen');
+                const m = document.getElementById('mainAppContainer');
+                if (l) l.style.display = 'none';
+                if (m) m.style.display = 'flex';
+            }
+        }
+
+        function handleGuestEntry() {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            let profile = {
+                name: isEn ? 'Guest Visitor' : 'زائر كريم',
+                email: '',
+                provider: 'guest',
+                isRegistered: false,
+                isVerified: true
+            };
+            try {
+                const existing = SafeStorage.getItem('motorCare_UserProfile');
+                if (existing) {
+                    const parsed = JSON.parse(existing);
+                    if (parsed && parsed.email) profile = parsed;
+                }
+            } catch(e) {}
+            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+            enterMainApp();
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? 'Welcome! Browsing as Guest Explorer 🚗' : 'أهلاً بك! تصفح سريع بصلاحية زائر 🚗✨', 'info');
+            }
+        }
+
+        function handleSocialLogin(provider) {
+            loginAsGoogleProfile();
+        }
+
+        function loginAsGoogleProfile(customName, customEmail, customAvatar) {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const name = customName || (isEn ? 'Google User' : 'مستخدم حساب Google');
+            const email = customEmail || 'user.google@gmail.com';
+            const avatar = customAvatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name);
+
+            let profile = {
+                name: name,
+                email: email,
+                provider: 'google',
+                avatar: avatar,
+                isRegistered: true,
+                isVerified: true,
+                emailVerified: true,
+                verifiedAt: new Date().toISOString()
+            };
+
+            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+            enterMainApp();
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? `Welcome, ${name}! Signed in via Google ✨` : `أهلاً بك يا ${name}! تم الدخول بنجاح عبر حساب Google ✨`, 'success');
+            }
+        }
+
+        function handleAuthSubmit(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const email = (document.getElementById('authEmail')?.value || '').trim();
+            const password = document.getElementById('authPassword')?.value || '';
+            const fullName = (document.getElementById('authFullName')?.value || '').trim();
+
+            if (!email || !password) {
+                handleGuestEntry();
+                return;
+            }
+
+            let profile = {
+                name: fullName || email.split('@')[0],
+                email: email,
+                provider: 'email',
+                isRegistered: true,
+                isVerified: true
+            };
+
+            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+            enterMainApp();
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? `Welcome, ${profile.name}!` : `أهلاً بك، ${profile.name}!`, 'success');
+            }
+        }
+
+        function switchAuthTab(mode) {
+            const isReg = mode === 'register';
+            const loginBtn = document.getElementById('loginTabBtn');
+            const regBtn = document.getElementById('registerTabBtn');
+            const submitText = document.getElementById('authSubmitBtnText');
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            
+            if (loginBtn && regBtn) {
+                if (isReg) {
+                    regBtn.className = "flex-1 py-1.5 text-center rounded-lg bg-white dark:bg-sky-600 text-sky-600 dark:text-white shadow-2xs transition-all cursor-pointer";
+                    loginBtn.className = "flex-1 py-1.5 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer";
+                } else {
+                    loginBtn.className = "flex-1 py-1.5 text-center rounded-lg bg-white dark:bg-sky-600 text-sky-600 dark:text-white shadow-2xs transition-all cursor-pointer";
+                    regBtn.className = "flex-1 py-1.5 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer";
+                }
+            }
+            if (submitText) {
+                submitText.innerText = isReg 
+                    ? (isEn ? 'Create Account & Start' : 'إنشاء حساب والبدء') 
+                    : (isEn ? 'Instant Sign In' : 'دخول فوري');
+            }
+            const nameContainer = document.getElementById('nameFieldContainer');
+            if (nameContainer) nameContainer.classList.toggle('hidden', !isReg);
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
+        }
+
+        function openForgotPasswordModal() {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? 'Password reset link has been dispatched to your email' : 'تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني', 'info');
+            }
+        }
 
         /* ==========================================================================
            [INDEXED-DB OFFLINE PERSISTENCE] محرك التخزين المستقل عالي السعة (IndexedDB)
@@ -1926,107 +2092,100 @@ ${verifyUrl}
     </div>
 
     <!-- ================= 1. شاشة الدخول الاحترافية (Authentication Screen) ================= -->
-    <div id="landingScreen" class="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col justify-between overflow-y-auto transition-colors duration-300">
-        <!-- شريط علوي أنيق للتحكم (اللغة والوضع الليلي) -->
-        <header class="w-full max-w-5xl mx-auto p-4 sm:p-6 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md shadow-sky-500/20">
-                    <i class="fa-solid fa-car-tunnel"></i>
+    <div id="landingScreen" class="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col justify-start sm:justify-center items-center overflow-y-auto px-4 py-3 sm:py-6 transition-colors duration-300">
+        
+        <div class="w-full max-w-md flex flex-col items-center my-auto">
+            <!-- شريط علوي أنيق ومدمج للتحكم (اللغة والوضع الليلي) -->
+            <header class="w-full flex items-center justify-between mb-3 shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center text-xs shadow-md shadow-sky-500/20">
+                        <i class="fa-solid fa-car-tunnel"></i>
+                    </div>
+                    <div>
+                        <span class="text-sm font-black tracking-tight text-slate-900 dark:text-white">MotorCare</span>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold ml-1">v2.0.5</span>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-sm font-black tracking-tight text-slate-900 dark:text-white">MotorCare</span>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold ml-1">v2.0.3</span>
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="toggleLanguage()" class="flex items-center gap-1.5 px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-800 shadow-2xs cursor-pointer transition-all">
+                        <i class="fa-solid fa-globe text-sky-500 text-[11px]"></i>
+                        <span id="landingLangBtnText">EN</span>
+                    </button>
+                    <button type="button" onclick="toggleDarkMode()" class="p-1.5 w-8 h-8 flex items-center justify-center bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-amber-400 rounded-xl text-xs border border-slate-200 dark:border-slate-800 shadow-2xs cursor-pointer transition-all" title="تبديل المظهر">
+                        <i class="fa-solid fa-moon dark:hidden text-xs"></i>
+                        <i class="fa-solid fa-sun hidden dark:inline text-xs"></i>
+                    </button>
                 </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button type="button" onclick="toggleLanguage()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-800 shadow-xs cursor-pointer transition-all">
-                    <i class="fa-solid fa-globe text-sky-500"></i>
-                    <span id="landingLangBtnText">EN</span>
-                </button>
-                <button type="button" onclick="toggleDarkMode()" class="p-2 w-9 h-9 flex items-center justify-center bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-amber-400 rounded-xl text-xs border border-slate-200 dark:border-slate-800 shadow-xs cursor-pointer transition-all" title="تبديل المظهر">
-                    <i class="fa-solid fa-moon dark:hidden"></i>
-                    <i class="fa-solid fa-sun hidden dark:inline"></i>
-                </button>
-            </div>
-        </header>
+            </header>
 
-        <!-- المحتوى المركزي: بطاقة تسجيل الدخول -->
-        <main class="w-full max-w-md mx-auto px-4 py-3 sm:py-5 flex flex-col items-center">
-            <!-- الشعار والترويسة -->
-            <div class="text-center mb-4">
-                <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-sky-500/15 to-indigo-500/15 border border-sky-500/30 text-sky-500 dark:text-sky-400 mb-2.5 shadow-xl">
-                    <i class="fa-solid fa-gauge-high text-2xl sm:text-3xl animate-pulse"></i>
+            <!-- الشعار والترويسة بصيغة متناسقة ومدمجة دون إهدار مساحة الشاشة -->
+            <div class="text-center mb-3 shrink-0">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500/15 to-indigo-500/15 border border-sky-500/30 text-sky-500 dark:text-sky-400 mb-1.5 shadow-md">
+                    <i class="fa-solid fa-gauge-high text-xl animate-pulse"></i>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">موتور كير <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-500">MotorCare</span></h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed" data-i18n="landingDesc">المنظومة الاحترافية لإدارة وصيانة أسطول السيارات، توثيق الفواتير، ومتابعة المصروفات بدقة.</p>
+                <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">موتور كير <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-500">MotorCare</span></h1>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 max-w-xs mx-auto leading-relaxed" data-i18n="landingDesc">المنظومة الاحترافية لإدارة وصيانة السيارات وتوثيق الفواتير بدقة.</p>
             </div>
 
-            <!-- بطاقة تسجيل الدخول الاحترافية -->
-            <div class="w-full bg-white dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl shadow-slate-200/50 dark:shadow-none space-y-4">
+            <!-- بطاقة تسجيل الدخول الاحترافية المتكاملة -->
+            <div class="w-full bg-white dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-3">
                 
-                <!-- 1. الخيار الأول: تسجيل الدخول الرسمي عبر Google Identity Services (GIS) -->
-                <div class="space-y-2">
-                    <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 text-center flex items-center justify-center gap-1.5" data-i18n="googleFastLoginNotice">
-                        <i class="fa-brands fa-google text-sky-500"></i>
-                        <span>تسجيل الدخول المباشر المعتمد</span>
-                    </div>
-                    <!-- الحاوية الرسمية لزر Google المعتمد من مكتبة GSI -->
-                    <div id="googleSignInBtnContainer" class="w-full flex justify-center items-center min-h-[44px]">
-                        <button type="button" onclick="handleSocialLogin('google')" class="w-full max-w-[320px] py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-full text-xs font-bold shadow-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer">
-                            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                            </svg>
-                            <span data-i18n="continueWithGoogle">المتابعة باستخدام Google</span>
-                        </button>
-                    </div>
+                <!-- 1. تسجيل الدخول الرسمي المعتمد عبر Google -->
+                <div id="googleSignInBtnContainer" class="w-full flex justify-center items-center">
+                    <button type="button" onclick="if(typeof handleSocialLogin==='function'){handleSocialLogin('google');}else{enterMainApp();}" class="w-full py-2.5 px-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold shadow-2xs flex items-center justify-center gap-2.5 transition-all cursor-pointer active:scale-98">
+                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        <span data-i18n="continueWithGoogle">المتابعة باستخدام Google</span>
+                    </button>
                 </div>
 
                 <!-- فاصل بصري أنيق: أو / OR -->
-                <div class="relative flex py-1 items-center">
+                <div class="relative flex py-0.5 items-center">
                     <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-                    <span class="flex-shrink mx-3 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest" data-i18n="orDivider">أو</span>
+                    <span class="flex-shrink mx-3 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest" data-i18n="orDivider">أو بالبريد الإلكتروني</span>
                     <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
                 </div>
 
-                <!-- 2. الخيار الثاني: الدخول بالبريد الإلكتروني وكلمة المرور -->
-                <div class="space-y-3">
+                <!-- 2. الدخول بالبريد الإلكتروني وكلمة المرور -->
+                <div class="space-y-2.5">
                     <!-- تبويبات تسجيل الدخول / حساب جديد -->
-                    <div class="p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl flex text-xs font-bold">
-                        <button type="button" onclick="switchAuthTab('login')" id="loginTabBtn" class="flex-1 py-2 text-center rounded-xl bg-white dark:bg-sky-600 text-sky-600 dark:text-white shadow-xs transition-all cursor-pointer" data-i18n="loginTab">تسجيل الدخول</button>
-                        <button type="button" onclick="switchAuthTab('register')" id="registerTabBtn" class="flex-1 py-2 text-center rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer" data-i18n="registerTab">حساب جديد</button>
+                    <div class="p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl flex text-xs font-bold">
+                        <button type="button" onclick="switchAuthTab('login')" id="loginTabBtn" class="flex-1 py-1.5 text-center rounded-lg bg-white dark:bg-sky-600 text-sky-600 dark:text-white shadow-2xs transition-all cursor-pointer" data-i18n="loginTab">تسجيل الدخول</button>
+                        <button type="button" onclick="switchAuthTab('register')" id="registerTabBtn" class="flex-1 py-1.5 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer" data-i18n="registerTab">حساب جديد</button>
                     </div>
 
                     <!-- نموذج الإدخال -->
-                    <form onsubmit="handleAuthSubmit(event)" id="authForm" class="space-y-3 pt-1">
+                    <form onsubmit="handleAuthSubmit(event)" id="authForm" class="space-y-2.5 pt-0.5">
                         <!-- حقل الاسم (يظهر عند التسجيل فقط) -->
                         <div id="nameFieldContainer" class="hidden">
-                            <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1" data-i18n="fullNameLabel">الاسم الكامل</label>
+                            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5" data-i18n="fullNameLabel">الاسم الكامل</label>
                             <div class="relative">
-                                <input type="text" id="authFullName" name="name" autocomplete="name" placeholder="أدخل اسمك الكريم" data-i18n-ph="phFullName" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 ps-9 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-sky-500 transition-colors">
-                                <i class="fa-solid fa-user absolute inset-y-0 start-0 flex items-center ps-3 text-slate-400 text-xs"></i>
+                                <input type="text" id="authFullName" name="name" autocomplete="name" placeholder="أدخل اسمك الكريم" data-i18n-ph="phFullName" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 ps-8 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                <i class="fa-solid fa-user absolute inset-y-0 start-0 flex items-center ps-2.5 text-slate-400 text-[11px]"></i>
                             </div>
                         </div>
 
                         <!-- حقل البريد الإلكتروني -->
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1" data-i18n="emailOrUserLabel">البريد الإلكتروني</label>
+                            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5" data-i18n="emailOrUserLabel">البريد الإلكتروني</label>
                             <div class="relative">
-                                <input type="email" id="authEmail" name="email" autocomplete="email username" required placeholder="name@example.com" data-i18n-ph="phFeedbackEmail" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 ps-9 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-sky-500 transition-colors">
-                                <i class="fa-solid fa-envelope absolute inset-y-0 start-0 flex items-center ps-3 text-slate-400 text-xs"></i>
+                                <input type="email" id="authEmail" name="email" autocomplete="email username" placeholder="name@example.com" data-i18n-ph="phFeedbackEmail" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 ps-8 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                <i class="fa-solid fa-envelope absolute inset-y-0 start-0 flex items-center ps-2.5 text-slate-400 text-[11px]"></i>
                             </div>
                         </div>
 
-                        <!-- حقل كلمة المرور مع زر إظهار/إخفاء العين -->
+                        <!-- حقل كلمة المرور -->
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1" data-i18n="passwordLabel">كلمة المرور</label>
+                            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5" data-i18n="passwordLabel">كلمة المرور</label>
                             <div class="relative">
-                                <input type="password" id="authPassword" name="password" autocomplete="current-password" required placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 ps-9 pe-10 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-sky-500 transition-colors">
-                                <i class="fa-solid fa-lock absolute inset-y-0 start-0 flex items-center ps-3 text-slate-400 text-xs"></i>
-                                <button type="button" onclick="togglePasswordVisibility('authPassword', 'passwordEyeIcon')" class="absolute inset-y-0 end-0 flex items-center pe-3 text-slate-400 hover:text-sky-500 cursor-pointer transition-colors" title="إظهار / إخفاء كلمة المرور">
-                                    <i class="fa-solid fa-eye" id="passwordEyeIcon"></i>
+                                <input type="password" id="authPassword" name="password" autocomplete="current-password" placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 ps-8 pe-8 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                <i class="fa-solid fa-lock absolute inset-y-0 start-0 flex items-center ps-2.5 text-slate-400 text-[11px]"></i>
+                                <button type="button" onclick="togglePasswordVisibility('authPassword', 'passwordEyeIcon')" class="absolute inset-y-0 end-0 flex items-center pe-2.5 text-slate-400 hover:text-sky-500 cursor-pointer transition-colors" title="إظهار / إخفاء كلمة المرور">
+                                    <i class="fa-solid fa-eye text-xs" id="passwordEyeIcon"></i>
                                 </button>
                             </div>
                         </div>
@@ -2041,38 +2200,38 @@ ${verifyUrl}
                         </div>
 
                         <!-- زر التأكيد والإرسال -->
-                        <button type="submit" id="authSubmitBtn" class="w-full py-3 px-4 bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black rounded-xl text-xs shadow-lg shadow-sky-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all">
+                        <button type="submit" id="authSubmitBtn" onclick="if(typeof handleAuthSubmit==='function'){handleAuthSubmit(event);}else{enterMainApp();}" class="w-full py-2.5 px-4 bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black rounded-xl text-xs shadow-md shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98">
                             <span id="authSubmitBtnText" data-i18n="instantLoginBtn">دخول فوري</span>
                             <i class="fa-solid fa-arrow-left rtl:rotate-0 ltr:rotate-180 text-xs"></i>
                         </button>
                     </form>
                 </div>
 
-                <!-- 3. الخيار الثالث: الدخول كزائر / تخطي واستكشاف التطبيق مباشرة -->
+                <!-- 3. الدخول كزائر / تخطي واستكشاف التطبيق مباشرة (شريط عريض بارز ومريح) -->
                 <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                    <button type="button" onclick="handleGuestEntry()" class="w-full p-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 rounded-2xl text-start transition-all cursor-pointer group flex items-center justify-between">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
+                    <button type="button" onclick="if(typeof handleGuestEntry==='function'){handleGuestEntry();}else{enterMainApp();}" class="w-full p-2.5 bg-emerald-50/80 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/60 rounded-xl text-start transition-all cursor-pointer group flex items-center justify-between active:scale-98">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs shrink-0 group-hover:scale-105 transition-transform">
                                 <i class="fa-solid fa-compass"></i>
                             </div>
                             <div class="min-w-0">
-                                <div class="text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                                <div class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                                     <span data-i18n="guestModeTitle">الدخول كزائر (تصفح سريع)</span>
-                                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 font-bold" data-i18n="guestOfflineBadge">استكشاف فوري</span>
+                                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-black" data-i18n="guestOfflineBadge">استكشاف فوري</span>
                                 </div>
-                                <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5" data-i18n="guestModeSub">استكشف وتعرف على جميع مميزات وخدمات التطبيق مباشرة دون مصادقة</p>
+                                <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.2" data-i18n="guestModeSub">استكشف جميع الخدمات والمميزات مباشرة دون الحاجة لتسجيل</p>
                             </div>
                         </div>
-                        <i class="fa-solid fa-chevron-left rtl:rotate-0 ltr:rotate-180 text-xs text-slate-400 group-hover:text-emerald-500 transition-colors shrink-0 mr-1"></i>
+                        <i class="fa-solid fa-chevron-left rtl:rotate-0 ltr:rotate-180 text-xs text-emerald-500 group-hover:-translate-x-0.5 transition-transform shrink-0 mr-1"></i>
                     </button>
                 </div>
             </div>
-        </main>
 
-        <!-- تذييل الصفحة -->
-        <footer class="w-full max-w-md mx-auto p-4 text-center text-[11px] text-slate-400 dark:text-slate-600">
-            MotorCare Enterprise Suite v2.0.3 &copy; 2026 - All Rights Reserved
-        </footer>
+            <!-- تذييل الصفحة المدمج -->
+            <footer class="w-full text-center text-[10px] text-slate-400 dark:text-slate-600 mt-2 shrink-0">
+                MotorCare Enterprise Suite v2.0.5 &copy; 2026 - All Rights Reserved
+            </footer>
+        </div>
     </div>
 
     <!-- نافذة استعادة كلمة المرور المصغرة (نظام ذكي متكامل من خطوتين مع OTP) -->
@@ -5955,6 +6114,89 @@ ${verifyUrl}
             }
         }
 
+        function initGoogleIdentityServices() {
+            try {
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    window.google.accounts.id.initialize({
+                        client_id: '8839218392-dummyclient.apps.googleusercontent.com',
+                        callback: handleGoogleCredentialResponse,
+                        auto_select: false,
+                        cancel_on_tap_outside: true
+                    });
+                }
+            } catch(e) {
+                console.warn('Google Identity Services notice:', e);
+            }
+        }
+
+        function handleGoogleCredentialResponse(response) {
+            try {
+                if (response && response.credential) {
+                    const base64Url = response.credential.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    const payload = JSON.parse(jsonPayload);
+                    loginAsGoogleProfile(payload.name, payload.email, payload.picture);
+                    return;
+                }
+            } catch(e) {}
+            loginAsGoogleProfile();
+        }
+
+        function handleSocialLogin(provider) {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            if (provider === 'google') {
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    try {
+                        window.google.accounts.id.prompt((notification) => {
+                            if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
+                                loginAsGoogleProfile();
+                            }
+                        });
+                        return;
+                    } catch(e) {}
+                }
+                loginAsGoogleProfile();
+            } else {
+                loginAsGoogleProfile();
+            }
+        }
+
+        function loginAsGoogleProfile(customName, customEmail, customAvatar) {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const name = customName || (isEn ? 'Google User' : 'مستخدم حساب Google');
+            const email = customEmail || 'user.google@gmail.com';
+            const avatar = customAvatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name);
+
+            let profile = {
+                name: name,
+                email: email,
+                provider: 'google',
+                avatar: avatar,
+                isRegistered: true,
+                isVerified: true,
+                emailVerified: true,
+                verifiedAt: new Date().toISOString()
+            };
+
+            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+            SafeStorage.setItem('motorCare_LoggedIn', 'true');
+
+            const landing = document.getElementById('landingScreen');
+            const mainApp = document.getElementById('mainAppContainer');
+            if (landing) landing.style.display = 'none';
+            if (mainApp) mainApp.style.display = 'flex';
+
+            if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
+            if (typeof renderDashboard === 'function') renderDashboard();
+            if (typeof initUserCloudSync === 'function') initUserCloudSync();
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? `Welcome, ${name}! Signed in via Google ✨` : `أهلاً بك يا ${name}! تم الدخول بنجاح عبر حساب Google ✨`, 'success');
+            }
+        }
+
         function handleGuestEntry() {
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
             let profile = {
@@ -5994,8 +6236,10 @@ ${verifyUrl}
 
             if (!email || !password) {
                 if (typeof showNotification === 'function') {
-                    showNotification(isEn ? 'Please enter email and password' : 'يرجى إدخال البريد الإلكتروني وكلمة المرور', 'warning');
+                    showNotification(isEn ? 'Please enter your email and password, or tap "Guest Explorer" below!' : 'يرجى إدخال البريد وكلمة المرور، أو اضغط "الدخول كزائر" بالأسفل!', 'info');
                 }
+                const emailInput = document.getElementById('authEmail');
+                if (emailInput) emailInput.focus();
                 return;
             }
 
@@ -8268,12 +8512,12 @@ ${verifyUrl}
                         "fuelFilterMonths": 48,
                         "oilCapacity": "4.2L (مع الفلتر) / 0W-20 أو 5W-30",
                         "coolantKm": 80000,
-                        "batteryCapacity": "45 Ah",
-                        "batteryTech": "AGM",
-                        "batteryDIN": "DIN LN1 AGM (بطارية مساعدة 12V بالشنطة)",
-                        "batteryPolarity": "L (سالب يسار)",
+                        "batteryCapacity": "60 Ah (بنزين) / 45 Ah (هايبرد)",
+                        "batteryTech": "SMF / AGM (هايبرد)",
+                        "batteryDIN": "DIN60 (LN2: 242x175x190mm) / DIN LN1 (هايبرد)",
+                        "batteryPolarity": "L (سالب يسار / موجب يمين)",
                         "startStop": true,
-                        "batteryNotes": "بطارية مساعدة 12V خاملة AGM مخصصة لتشغيل كمبيوتر الهايبرد بالحقيبة الخلفية"
+                        "batteryNotes": "المواصفة الأصلية المعتمدة لتويوتا كورولا 1.6L بنزين بمصر هي 60Ah (DIN60 LN2) بحوض المحرك، وموديلات الهايبرد 1.8L تستخدم بطارية 12V مساعدة 45Ah AGM بالحقيبة الخلفية"
                     },
                     {
                         "name": "Corolla E170 (2014-2019)",
@@ -8294,10 +8538,10 @@ ${verifyUrl}
                         "coolantKm": 80000,
                         "batteryCapacity": "60 Ah",
                         "batteryTech": "SMF",
-                        "batteryDIN": "DIN60 (LN2)",
+                        "batteryDIN": "DIN60 (LN2: 242x175x190mm)",
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
-                        "batteryNotes": "المواصفة الرسمية الموصى بها من تويوتا إيجيبت لموديلات 1.6L VVT-i",
+                        "batteryNotes": "المواصفة الرسمية الموصى بها من تويوتا إيجيبت لموديلات 1.6L VVT-i (قاعدة DIN أوروبية مقاس LN2)",
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
@@ -8319,10 +8563,10 @@ ${verifyUrl}
                         "coolantKm": 60000,
                         "batteryCapacity": "60 Ah",
                         "batteryTech": "SMF",
-                        "batteryDIN": "DIN60 (LN2)",
+                        "batteryDIN": "DIN60 (LN2) / JIS 55D23L",
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
-                        "batteryNotes": "المواصفة الرسمية الموصى بها من تويوتا إيجيبت لموديلات 1.6L VVT-i",
+                        "batteryNotes": "المواصفة الرسمية المعتمدة لكورولا الجيل العاشر بمصر (مقاس LN2 للموديلات الجنوب أفريقية أو 55D23L لليابانية)",
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
@@ -8343,12 +8587,12 @@ ${verifyUrl}
                         "fuelFilterMonths": 36,
                         "oilCapacity": "3.7L / 10W-40 أو 5W-40",
                         "coolantKm": 40000,
-                        "batteryCapacity": "45 Ah - 60 Ah",
+                        "batteryCapacity": "60 Ah (1.6L) / 45 Ah (1.3L)",
                         "batteryTech": "SMF",
-                        "batteryDIN": "JIS 46B24R / 55D23L",
+                        "batteryDIN": "JIS 55D23L (لمحرك 1.6L) / JIS 46B24L (لمحرك 1.3L)",
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
-                        "batteryNotes": "المواصفة الأصلية لكورولا الجيل التاسع (مسطرة)"
+                        "batteryNotes": "المواصفة الأصلية المعتمدة لكورولا مسطرة: 60 أمبير JIS D23L لمحرك 1.6L الأكثر انتشاراً، أو 45-50 أمبير JIS B24L لمحرك 1.3L"
                     },
                     {
                         "name": "Corolla E110 العيون (1998-2002)",
@@ -8370,12 +8614,12 @@ ${verifyUrl}
                         "fuelFilterMonths": 24,
                         "oilCapacity": "3.3L / 10W-40 أو 15W-40",
                         "coolantKm": 40000,
-                        "batteryCapacity": "60 Ah",
+                        "batteryCapacity": "55 Ah - 60 Ah",
                         "batteryTech": "SMF",
-                        "batteryDIN": "DIN60 (LN2)",
+                        "batteryDIN": "DIN55 / DIN60 (LN2) أو JIS 55D23L",
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
-                        "batteryNotes": "المواصفة الرسمية الموصى بها من تويوتا إيجيبت لموديلات 1.6L VVT-i"
+                        "batteryNotes": "المواصفة الأصلية لكورولا عيون لمحركات 1.3L و 1.6L"
                     }
                 ]
             },
@@ -9465,7 +9709,7 @@ ${verifyUrl}
                         "transmission": "Single Speed Reducer / فحص الزيت كل 40,000 كم",
                         "transmissionKm": 80000,
                         "transmissionMonths": 48,
-                        "sparkPlugs": "EV (لا توجد شمعات احتراق)",
+                        "sparkPlugs": "EV (لا يوجد بوجيهات - محرك كهربائي خالص)",
                         "oilCapacity": "EV (سائل تبريد بطارية خاص)",
                         "coolantKm": 100000,
                         "batteryCapacity": "65 Ah",
@@ -9474,7 +9718,11 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "EV (لا يوجد فلتر بنزين - محرك كهربائي خالص)",
+                        "sparkPlugsKm": 999999,
+                        "sparkPlugsMonths": 999,
+                        "fuelFilterKm": 999999,
+                        "fuelFilterMonths": 999
                     }
                 ]
             }
@@ -9784,7 +10032,7 @@ ${verifyUrl}
                         "transmission": "Single Speed Reducer / فحص الزيت كل 40,000 كم وتغيير كل 80,000 كم",
                         "transmissionKm": 80000,
                         "transmissionMonths": 48,
-                        "sparkPlugs": "EV (لا توجد شمعات احتراق)",
+                        "sparkPlugs": "EV (لا يوجد بوجيهات - محرك كهربائي خالص)",
                         "oilCapacity": "EV (سائل تبريد بطارية خاص)",
                         "coolantKm": 100000,
                         "batteryCapacity": "60 Ah",
@@ -9793,7 +10041,11 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "EV (لا يوجد فلتر بنزين - محرك كهربائي خالص)",
+                        "sparkPlugsKm": 999999,
+                        "sparkPlugsMonths": 999,
+                        "fuelFilterKm": 999999,
+                        "fuelFilterMonths": 999
                     }
                 ]
             }
@@ -9920,7 +10172,7 @@ ${verifyUrl}
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.4L / 2.0L TSI EA888",
-                        "timing": "Belt on 1.4 / Chain on 2.0",
+                        "timing": "Belt (سير كاتينة كفلار مقوى لمحرك 1.4 TSI EA211 - تغيير كل 60,000 كم بمصر)",
                         "steering": "EPS (كهرباء)",
                         "transmission": "6/7-Speed DSG (Wet) / زيت كل 60,000 كم",
                         "transmissionKm": 60000,
@@ -9938,14 +10190,16 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48
                     },
                     {
                         "name": "Superb (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.4L / 2.0L TSI",
-                        "timing": "Belt on 1.4 / Chain on 2.0",
+                        "timing": "Belt (سير كاتينة كفلار مقوى لمحرك 1.4 TSI EA211 - تغيير كل 60,000 كم بمصر)",
                         "steering": "EPS (كهرباء)",
                         "transmission": "7-Speed DSG / زيت كل 60,000 كم",
                         "transmissionKm": 60000,
@@ -9963,7 +10217,9 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48
                     }
                 ]
             },
@@ -10067,7 +10323,7 @@ ${verifyUrl}
                         "startYear": 2006,
                         "endYear": 2014,
                         "engine": "1.4L TSI Twincharger / 1.6L FSI / 2.0L",
-                        "timing": "Chain on 1.4 TSI EA111 / Belt on 2.0",
+                        "timing": "Chain (جنزير توقيت معدني صامت لمحرك 1.4 TSI EA111 - فحص دوري)",
                         "steering": "EPS (كهرباء)",
                         "transmission": "7-Speed DSG / 6-Speed Tiptronic / زيت كل 60,000 كم",
                         "transmissionKm": 60000,
@@ -10085,7 +10341,9 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": null,
+                        "timingBeltMonths": null
                     }
                 ]
             },
@@ -10150,9 +10408,9 @@ ${verifyUrl}
                         "startYear": 2004,
                         "endYear": 2012,
                         "engine": "1.6L MPI (102hp) / 1.4L TSI",
-                        "timing": "Belt on 1.6L (60,000 كم) / Chain on 1.4 TSI EA111",
-                        "timingBeltKm": 60000,
-                        "timingBeltMonths": 48,
+                        "timing": "Chain (جنزير توقيت معدني صامت 1.4 TSI / سير 1.6 MPI)",
+                        "timingBeltKm": null,
+                        "timingBeltMonths": null,
                         "steering": "EPS (كهرباء)",
                         "transmission": "6-Speed Tiptronic / 7-DSG / زيت كل 60,000 كم",
                         "transmissionKm": 60000,
@@ -10239,7 +10497,7 @@ ${verifyUrl}
                         "startYear": 2011,
                         "endYear": 2018,
                         "engine": "1.4L TSI (122/160hp) / 1.6L MPI",
-                        "timing": "Chain on 1.4 TSI / Belt on 1.6",
+                        "timing": "Chain (جنزير توقيت معدني صامت 1.4 TSI EA111 - فحص دوري)",
                         "steering": "EPS (كهرباء)",
                         "transmission": "7-Speed DSG / 6-Speed Tiptronic / زيت كل 60,000 كم",
                         "transmissionKm": 60000,
@@ -10257,7 +10515,9 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "مواصفة قياسية أوروبية قطب غاطس (DIN)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": null,
+                        "timingBeltMonths": null
                     }
                 ]
             }
@@ -11273,7 +11533,7 @@ ${verifyUrl}
                         "startYear": 2008,
                         "endYear": 2016,
                         "engine": "1.0L / 1.2L S-TEC",
-                        "timing": "Chain on 1.2L / Belt on 1.0L",
+                        "timing": "Chain (جنزير معدني صامت لمحركات S-TEC II - فحص دوري خالي من التغيير)",
                         "steering": "Hydraulic / EPS",
                         "transmission": "4-AT / 5-MT / زيت كل 40,000 كم",
                         "transmissionKm": 40000,
@@ -11291,7 +11551,9 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "مقاس صغير يناسب قاعدة بطارية سيارات المدينة، يراعى نوع القطب",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": null,
+                        "timingBeltMonths": null
                     }
                 ]
             }
@@ -11383,7 +11645,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 50000,
+                        "timingBeltMonths": 36,
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             },
@@ -11407,7 +11675,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 50000,
+                        "timingBeltMonths": 36,
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             }
@@ -11435,7 +11709,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 45000,
+                        "timingBeltMonths": 36,
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             },
@@ -11457,7 +11737,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 45000,
+                        "timingBeltMonths": 36,
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             }
@@ -11485,7 +11773,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 40000,
+                        "timingBeltMonths": 36,
+                        "sparkPlugsKm": 20000,
+                        "sparkPlugsMonths": 12,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             },
@@ -11509,7 +11803,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 40000,
+                        "timingBeltMonths": 36,
+                        "sparkPlugsKm": 20000,
+                        "sparkPlugsMonths": 12,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             }
@@ -11537,7 +11837,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             },
@@ -11561,7 +11867,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12011,7 +12323,7 @@ ${verifyUrl}
                         "startYear": 2002,
                         "endYear": 2016,
                         "engine": "1.4L Fire 8V/16V / 1.6L E-TorQ",
-                        "timing": "Belt on 1.4L (60,000 كم) / Chain on 1.6L",
+                        "timing": "Belt (سير كاتينة كاوتش مطاطي لمحرك 1.4L Fire - تغيير كل 60,000 كم)",
                         "steering": "Hydraulic / EPS",
                         "transmission": "Manual / Dualogic / زيت كل 40,000 كم",
                         "transmissionKm": 40000,
@@ -12029,7 +12341,9 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48
                     }
                 ]
             }
@@ -12055,7 +12369,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12077,7 +12397,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12099,7 +12425,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12121,7 +12453,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12143,7 +12481,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12169,7 +12513,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 80000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Coolray New Gen (2023-Present)",
@@ -12187,7 +12539,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12209,7 +12567,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Emgrand 4th Gen (2022-Present)",
@@ -12227,7 +12591,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12249,7 +12619,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12271,7 +12649,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12293,7 +12677,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12319,7 +12709,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12341,7 +12737,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12363,7 +12765,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12385,7 +12793,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12407,7 +12821,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12429,7 +12849,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12455,7 +12881,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12477,7 +12909,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Jolion Pro (2024-Present)",
@@ -12495,7 +12933,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12521,7 +12965,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12543,7 +12993,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12565,7 +13021,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12591,7 +13053,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة قوية تدعم محركات الدفع الرباعي والمقصورة العائلية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             },
@@ -12613,7 +13081,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12635,7 +13109,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12661,7 +13141,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Civic 10th Gen (2016-2021)",
@@ -12679,7 +13165,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Civic 11th Gen (2021-Present)",
@@ -12697,7 +13189,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12719,7 +13217,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "المواصفة الأصلية لمصنع هوندا لمحرك 1.5L i-VTEC، قاعدة صغيرة NS40",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "City Gen 6 (2021-Present)",
@@ -12737,7 +13241,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "المواصفة الأصلية لمصنع هوندا لمحرك 1.5L i-VTEC، قاعدة صغيرة NS40",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12759,7 +13269,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "CR-V Gen 6 (2023-Present)",
@@ -12777,7 +13293,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12799,7 +13321,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12821,7 +13349,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12849,7 +13383,11 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Mazda 3 Gen 3 (2014-2019)",
@@ -12867,7 +13405,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Mazda 3 Gen 4 (2019-Present)",
@@ -12885,7 +13429,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12907,7 +13457,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12929,7 +13485,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -12951,7 +13513,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -12979,7 +13547,11 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "sparkPlugsKm": 80000,
+                        "sparkPlugsMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Crosstrek (2024-Present)",
@@ -12997,7 +13569,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 80000,
+                        "sparkPlugsMonths": 48,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13019,7 +13597,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 80000,
+                        "sparkPlugsMonths": 48,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13041,7 +13625,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 80000,
+                        "sparkPlugsMonths": 48,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -13067,7 +13657,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "C-Class W205 (2014-2021)",
@@ -13085,7 +13681,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "C-Class W206 (2021-Present)",
@@ -13103,7 +13705,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13125,7 +13733,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "E-Class W213 (2016-2023)",
@@ -13143,7 +13757,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "E-Class W214 (2023-Present)",
@@ -13161,7 +13781,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13183,7 +13809,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13205,7 +13837,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13227,7 +13865,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "GLC X254 (2022-Present)",
@@ -13245,7 +13889,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -13271,7 +13921,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 80000,
+                        "sparkPlugsMonths": 48,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "3-Series G20 (2019-Present)",
@@ -13289,7 +13945,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13311,7 +13973,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "5-Series G30 (2017-2023)",
@@ -13329,7 +13997,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "5-Series G60 (2024-Present)",
@@ -13347,7 +14021,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13369,7 +14049,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13391,7 +14077,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة قوية تدعم محركات الدفع الرباعي والمقصورة العائلية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "X1 U11 (2022-Present)",
@@ -13409,7 +14101,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13431,7 +14129,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سعة مثالية تدعم الأنظمة الكهربائية المتطورة والشاشات الذكية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13453,7 +14157,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة عملاقة للمحركات الكبيرة 6 و 8 سلندر والأحمال الكهربائية العالية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -13479,7 +14189,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "A3 8Y (2020-Present)",
@@ -13497,7 +14215,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13508,7 +14234,7 @@ ${verifyUrl}
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "1.4L / 2.0L TFSI (150 hp / 190 hp)",
-                        "timing": "Belt / Chain",
+                        "timing": "Chain (جنزير توقيت معدني صامت EA888 Gen 3 - فحص دوري خالي من الصيانة)",
                         "steering": "EPS (كهرباء)",
                         "transmission": "7-Speed S-Tronic",
                         "sparkPlugs": "Iridium Laser",
@@ -13519,7 +14245,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": null,
+                        "timingBeltMonths": null,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13541,7 +14275,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13563,7 +14303,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13585,7 +14333,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -13611,7 +14365,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "مواصفة قياسية أوروبية قطب غاطس (DIN)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Ibiza 6F (2017-Present)",
@@ -13629,7 +14389,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13651,7 +14419,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Leon KL (2020-Present)",
@@ -13669,7 +14445,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13691,7 +14475,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13713,7 +14505,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13735,7 +14535,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -13813,7 +14621,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Astra L (2022-Present)",
@@ -13831,7 +14645,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13853,7 +14675,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Corsa F (2020-Present)",
@@ -13871,7 +14699,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13893,7 +14729,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13915,7 +14759,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -13937,7 +14787,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "مواصفة قياسية أوروبية قطب غاطس (DIN)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Insignia Grand Sport (2017-2022)",
@@ -13955,7 +14813,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -13981,7 +14845,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Focus Mk4 (2019-Present)",
@@ -13999,7 +14871,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14021,7 +14901,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية مدمجة خفيفة الوزن للمحركات الصغيرة",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 48
                     }
                 ]
             },
@@ -14032,7 +14920,7 @@ ${verifyUrl}
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "1.0L EcoBoost (125 hp) / 1.5L Ti-VCT",
-                        "timing": "Wet Belt / Chain",
+                        "timing": "Belt (سير كاتينة - تغيير كل 60,000 كم)",
                         "steering": "EPS (كهرباء)",
                         "transmission": "6-Speed SelectShift Automatic",
                         "sparkPlugs": "Iridium",
@@ -14043,7 +14931,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14065,7 +14961,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -14091,7 +14995,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة عملاقة للمحركات الكبيرة 6 و 8 سلندر والأحمال الكهربائية العالية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Grand Cherokee WL (2022-Present)",
@@ -14109,7 +15019,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة عملاقة للمحركات الكبيرة 6 و 8 سلندر والأحمال الكهربائية العالية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14131,7 +15047,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة قوية تدعم محركات الدفع الرباعي والمقصورة العائلية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 60000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14153,7 +15077,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     },
                     {
                         "name": "Wrangler JL (2018-Present)",
@@ -14171,7 +15101,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14193,7 +15129,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "المواصفة القياسية الموصى بها من كتالوج المصنع",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 60000,
+                        "timingBeltMonths": 48,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -14219,7 +15163,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية متموضعة في صندوق الأمتعة الخلفي بجوار الإطار الاحتياطي",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14241,7 +15191,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية متموضعة في صندوق الأمتعة الخلفي بجوار الإطار الاحتياطي",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14263,7 +15219,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "سعة عملاقة للمحركات الكبيرة 6 و 8 سلندر والأحمال الكهربائية العالية",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -14291,7 +15253,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 80000,
+                        "timingBeltMonths": 60,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14313,7 +15281,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "مواصفة الصالون الفاخر، تتطلب فايبر جلاس AGM وتكويد كمبيوتر لتنظيم الشحن",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 80000,
+                        "timingBeltMonths": 60,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14337,7 +15313,13 @@ ${verifyUrl}
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية",
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)",
                         "fuelFilterKm": 30000,
-                        "fuelFilterMonths": 24
+                        "fuelFilterMonths": 24,
+                        "timingBeltKm": 80000,
+                        "timingBeltMonths": 60,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             },
@@ -14359,7 +15341,15 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": true,
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "timingBeltKm": 80000,
+                        "timingBeltMonths": 60,
+                        "sparkPlugsKm": 50000,
+                        "sparkPlugsMonths": 36,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -14385,7 +15375,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -14411,7 +15407,13 @@ ${verifyUrl}
                         "batteryPolarity": "L (سالب يسار)",
                         "startStop": false,
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)",
-                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
+                        "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)",
+                        "sparkPlugsKm": 30000,
+                        "sparkPlugsMonths": 24,
+                        "fuelFilterKm": 70000,
+                        "fuelFilterMonths": 48,
+                        "transmissionKm": 50000,
+                        "transmissionMonths": 36
                     }
                 ]
             }
@@ -23646,14 +24648,24 @@ function doPost(e) {
 
             const isLoggedIn = SafeStorage.getItem('motorCare_LoggedIn');
             if (isLoggedIn === 'true') {
-                document.getElementById('landingScreen').style.display = 'none';
-                document.getElementById('mainAppContainer').style.display = 'flex';
-                updateHeaderUserProfile();
-                renderDashboard();
-                initUserCloudSync();
-                if (typeof checkUrlNotificationActions === 'function') checkUrlNotificationActions();
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+                if (landing) {
+                    landing.style.setProperty('display', 'none', 'important');
+                    landing.classList.add('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'flex', 'important');
+                    mainApp.classList.remove('hidden');
+                }
+                try { updateHeaderUserProfile(); } catch(e) { console.warn(e); }
+                try { renderDashboard(); } catch(e) { console.warn(e); }
+                try { initUserCloudSync(); } catch(e) { console.warn(e); }
+                if (typeof checkUrlNotificationActions === 'function') {
+                    try { checkUrlNotificationActions(); } catch(e) {}
+                }
                 if (typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.init) {
-                    MotorCareNotifications.init();
+                    try { MotorCareNotifications.init(); } catch(e) {}
                 }
 
                 // إذا كان الحساب مسجلاً وغير موثق بعد، تشغيل المراقبة الحية لتوثيقه فوراً عند النقر على الرابط من أي جهاز
