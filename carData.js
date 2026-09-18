@@ -1,6 +1,6 @@
-// MotorCare Offline OEM Car Database v1.8.0
+// MotorCare Offline OEM Car Database v2.0.1
 // قاعدة بيانات السيارات والمواصفات القياسية للمصنع (Offline-First OEM Specifications)
-// تشمل كتالوج شامل لـ 40 ماركة و 285 جيلاً ومواصفات المحرك والسيور والزيوت
+// تشمل كتالوج شامل لـ 40 ماركة و 283 جيلاً ومواصفات المحرك والسيور والزيوت
 
 const _targetScope = (typeof window !== 'undefined') ? window : ((typeof globalThis !== 'undefined') ? globalThis : this);
 _targetScope.BRAND_GROUPS = {
@@ -61,7 +61,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Elantra": {
                 "generations": [
                     {
-                        "name": "Elantra HD (2007-2024) - جنزير حديد [Timing Chain]",
+                        "name": "Elantra HD (2007-2024)",
                         "startYear": 2007,
                         "endYear": 2024,
                         "engine": "1.6L Gamma MPI (G4FC DOHC 16V CVVT)",
@@ -88,7 +88,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة"
                     },
                     {
-                        "name": "Elantra XD (2000-2007) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Elantra XD (2000-2007)",
                         "startYear": 2000,
                         "endYear": 2007,
                         "engine": "1.6L Alpha II DOHC (سير كاتينة)",
@@ -115,7 +115,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة"
                     },
                     {
-                        "name": "Elantra MD (2011-2016) - جنزير حديد [Timing Chain]",
+                        "name": "Elantra MD (2011-2016)",
                         "startYear": 2011,
                         "endYear": 2016,
                         "engine": "1.6L Gamma MPI",
@@ -142,7 +142,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "timingBeltMonths": 0
                     },
                     {
-                        "name": "Elantra AD (2016-2020) - جنزير حديد [Timing Chain]",
+                        "name": "Elantra AD (2016-2020)",
                         "startYear": 2016,
                         "endYear": 2020,
                         "engine": "1.6L Gamma MPI",
@@ -169,7 +169,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "timingBeltMonths": 0
                     },
                     {
-                        "name": "Elantra CN7 (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Elantra CN7 (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.6L Smartstream G / Gamma MPI",
@@ -200,7 +200,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tucson": {
                 "generations": [
                     {
-                        "name": "Tucson NX4 (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Tucson NX4 (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.6L T-GDI (Smartstream Turbo)",
@@ -225,7 +225,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Tucson TL (2016-2020) Turbo - جنزير حديد [Timing Chain]",
+                        "name": "Tucson TL (2016-2020) Turbo",
                         "startYear": 2016,
                         "endYear": 2020,
                         "engine": "1.6L T-GDI (Turbo)",
@@ -250,7 +250,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Tucson TL (2016-2020) N/A - جنزير حديد [Timing Chain]",
+                        "name": "Tucson TL (2016-2020) N/A",
                         "startYear": 2016,
                         "endYear": 2020,
                         "engine": "1.6L GDI / MPI",
@@ -275,7 +275,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Tucson LM / ix35 (2010-2015) - جنزير حديد [Timing Chain]",
+                        "name": "Tucson LM / ix35 (2010-2015)",
                         "startYear": 2010,
                         "endYear": 2015,
                         "engine": "2.0L Theta II / 1.6L GDI",
@@ -300,7 +300,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Tucson JM (2005-2009) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Tucson JM (2005-2009)",
                         "startYear": 2005,
                         "endYear": 2009,
                         "engine": "2.0L Beta II (G4GC)",
@@ -331,7 +331,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Accent": {
                 "generations": [
                     {
-                        "name": "Accent HCI (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Accent HCI (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.4L / 1.6L Kappa / Gamma",
@@ -356,7 +356,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Accent RB (2011-2024) - جنزير حديد [Timing Chain]",
+                        "name": "Accent RB (2011-2024)",
                         "startYear": 2011,
                         "endYear": 2024,
                         "engine": "1.6L Gamma MPI (G4FC)",
@@ -381,7 +381,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "السعة القياسية الأكثر انتشاراً وتوفراً بالسوق المصري للسيارات الاقتصادية"
                     },
                     {
-                        "name": "Accent MC (New Accent 2006-2011) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Accent MC (New Accent 2006-2011)",
                         "startYear": 2006,
                         "endYear": 2011,
                         "engine": "1.6L Alpha II",
@@ -408,7 +408,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Accent LC (2000-2005) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Accent LC (2000-2005)",
                         "startYear": 2000,
                         "endYear": 2005,
                         "engine": "1.3L / 1.5L Alpha",
@@ -439,7 +439,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Creta": {
                 "generations": [
                     {
-                        "name": "Creta SU2 (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Creta SU2 (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Smartstream MPI",
@@ -464,7 +464,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Creta GS (2016-2020) - جنزير حديد [Timing Chain]",
+                        "name": "Creta GS (2016-2020)",
                         "startYear": 2016,
                         "endYear": 2020,
                         "engine": "1.6L Gamma MPI",
@@ -493,7 +493,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Matrix": {
                 "generations": [
                     {
-                        "name": "Matrix (2002-2011) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Matrix (2002-2011)",
                         "startYear": 2002,
                         "endYear": 2011,
                         "engine": "1.6L Alpha II (G4ED)",
@@ -524,7 +524,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Verna": {
                 "generations": [
                     {
-                        "name": "Verna (2004-2019) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Verna (2004-2019)",
                         "startYear": 2004,
                         "endYear": 2019,
                         "engine": "1.6L Alpha II (106 hp)",
@@ -555,7 +555,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "i10 / Grand i10": {
                 "generations": [
                     {
-                        "name": "Grand i10 (2014-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Grand i10 (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "1.2L Kappa Dual VTVT",
@@ -580,7 +580,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "i10 (2008-2013) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "i10 (2008-2013)",
                         "startYear": 2008,
                         "endYear": 2013,
                         "engine": "1.1L Epsilon",
@@ -611,7 +611,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "i20 & Bayon": {
                 "generations": [
                     {
-                        "name": "i20 & Bayon (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "i20 & Bayon (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.4L Kappa / 1.0L Turbo",
@@ -640,7 +640,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Santa Fe": {
                 "generations": [
                     {
-                        "name": "Santa Fe (2013-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Santa Fe (2013-Present)",
                         "startYear": 2013,
                         "endYear": 2026,
                         "engine": "2.4L / 3.3L / 3.5L V6",
@@ -673,7 +673,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Cerato": {
                 "generations": [
                     {
-                        "name": "Cerato Classic / LD (2004-2012) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Cerato Classic / LD (2004-2012)",
                         "startYear": 2004,
                         "endYear": 2012,
                         "engine": "1.6L Alpha II (G4ED) DOHC",
@@ -700,7 +700,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة"
                     },
                     {
-                        "name": "Cerato Forte / TD (2009-2013) - جنزير حديد [Timing Chain]",
+                        "name": "Cerato Forte / TD (2009-2013)",
                         "startYear": 2009,
                         "endYear": 2013,
                         "engine": "1.6L Gamma MPI (جنزير توقيت حديد)",
@@ -727,7 +727,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "timingBeltMonths": 0
                     },
                     {
-                        "name": "Cerato K3 / YD (2013-2018) - جنزير حديد [Timing Chain]",
+                        "name": "Cerato K3 / YD (2013-2018)",
                         "startYear": 2013,
                         "endYear": 2018,
                         "engine": "1.6L Gamma MPI",
@@ -754,7 +754,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "timingBeltMonths": 0
                     },
                     {
-                        "name": "Grand Cerato BD (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Grand Cerato BD (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.6L Gamma MPI",
@@ -785,7 +785,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Sportage": {
                 "generations": [
                     {
-                        "name": "Sportage NQ5 (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Sportage NQ5 (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.6L T-GDI (Smartstream Turbo)",
@@ -810,7 +810,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Sportage QL (2016-2021) - جنزير حديد [Timing Chain]",
+                        "name": "Sportage QL (2016-2021)",
                         "startYear": 2016,
                         "endYear": 2021,
                         "engine": "1.6L GDI / T-GDI",
@@ -835,7 +835,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Sportage SL (2011-2015) - جنزير حديد [Timing Chain]",
+                        "name": "Sportage SL (2011-2015)",
                         "startYear": 2011,
                         "endYear": 2015,
                         "engine": "2.0L Theta II / 1.6L GDI",
@@ -860,7 +860,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Sportage JE (2005-2010) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Sportage JE (2005-2010)",
                         "startYear": 2005,
                         "endYear": 2010,
                         "engine": "2.0L Beta II",
@@ -891,7 +891,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Rio": {
                 "generations": [
                     {
-                        "name": "Rio YB (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Rio YB (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.4L / 1.6L Gamma",
@@ -916,7 +916,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Rio UB (2012-2016) - جنزير حديد [Timing Chain]",
+                        "name": "Rio UB (2012-2016)",
                         "startYear": 2012,
                         "endYear": 2016,
                         "engine": "1.4L Gamma",
@@ -941,7 +941,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Rio JB (2006-2011) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Rio JB (2006-2011)",
                         "startYear": 2006,
                         "endYear": 2011,
                         "engine": "1.4L / 1.6L Alpha II",
@@ -972,7 +972,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Picanto": {
                 "generations": [
                     {
-                        "name": "Picanto JA (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Picanto JA (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.2L Kappa MPI",
@@ -997,7 +997,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Picanto TA (2011-2016) - جنزير حديد [Timing Chain]",
+                        "name": "Picanto TA (2011-2016)",
                         "startYear": 2011,
                         "endYear": 2016,
                         "engine": "1.2L Kappa",
@@ -1022,7 +1022,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Picanto SA (2004-2010) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Picanto SA (2004-2010)",
                         "startYear": 2004,
                         "endYear": 2010,
                         "engine": "1.1L Epsilon",
@@ -1053,7 +1053,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Carens": {
                 "generations": [
                     {
-                        "name": "Carens UN (2007-2012) 2.0L Beta - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Carens UN (2007-2012) 2.0L Beta",
                         "startYear": 2007,
                         "endYear": 2012,
                         "engine": "2.0L Beta II DOHC (سير كاتينة)",
@@ -1080,7 +1080,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)"
                     },
                     {
-                        "name": "Carens UN (2007-2012) 1.6L Gamma - جنزير حديد [Timing Chain]",
+                        "name": "Carens UN (2007-2012) 1.6L Gamma",
                         "startYear": 2007,
                         "endYear": 2012,
                         "engine": "1.6L Gamma MPI (جنزير حديد)",
@@ -1105,7 +1105,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)"
                     },
                     {
-                        "name": "Carens RP (2013-2019) - جنزير حديد [Timing Chain]",
+                        "name": "Carens RP (2013-2019)",
                         "startYear": 2013,
                         "endYear": 2019,
                         "engine": "1.6L GDI (135hp)",
@@ -1134,7 +1134,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Seltos & Sonet": {
                 "generations": [
                     {
-                        "name": "Seltos / Sonet (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Seltos / Sonet (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L Smartstream / 1.6L Gamma",
@@ -1163,7 +1163,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Pegas": {
                 "generations": [
                     {
-                        "name": "Pegas (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Pegas (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.4L Kappa MPI",
@@ -1196,7 +1196,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Corolla": {
                 "generations": [
                     {
-                        "name": "Corolla E210 (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Corolla E210 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.6L Dual VVT-i (1ZR-FE) / 1.8L Hybrid",
@@ -1221,7 +1221,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "بطارية مساعدة 12V خاملة AGM مخصصة لتشغيل كمبيوتر الهايبرد بالحقيبة الخلفية"
                     },
                     {
-                        "name": "Corolla E170 (2014-2019) - جنزير حديد [Timing Chain]",
+                        "name": "Corolla E170 (2014-2019)",
                         "startYear": 2014,
                         "endYear": 2019,
                         "engine": "1.6L Dual VVT-i (1ZR-FE)",
@@ -1246,7 +1246,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Corolla E140 / E150 جنوب أفريقي (2008-2013) - جنزير حديد [Timing Chain]",
+                        "name": "Corolla E140 / E150 جنوب أفريقي (2008-2013)",
                         "startYear": 2008,
                         "endYear": 2013,
                         "engine": "1.6L Dual VVT-i (1ZR-FE)",
@@ -1271,7 +1271,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Corolla E120 المسطرة (2001-2007) - جنزير حديد [Timing Chain]",
+                        "name": "Corolla E120 المسطرة (2001-2007)",
                         "startYear": 2001,
                         "endYear": 2007,
                         "engine": "1.6L 3ZZ-FE / 1.3L 2NZ-FE (جنزير حديد)",
@@ -1296,7 +1296,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة الأصلية لكورولا الجيل التاسع (مسطرة)"
                     },
                     {
-                        "name": "Corolla E110 العيون (1998-2002) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Corolla E110 العيون (1998-2002)",
                         "startYear": 1998,
                         "endYear": 2002,
                         "engine": "1.3L 2E / 1.6L 4A-FE DOHC 16V",
@@ -1327,7 +1327,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Yaris": {
                 "generations": [
                     {
-                        "name": "Yaris XP210 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Yaris XP210 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L 3-Cyl Dynamic Force (M15A-FKS)",
@@ -1352,7 +1352,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Yaris XP130 (2012-2019) - جنزير حديد [Timing Chain]",
+                        "name": "Yaris XP130 (2012-2019)",
                         "startYear": 2012,
                         "endYear": 2019,
                         "engine": "1.3L / 1.5L Dual VVT-i (1NR/2NR)",
@@ -1377,7 +1377,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Yaris XP90 الفراشة (2006-2011) - جنزير حديد [Timing Chain]",
+                        "name": "Yaris XP90 الفراشة (2006-2011)",
                         "startYear": 2006,
                         "endYear": 2011,
                         "engine": "1.3L VVT-i (2NZ-FE)",
@@ -1406,7 +1406,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Fortuner": {
                 "generations": [
                     {
-                        "name": "Fortuner Gen 2 (2016-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Fortuner Gen 2 (2016-Present)",
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "2.7L (2TR-FE) / 4.0L V6 (1GR-FE)",
@@ -1431,7 +1431,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)"
                     },
                     {
-                        "name": "Fortuner Gen 1 (2005-2015) - جنزير حديد [Timing Chain]",
+                        "name": "Fortuner Gen 1 (2005-2015)",
                         "startYear": 2005,
                         "endYear": 2015,
                         "engine": "2.7L (2TR-FE) / 4.0L V6 (1GR-FE)",
@@ -1460,7 +1460,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Prado & Land Cruiser": {
                 "generations": [
                     {
-                        "name": "Land Cruiser Prado J150 (2010-2023) - جنزير حديد [Timing Chain]",
+                        "name": "Land Cruiser Prado J150 (2010-2023)",
                         "startYear": 2010,
                         "endYear": 2023,
                         "engine": "2.7L (2TR) / 4.0L V6 (1GR-FE Dual VVT-i)",
@@ -1485,7 +1485,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Land Cruiser LC300 / LC200 - جنزير حديد [Timing Chain]",
+                        "name": "Land Cruiser LC300 / LC200",
                         "startYear": 2008,
                         "endYear": 2026,
                         "engine": "3.5L Twin Turbo V6 / 4.6L V8 (1UR-FE)",
@@ -1514,7 +1514,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Camry": {
                 "generations": [
                     {
-                        "name": "Camry XV70 / XV50 (2012-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Camry XV70 / XV50 (2012-Present)",
                         "startYear": 2012,
                         "endYear": 2026,
                         "engine": "2.5L Dynamic Force / Dual VVT-i (A25A/2AR)",
@@ -1543,7 +1543,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "RAV4": {
                 "generations": [
                     {
-                        "name": "RAV4 XA50 / XA40 (2013-Present) - جنزير حديد [Timing Chain]",
+                        "name": "RAV4 XA50 / XA40 (2013-Present)",
                         "startYear": 2013,
                         "endYear": 2026,
                         "engine": "2.5L Dynamic Force / Dual VVT-i",
@@ -1572,7 +1572,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "C-HR": {
                 "generations": [
                     {
-                        "name": "C-HR (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "C-HR (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.2L Turbo (8NR-FTS) / 1.8L Hybrid",
@@ -1601,7 +1601,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Belta & Rumion": {
                 "generations": [
                     {
-                        "name": "Belta / Rumion (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Belta / Rumion (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L K15B DOHC 16V",
@@ -1630,7 +1630,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Hilux": {
                 "generations": [
                     {
-                        "name": "Hilux Revo / Vigo (2005-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Hilux Revo / Vigo (2005-Present)",
                         "startYear": 2005,
                         "endYear": 2026,
                         "engine": "2.7L Gasoline (2TR-FE) / 2.4L-2.8L D-4D",
@@ -1663,7 +1663,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Sunny": {
                 "generations": [
                     {
-                        "name": "Sunny N17 الشكل الجديد (2013-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Sunny N17 الشكل الجديد (2013-Present)",
                         "startYear": 2013,
                         "endYear": 2026,
                         "engine": "1.5L (HR15DE)",
@@ -1688,7 +1688,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة الرسمية الموصى بها من نيسان لموديلات N17 بمحرك HR15DE، مقاس قاعدة صغير JIS"
                     },
                     {
-                        "name": "Sunny N16 الشكل القديم سوبر صالون (2001-2012) - جنزير حديد [Timing Chain]",
+                        "name": "Sunny N16 الشكل القديم سوبر صالون (2001-2012)",
                         "startYear": 2001,
                         "endYear": 2012,
                         "engine": "1.6L (QG16DE 16V)",
@@ -1717,7 +1717,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Sentra": {
                 "generations": [
                     {
-                        "name": "Sentra B17 (2014-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Sentra B17 (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "1.6L (HR16DE)",
@@ -1746,7 +1746,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Qashqai": {
                 "generations": [
                     {
-                        "name": "Qashqai J12 (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Qashqai J12 (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.3L Turbo (HR13DDT)",
@@ -1771,7 +1771,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Qashqai J11 (2014-2021) - جنزير حديد [Timing Chain]",
+                        "name": "Qashqai J11 (2014-2021)",
                         "startYear": 2014,
                         "endYear": 2021,
                         "engine": "1.2L Turbo (HRA2DDT / DIG-T)",
@@ -1796,7 +1796,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Qashqai J10 (2007-2013) - جنزير حديد [Timing Chain]",
+                        "name": "Qashqai J10 (2007-2013)",
                         "startYear": 2007,
                         "endYear": 2013,
                         "engine": "1.6L (HR16DE) / 2.0L (MR20DE)",
@@ -1825,7 +1825,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Juke": {
                 "generations": [
                     {
-                        "name": "Juke F16 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Juke F16 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.0L Turbo 3-Cyl (HR10DDT)",
@@ -1850,7 +1850,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Juke F15 (2011-2019) - جنزير حديد [Timing Chain]",
+                        "name": "Juke F15 (2011-2019)",
                         "startYear": 2011,
                         "endYear": 2019,
                         "engine": "1.6L / 1.6L Turbo (HR16/MR16)",
@@ -1879,7 +1879,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tiida": {
                 "generations": [
                     {
-                        "name": "Tiida C11 (2006-2014) - جنزير حديد [Timing Chain]",
+                        "name": "Tiida C11 (2006-2014)",
                         "startYear": 2006,
                         "endYear": 2014,
                         "engine": "1.6L (HR16DE)",
@@ -1908,7 +1908,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "X-Trail": {
                 "generations": [
                     {
-                        "name": "X-Trail T32 / T33 (2015-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X-Trail T32 / T33 (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "2.5L QR25DE / 1.5L e-POWER",
@@ -1941,7 +1941,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Lancer": {
                 "generations": [
                     {
-                        "name": "Lancer Shark / EX (2008-2017) - جنزير حديد [Timing Chain]",
+                        "name": "Lancer Shark / EX (2008-2017)",
                         "startYear": 2008,
                         "endYear": 2017,
                         "engine": "1.6L MIVEC (4A92) / 2.0L (4B11)",
@@ -1966,7 +1966,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة"
                     },
                     {
-                        "name": "Lancer Puma (CS 2003-2013) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Lancer Puma (CS 2003-2013)",
                         "startYear": 2003,
                         "endYear": 2013,
                         "engine": "1.6L SOHC (4G18) / 1.3L (4G13)",
@@ -1993,7 +1993,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة"
                     },
                     {
-                        "name": "Lancer GTS / Mirage (1998-2002) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Lancer GTS / Mirage (1998-2002)",
                         "startYear": 1998,
                         "endYear": 2002,
                         "engine": "1.3L (4G13) / 1.6L (4G92)",
@@ -2024,7 +2024,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Pajero": {
                 "generations": [
                     {
-                        "name": "Pajero Gen 4 (V80/V90 2007-2021) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Pajero Gen 4 (V80/V90 2007-2021)",
                         "startYear": 2007,
                         "endYear": 2021,
                         "engine": "3.5L / 3.8L V6 (6G74/6G75)",
@@ -2051,7 +2051,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Pajero Gen 3 (V60/V70 2000-2006) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Pajero Gen 3 (V60/V70 2000-2006)",
                         "startYear": 2000,
                         "endYear": 2006,
                         "engine": "3.0L / 3.5L V6 (6G72/6G74)",
@@ -2082,7 +2082,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Xpander": {
                 "generations": [
                     {
-                        "name": "Xpander (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Xpander (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.5L MIVEC (4A91 DOHC 16V)",
@@ -2111,7 +2111,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Eclipse Cross": {
                 "generations": [
                     {
-                        "name": "Eclipse Cross (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Eclipse Cross (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.5L Turbo MIVEC (4B40 DOHC DI-T)",
@@ -2140,7 +2140,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Outlander": {
                 "generations": [
                     {
-                        "name": "Outlander Gen 3/4 (2014-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Outlander Gen 3/4 (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "2.4L MIVEC (4B12) / 1.5L Turbo",
@@ -2169,7 +2169,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Attrage / Mirage": {
                 "generations": [
                     {
-                        "name": "Attrage / Mirage (2014-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Attrage / Mirage (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "1.2L 3-Cyl MIVEC (3A92 DOHC 12V)",
@@ -2198,7 +2198,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "ASX": {
                 "generations": [
                     {
-                        "name": "ASX (2011-Present) - جنزير حديد [Timing Chain]",
+                        "name": "ASX (2011-Present)",
                         "startYear": 2011,
                         "endYear": 2026,
                         "engine": "2.0L MIVEC (4B11) / 1.6L (4A92)",
@@ -2231,7 +2231,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "MG5": {
                 "generations": [
                     {
-                        "name": "MG5 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "MG5 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L NSE Major (120hp)",
@@ -2260,7 +2260,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "MG ZS": {
                 "generations": [
                     {
-                        "name": "MG ZS (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "MG ZS (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L NSE Major (119hp) / 1.3L Turbo",
@@ -2289,7 +2289,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "MG6": {
                 "generations": [
                     {
-                        "name": "MG6 (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "MG6 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (169hp)",
@@ -2318,7 +2318,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "MG RX5 & RX5 Plus": {
                 "generations": [
                     {
-                        "name": "MG RX5 & RX5 Plus (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "MG RX5 & RX5 Plus (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (169hp / 171hp Plus)",
@@ -2347,7 +2347,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "MG HS & MG One & MG GT": {
                 "generations": [
                     {
-                        "name": "MG HS (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "MG HS (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (169hp) / 2.0L Turbo",
@@ -2372,7 +2372,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "MG One / MG GT (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "MG One / MG GT (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (Mega Tech 181hp)",
@@ -2401,7 +2401,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "MG4 (EV) & ZS EV": {
                 "generations": [
                     {
-                        "name": "MG4 / ZS EV (2021-Present) - محرك كهربائي [EV / Electric]",
+                        "name": "MG4 / ZS EV (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "Electric Permanent Magnet Motor (51kWh / 64kWh)",
@@ -2430,7 +2430,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tiggo 7 & Tiggo 7 Pro": {
                 "generations": [
                     {
-                        "name": "Tiggo 7 Pro (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Tiggo 7 Pro (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (ACTECO 147hp)",
@@ -2455,7 +2455,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Tiggo 7 Gen 1 (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Tiggo 7 Gen 1 (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (ACTECO)",
@@ -2484,7 +2484,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tiggo 8 & Tiggo 8 Pro": {
                 "generations": [
                     {
-                        "name": "Tiggo 8 & Tiggo 8 Pro (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Tiggo 8 & Tiggo 8 Pro (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.6L TGDI (ACTECO 197hp) / 1.5L Turbo",
@@ -2513,7 +2513,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tiggo 3": {
                 "generations": [
                     {
-                        "name": "Tiggo 3 (2015-Present locally assembled) - جنزير حديد [Timing Chain]",
+                        "name": "Tiggo 3 (2015-Present locally assembled)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.6L DVVT (ACTECO 126hp)",
@@ -2542,7 +2542,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tiggo 4 & Tiggo 4 Pro": {
                 "generations": [
                     {
-                        "name": "Tiggo 4 Pro (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Tiggo 4 Pro (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.5L MPI / 1.5L Turbo",
@@ -2571,7 +2571,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Arrizo 5": {
                 "generations": [
                     {
-                        "name": "Arrizo 5 (2019-Present locally assembled) - جنزير حديد [Timing Chain]",
+                        "name": "Arrizo 5 (2019-Present locally assembled)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L DVVT (ACTECO 114hp)",
@@ -2600,7 +2600,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Envy": {
                 "generations": [
                     {
-                        "name": "Chery Envy (2013-2018) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Chery Envy (2013-2018)",
                         "startYear": 2013,
                         "endYear": 2018,
                         "engine": "1.5L ACTECO SOHC 16V",
@@ -2635,7 +2635,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "F3": {
                 "generations": [
                     {
-                        "name": "BYD F3 (2012-Present) 1.5L محرك جنزير - جنزير حديد [Timing Chain]",
+                        "name": "BYD F3 (2012-Present) 1.5L BYD473QE",
                         "startYear": 2012,
                         "endYear": 2026,
                         "engine": "1.5L BYD473QE DOHC 16V VVL (جنزير حديد)",
@@ -2660,7 +2660,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة"
                     },
                     {
-                        "name": "BYD F3 (2007-2011) 1.6L محرك ميتسوبيشي - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "BYD F3 (2007-2011) 1.6L Mitsubishi 4G18",
                         "startYear": 2007,
                         "endYear": 2011,
                         "engine": "1.6L Mitsubishi 4G18 / 1.5L 4G15S (سير كاتينة)",
@@ -2691,7 +2691,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Song Plus (DM-i / EV)": {
                 "generations": [
                     {
-                        "name": "Song Plus DM-i / EV (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Song Plus DM-i / EV (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Xiaoyun Hybrid / Dual Motor EV (Blade Battery)",
@@ -2720,7 +2720,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Atto 3 & Dolphin & Seal": {
                 "generations": [
                     {
-                        "name": "Atto 3 / Dolphin / Seal EV (2022-Present) - محرك كهربائي [EV / Electric]",
+                        "name": "Atto 3 / Dolphin / Seal EV (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "Permanent Magnet Synchronous EV Motor (Blade Battery)",
@@ -2749,7 +2749,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Octavia": {
                 "generations": [
                     {
-                        "name": "Octavia A8 (2021-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Octavia A8 (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.4L TSI (EA211 150hp) / 2.0L RS",
@@ -2776,7 +2776,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Octavia A7 (2014-2020) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Octavia A7 (2014-2020)",
                         "startYear": 2014,
                         "endYear": 2020,
                         "engine": "1.6L MPI (EA211 110hp) / 1.4L TSI",
@@ -2803,7 +2803,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Octavia A5 (2005-2013) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Octavia A5 (2005-2013)",
                         "startYear": 2005,
                         "endYear": 2013,
                         "engine": "1.6L MPI (BSE/BSF 102hp) / 1.4L TSI",
@@ -2830,7 +2830,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة الأصلية لموديلات A5 بمحرك MPI / TSI"
                     },
                     {
-                        "name": "Octavia A4 (1997-2004) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Octavia A4 (1997-2004)",
                         "startYear": 1997,
                         "endYear": 2004,
                         "engine": "1.6L SR (AKL 8V 101hp)",
@@ -2861,7 +2861,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Superb & Kodiaq": {
                 "generations": [
                     {
-                        "name": "Kodiaq (2017-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Kodiaq (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.4L / 2.0L TSI EA888",
@@ -2886,7 +2886,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Superb (2015-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Superb (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.4L / 2.0L TSI",
@@ -2915,7 +2915,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Karoq & Kamiq": {
                 "generations": [
                     {
-                        "name": "Karoq / Kamiq (2018-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Karoq / Kamiq (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.4L TSI (150hp) / 1.6L MPI / 1.0L TSI",
@@ -2946,7 +2946,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Fabia & Scala": {
                 "generations": [
                     {
-                        "name": "Fabia / Scala (2015-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Fabia / Scala (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.0L TSI / 1.6L MPI",
@@ -2981,7 +2981,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Passat": {
                 "generations": [
                     {
-                        "name": "Passat B8 (2015-2023) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Passat B8 (2015-2023)",
                         "startYear": 2015,
                         "endYear": 2023,
                         "engine": "1.4L TSI (EA211 150hp) / 2.0L TSI",
@@ -3008,7 +3008,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Passat B7 / B6 (2006-2014) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Passat B7 / B6 (2006-2014)",
                         "startYear": 2006,
                         "endYear": 2014,
                         "engine": "1.4L TSI Twincharger / 1.6L FSI / 2.0L",
@@ -3037,7 +3037,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Golf": {
                 "generations": [
                     {
-                        "name": "Golf 8 (2020-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Golf 8 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.4L TSI (150hp) / 1.5L eTSI / 2.0L GTI",
@@ -3064,7 +3064,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Golf 7 (2013-2019) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Golf 7 (2013-2019)",
                         "startYear": 2013,
                         "endYear": 2019,
                         "engine": "1.2L / 1.4L TSI (EA211)",
@@ -3091,7 +3091,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Golf 6 / Golf 5 (2004-2012) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Golf 6 / Golf 5 (2004-2012)",
                         "startYear": 2004,
                         "endYear": 2012,
                         "engine": "1.6L MPI (102hp) / 1.4L TSI",
@@ -3122,7 +3122,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tiguan": {
                 "generations": [
                     {
-                        "name": "Tiguan Gen 2 (2016-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Tiguan Gen 2 (2016-Present)",
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "1.4L TSI (150hp) / 2.0L TSI",
@@ -3153,7 +3153,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Jetta & Polo & T-Roc": {
                 "generations": [
                     {
-                        "name": "T-Roc / Polo (2018-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "T-Roc / Polo (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.4L TSI / 1.0L TSI",
@@ -3180,7 +3180,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Jetta Mk6 (2011-2018) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Jetta Mk6 (2011-2018)",
                         "startYear": 2011,
                         "endYear": 2018,
                         "engine": "1.4L TSI (122/160hp) / 1.6L MPI",
@@ -3213,7 +3213,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "3008": {
                 "generations": [
                     {
-                        "name": "3008 Gen 2 (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "3008 Gen 2 (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.6L Turbo THP (EP6 165hp)",
@@ -3238,7 +3238,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)"
                     },
                     {
-                        "name": "3008 Gen 1 (2010-2016) - جنزير حديد [Timing Chain]",
+                        "name": "3008 Gen 1 (2010-2016)",
                         "startYear": 2010,
                         "endYear": 2016,
                         "engine": "1.6L Turbo THP (156hp)",
@@ -3267,7 +3267,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "5008": {
                 "generations": [
                     {
-                        "name": "5008 Gen 2 (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "5008 Gen 2 (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.6L Turbo THP (165hp)",
@@ -3296,7 +3296,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "2008": {
                 "generations": [
                     {
-                        "name": "2008 Gen 2 (2020-Present) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "2008 Gen 2 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.2L PureTech Turbo (130hp)",
@@ -3323,7 +3323,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)"
                     },
                     {
-                        "name": "2008 Gen 1 (2013-2019) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "2008 Gen 1 (2013-2019)",
                         "startYear": 2013,
                         "endYear": 2019,
                         "engine": "1.6L VTi (120hp) / 1.2L PureTech",
@@ -3354,7 +3354,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "508": {
                 "generations": [
                     {
-                        "name": "508 Gen 2 (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "508 Gen 2 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.6L Turbo PureTech (165hp / 215hp GT)",
@@ -3379,7 +3379,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)"
                     },
                     {
-                        "name": "508 Gen 1 (2011-2018) - جنزير حديد [Timing Chain]",
+                        "name": "508 Gen 1 (2011-2018)",
                         "startYear": 2011,
                         "endYear": 2018,
                         "engine": "1.6L Turbo THP (156hp)",
@@ -3408,7 +3408,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "301": {
                 "generations": [
                     {
-                        "name": "Peugeot 301 (2013-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Peugeot 301 (2013-Present)",
                         "startYear": 2013,
                         "endYear": 2026,
                         "engine": "1.6L VTi (EC5 115hp)",
@@ -3439,7 +3439,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "208 & 207 & 206": {
                 "generations": [
                     {
-                        "name": "Peugeot 208 (2012-Present) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "Peugeot 208 (2012-Present)",
                         "startYear": 2012,
                         "endYear": 2026,
                         "engine": "1.2L PureTech / 1.6L VTi",
@@ -3466,7 +3466,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Peugeot 206 & 207 (1999-2013) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Peugeot 206 & 207 (1999-2013)",
                         "startYear": 1999,
                         "endYear": 2013,
                         "engine": "1.4L (TU3JP) / 1.6L (TU5JP4)",
@@ -3501,7 +3501,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Megane": {
                 "generations": [
                     {
-                        "name": "Megane 4 (2017-Present) Grand Coupe 1.6L SCe - جنزير حديد [Timing Chain]",
+                        "name": "Megane 4 (2017-Present) Grand Coupe 1.6L SCe",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.6L 16V Nissan-Renault SCe (H4M - 115hp)",
@@ -3526,7 +3526,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)"
                     },
                     {
-                        "name": "Megane 4 (2017-Present) 1.2 TCe / 1.3 TCe Turbo - جنزير حديد [Timing Chain]",
+                        "name": "Megane 4 (2017-Present) 1.2 TCe / 1.3 TCe Turbo",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.2L TCe (130hp) / 1.3L TCe GPF (140hp)",
@@ -3551,7 +3551,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "سيارات مجموعة VAG والألماني تشترط بطارية AGM مع التكويد الإلكتروني (Battery Registration)"
                     },
                     {
-                        "name": "Megane 3 (2009-2016) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Megane 3 (2009-2016)",
                         "startYear": 2009,
                         "endYear": 2016,
                         "engine": "1.6L 16V (K4M - 110hp) / 2.0L CVT (M4R - 140hp)",
@@ -3578,7 +3578,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "مواصفة قياسية أوروبية قطب غاطس (DIN)"
                     },
                     {
-                        "name": "Megane 2 (2003-2009) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Megane 2 (2003-2009)",
                         "startYear": 2003,
                         "endYear": 2009,
                         "engine": "1.6L 16V (K4M - 115hp) تروس ديphaseur",
@@ -3609,7 +3609,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Logan": {
                 "generations": [
                     {
-                        "name": "Logan MK2 (2014-2022) - الجيل الثاني - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Logan MK2 (2014-2022) - الجيل الثاني",
                         "startYear": 2014,
                         "endYear": 2022,
                         "engine": "1.6L 8V (85hp) / 1.6L 16V (110hp)",
@@ -3636,7 +3636,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة الأصلية المعتمدة من رينو لموديلات محركات K7M و K4M"
                     },
                     {
-                        "name": "Logan MK1 (2009-2013) - الجيل الأول - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Logan MK1 (2009-2013) - الجيل الأول",
                         "startYear": 2009,
                         "endYear": 2013,
                         "engine": "1.6L 8V (K7M - 90hp) / 1.6L 16V (K4M - 105hp)",
@@ -3667,7 +3667,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Sandero & Stepway": {
                 "generations": [
                     {
-                        "name": "Sandero / Stepway MK2 (2014-2023) - الجيل الثاني - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Sandero / Stepway MK2 (2014-2023) - الجيل الثاني",
                         "startYear": 2014,
                         "endYear": 2023,
                         "engine": "1.6L 16V (110hp) / 1.6L 8V (85hp)",
@@ -3694,7 +3694,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة الأصلية المعتمدة من رينو لموديلات محركات K7M و K4M"
                     },
                     {
-                        "name": "Sandero / Stepway MK1 (2009-2013) - الجيل الأول - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Sandero / Stepway MK1 (2009-2013) - الجيل الأول",
                         "startYear": 2009,
                         "endYear": 2013,
                         "engine": "1.6L 8V (K7M - 90hp) / 1.6L 16V",
@@ -3725,7 +3725,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Fluence": {
                 "generations": [
                     {
-                        "name": "Fluence Facelift (2013-2017) - جنزير حديد [Timing Chain]",
+                        "name": "Fluence Facelift (2013-2017)",
                         "startYear": 2013,
                         "endYear": 2017,
                         "engine": "1.6L 16V Nissan-Renault (HR16DE / H4M - 115hp)",
@@ -3750,7 +3750,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية الموصى بها من المصنع لسيدان الفئة المدمجة"
                     },
                     {
-                        "name": "Fluence Pre-Facelift (2010-2012) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Fluence Pre-Facelift (2010-2012)",
                         "startYear": 2010,
                         "endYear": 2012,
                         "engine": "1.6L 16V (K4M - 110hp)",
@@ -3781,7 +3781,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Duster": {
                 "generations": [
                     {
-                        "name": "Duster Gen 2 (2018-Present) - الجيل الثاني - جنزير حديد [Timing Chain]",
+                        "name": "Duster Gen 2 (2018-Present) - الجيل الثاني",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.6L 16V (H4M - 115hp) / 1.2L TCe Turbo",
@@ -3806,7 +3806,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "موديلات الجيل الثاني مجهزة بنظام Stop/Start وتتطلب بطارية EFB"
                     },
                     {
-                        "name": "Duster Gen 1 (2011-2017) - الجيل الأول - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Duster Gen 1 (2011-2017) - الجيل الأول",
                         "startYear": 2011,
                         "endYear": 2017,
                         "engine": "1.6L 16V (K4M - 105hp) / 2.0L 16V (F4R - 135hp)",
@@ -3837,7 +3837,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Kadjar": {
                 "generations": [
                     {
-                        "name": "Kadjar (2016-2022) - جنزير حديد [Timing Chain]",
+                        "name": "Kadjar (2016-2022)",
                         "startYear": 2016,
                         "endYear": 2022,
                         "engine": "1.2L TCe Turbo (H5Ft - 130hp) / 1.3L TCe Turbo (140hp)",
@@ -3866,7 +3866,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Captur": {
                 "generations": [
                     {
-                        "name": "Captur Gen 1 & 2 (2014-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Captur Gen 1 & 2 (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "0.9L / 1.2L TCe (120hp) / 1.3L TCe Turbo (130hp)",
@@ -3895,7 +3895,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Clio": {
                 "generations": [
                     {
-                        "name": "Clio 4 & 5 (2013-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Clio 4 & 5 (2013-Present)",
                         "startYear": 2013,
                         "endYear": 2026,
                         "engine": "0.9L TCe / 1.2L 16V / 1.0L TCe (100hp)",
@@ -3920,7 +3920,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)"
                     },
                     {
-                        "name": "Clio 2 & 3 (1998-2012) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Clio 2 & 3 (1998-2012)",
                         "startYear": 1998,
                         "endYear": 2012,
                         "engine": "1.2L / 1.4L / 1.6L 16V (K4M/K4J)",
@@ -3951,7 +3951,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Austral": {
                 "generations": [
                     {
-                        "name": "Austral (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Austral (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.3L TCe Turbo Mild Hybrid 12V (150hp / 160hp)",
@@ -3984,7 +3984,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Optra": {
                 "generations": [
                     {
-                        "name": "Optra J200 الشكل القديم (2005-2014) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Optra J200 الشكل القديم (2005-2014)",
                         "startYear": 2005,
                         "endYear": 2014,
                         "engine": "1.6L E-TEC II (DOHC 16V)",
@@ -4011,7 +4011,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "بطارية قياسية 12V خالية من الصيانة (Sealed Maintenance Free)"
                     },
                     {
-                        "name": "New Optra الشكل الجديد (2015-2023) - جنزير حديد [Timing Chain]",
+                        "name": "New Optra الشكل الجديد (2015-2023)",
                         "startYear": 2015,
                         "endYear": 2023,
                         "engine": "1.5L S-TEC III (DOHC 16V DVVT)",
@@ -4042,7 +4042,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Cruze": {
                 "generations": [
                     {
-                        "name": "Cruze J300 (2009-2017) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Cruze J300 (2009-2017)",
                         "startYear": 2009,
                         "endYear": 2017,
                         "engine": "1.6L Ecotec (A16XER DOHC 16V)",
@@ -4073,7 +4073,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Aveo": {
                 "generations": [
                     {
-                        "name": "Aveo T250 (2006-2020) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Aveo T250 (2006-2020)",
                         "startYear": 2006,
                         "endYear": 2020,
                         "engine": "1.5L SOHC E-TEC II (8V)",
@@ -4104,7 +4104,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Lanos": {
                 "generations": [
                     {
-                        "name": "Lanos T100 (1997-2020 Daewoo/Chevrolet) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Lanos T100 (1997-2020 Daewoo/Chevrolet)",
                         "startYear": 1997,
                         "endYear": 2020,
                         "engine": "1.5L SOHC (A15SMS 8V 86hp)",
@@ -4135,7 +4135,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Captiva": {
                 "generations": [
                     {
-                        "name": "Captiva Gen 2 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Captiva Gen 2 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (Baojun Platform)",
@@ -4160,7 +4160,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "External In-Line (فلتر بنزين خارجي في الشاسيه أو حوض المحرك)"
                     },
                     {
-                        "name": "Captiva Gen 1 (2007-2016) - جنزير حديد [Timing Chain]",
+                        "name": "Captiva Gen 1 (2007-2016)",
                         "startYear": 2007,
                         "endYear": 2016,
                         "engine": "2.4L / 3.2L V6",
@@ -4189,7 +4189,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Groove & Spark": {
                 "generations": [
                     {
-                        "name": "Groove (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Groove (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L DOHC 16V",
@@ -4214,7 +4214,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Spark (2008-2016) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Spark (2008-2016)",
                         "startYear": 2008,
                         "endYear": 2016,
                         "engine": "1.0L / 1.2L S-TEC",
@@ -4247,7 +4247,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Granta": {
                 "generations": [
                     {
-                        "name": "Granta (2015-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Granta (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.6L (8-Valve VAZ-11186 / 16-Valve VAZ-21127)",
@@ -4278,7 +4278,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "2107 / 2105": {
                 "generations": [
                     {
-                        "name": "Lada 2107 / 2105 (1982-2014) - جنزير حديد [Timing Chain]",
+                        "name": "Lada 2107 / 2105 (1982-2014)",
                         "startYear": 1982,
                         "endYear": 2014,
                         "engine": "1.5L / 1.6L VAZ-2103 / 2106 (جنزير مزدوج)",
@@ -4311,7 +4311,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Nubira": {
                 "generations": [
                     {
-                        "name": "Nubira J100/J150 (1998-2009) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Nubira J100/J150 (1998-2009)",
                         "startYear": 1998,
                         "endYear": 2009,
                         "engine": "1.6L E-TEC",
@@ -4335,7 +4335,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Lanos": {
                 "generations": [
                     {
-                        "name": "Lanos T100 (1997-2008) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Lanos T100 (1997-2008)",
                         "startYear": 1997,
                         "endYear": 2008,
                         "engine": "1.5L 8V SOHC",
@@ -4363,7 +4363,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "A516": {
                 "generations": [
                     {
-                        "name": "A516 (2006-2013) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "A516 (2006-2013)",
                         "startYear": 2006,
                         "endYear": 2013,
                         "engine": "1.6L Acteco",
@@ -4387,7 +4387,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tiggo": {
                 "generations": [
                     {
-                        "name": "Tiggo (2008-2014) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Tiggo (2008-2014)",
                         "startYear": 2008,
                         "endYear": 2014,
                         "engine": "1.6L / 2.0L",
@@ -4413,7 +4413,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "128": {
                 "generations": [
                     {
-                        "name": "Nasr 128 (1971-2006) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Nasr 128 (1971-2006)",
                         "startYear": 1971,
                         "endYear": 2006,
                         "engine": "1.1L / 1.3L SOHC",
@@ -4437,7 +4437,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "131": {
                 "generations": [
                     {
-                        "name": "Nasr 131 (1979-2001) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Nasr 131 (1979-2001)",
                         "startYear": 1979,
                         "endYear": 2001,
                         "engine": "1.4L / 1.6L DOHC (Sahin)",
@@ -4465,7 +4465,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Gen 2": {
                 "generations": [
                     {
-                        "name": "Gen 2 (2004-2012) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Gen 2 (2004-2012)",
                         "startYear": 2004,
                         "endYear": 2012,
                         "engine": "1.6L CamPro",
@@ -4489,7 +4489,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Saga": {
                 "generations": [
                     {
-                        "name": "Saga (2019-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Saga (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.3L VVT",
@@ -4517,7 +4517,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Swift": {
                 "generations": [
                     {
-                        "name": "Swift Gen 4 / Gen 3 (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Swift Gen 4 / Gen 3 (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.2L Dualjet (K12M/K12N 4-Cyl)",
@@ -4542,7 +4542,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "المواصفة القياسية المعتمدة من سوزوكي لسيارات السيدان والهاتشباك المدمجة"
                     },
                     {
-                        "name": "Swift Gen 2 (2011-2016) - جنزير حديد [Timing Chain]",
+                        "name": "Swift Gen 2 (2011-2016)",
                         "startYear": 2011,
                         "endYear": 2016,
                         "engine": "1.2L / 1.4L K12B / K14B",
@@ -4571,7 +4571,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Dzire": {
                 "generations": [
                     {
-                        "name": "Dzire (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Dzire (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.2L K12M DOHC 16V",
@@ -4600,7 +4600,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Ciaz": {
                 "generations": [
                     {
-                        "name": "Ciaz (2015-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Ciaz (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.4L / 1.5L K14B / K15B DOHC 16V",
@@ -4629,7 +4629,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Baleno & Fronx": {
                 "generations": [
                     {
-                        "name": "Baleno / Fronx (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Baleno / Fronx (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L K15B / 1.4L K14B",
@@ -4658,7 +4658,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Vitara & Grand Vitara": {
                 "generations": [
                     {
-                        "name": "Vitara / Grand Vitara (2015-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Vitara / Grand Vitara (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.6L M16A / 1.5L Dualjet K15C",
@@ -4687,7 +4687,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Ertiga": {
                 "generations": [
                     {
-                        "name": "Ertiga (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Ertiga (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.5L K15B DOHC 16V",
@@ -4716,7 +4716,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Jimny": {
                 "generations": [
                     {
-                        "name": "Jimny JB74 (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Jimny JB74 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L K15B DOHC",
@@ -4745,7 +4745,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Alto & Celerio": {
                 "generations": [
                     {
-                        "name": "Alto 800 (2015-Present) 0.8L F8D - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Alto 800 (2015-Present) 0.8L F8D",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "0.8L F8D 3-Cylinder SOHC",
@@ -4772,7 +4772,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "سعة ومقاس الصندوق الصغير المخصص لحوض محرك سيارات المدينة الصغيرة"
                     },
                     {
-                        "name": "Celerio (2015-Present) 1.0L K10B - جنزير حديد [Timing Chain]",
+                        "name": "Celerio (2015-Present) 1.0L K10B",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.0L K10B 3-Cylinder DOHC (جنزير حديد)",
@@ -4805,7 +4805,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tipo": {
                 "generations": [
                     {
-                        "name": "Tipo 1.6L E.TorQ أوتوماتيك (2016-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Tipo 1.6L E.TorQ أوتوماتيك (2016-Present)",
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "1.6L E.TorQ EVO (110 hp)",
@@ -4832,7 +4832,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "timingBeltMonths": 0
                     },
                     {
-                        "name": "Tipo 1.4L Fire مانيوال (2016-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Tipo 1.4L Fire مانيوال (2016-Present)",
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "1.4L Fire 16V (95 hp)",
@@ -4863,7 +4863,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "500 & 500X": {
                 "generations": [
                     {
-                        "name": "500X (2015-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "500X (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.4L MultiAir Turbo (140hp) / 1.3L FireFly Turbo",
@@ -4890,7 +4890,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Fiat 500 (2008-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Fiat 500 (2008-Present)",
                         "startYear": 2008,
                         "endYear": 2026,
                         "engine": "1.2L 8V Fire (69hp) / 1.4L 16V",
@@ -4921,7 +4921,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Punto": {
                 "generations": [
                     {
-                        "name": "Grande Punto & Punto Evo (2006-2018) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Grande Punto & Punto Evo (2006-2018)",
                         "startYear": 2006,
                         "endYear": 2018,
                         "engine": "1.4L 8V Fire (77hp)",
@@ -4952,7 +4952,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Linea & Siena": {
                 "generations": [
                     {
-                        "name": "Linea & Siena (2002-2016) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Linea & Siena (2002-2016)",
                         "startYear": 2002,
                         "endYear": 2016,
                         "engine": "1.4L Fire 8V/16V / 1.6L E-TorQ",
@@ -4985,7 +4985,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Jetour X70": {
                 "generations": [
                     {
-                        "name": "X70 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X70 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (156 hp)",
@@ -5007,7 +5007,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Jetour X70 Plus": {
                 "generations": [
                     {
-                        "name": "X70 Plus (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X70 Plus (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo / 1.6L TGDI (197 hp)",
@@ -5029,7 +5029,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Jetour X90 Plus": {
                 "generations": [
                     {
-                        "name": "X90 Plus (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X90 Plus (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.6L TGDI (197 hp) / 2.0L Turbo",
@@ -5051,7 +5051,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Jetour Dashing": {
                 "generations": [
                     {
-                        "name": "Dashing (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Dashing (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.5L Turbo / 1.6L TGDI (197 hp)",
@@ -5073,7 +5073,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Jetour T2 (Traveller)": {
                 "generations": [
                     {
-                        "name": "T2 4x4 (2023-Present) - جنزير حديد [Timing Chain]",
+                        "name": "T2 4x4 (2023-Present)",
                         "startYear": 2023,
                         "endYear": 2026,
                         "engine": "1.5L Turbo / 2.0L TGDI 4WD (254 hp)",
@@ -5099,7 +5099,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Coolray": {
                 "generations": [
                     {
-                        "name": "Coolray Gen 1 (2020-2023) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Coolray Gen 1 (2020-2023)",
                         "startYear": 2020,
                         "endYear": 2023,
                         "engine": "1.5L 3-Cyl Turbo (177 hp)",
@@ -5117,7 +5117,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Coolray New Gen (2023-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Coolray New Gen (2023-Present)",
                         "startYear": 2023,
                         "endYear": 2026,
                         "engine": "1.5L 4-Cyl NordThor Turbo (174 hp)",
@@ -5139,7 +5139,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Emgrand": {
                 "generations": [
                     {
-                        "name": "Emgrand 7 (2013-2019) - جنزير حديد [Timing Chain]",
+                        "name": "Emgrand 7 (2013-2019)",
                         "startYear": 2013,
                         "endYear": 2019,
                         "engine": "1.5L DVVT (107 hp)",
@@ -5157,7 +5157,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Emgrand 4th Gen (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Emgrand 4th Gen (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.5L BHE15 (114 hp)",
@@ -5179,7 +5179,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Okavango": {
                 "generations": [
                     {
-                        "name": "Okavango 7-Seater (2021-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Okavango 7-Seater (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo 48V Mild Hybrid (190 hp)",
@@ -5201,7 +5201,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "GX3 Pro": {
                 "generations": [
                     {
-                        "name": "GX3 Pro (2023-Present) - جنزير حديد [Timing Chain]",
+                        "name": "GX3 Pro (2023-Present)",
                         "startYear": 2023,
                         "endYear": 2026,
                         "engine": "1.5L DVVT (103 hp)",
@@ -5223,7 +5223,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Starray": {
                 "generations": [
                     {
-                        "name": "Starray (2024-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Starray (2024-Present)",
                         "startYear": 2024,
                         "endYear": 2026,
                         "engine": "1.5L Turbo / 2.0L Turbo Drive-E",
@@ -5249,7 +5249,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Alsvin": {
                 "generations": [
                     {
-                        "name": "Alsvin (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Alsvin (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.4L / 1.5L BlueCore (107 hp)",
@@ -5271,7 +5271,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Eado Plus": {
                 "generations": [
                     {
-                        "name": "Eado Plus (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Eado Plus (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.4L Turbo BlueCore (158 hp)",
@@ -5293,7 +5293,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "CS35 Plus": {
                 "generations": [
                     {
-                        "name": "CS35 Plus (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "CS35 Plus (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.4L Turbo BlueCore (156 hp)",
@@ -5315,7 +5315,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "CS55 Plus": {
                 "generations": [
                     {
-                        "name": "CS55 Plus (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "CS55 Plus (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.5L Turbo BlueCore (185 hp)",
@@ -5337,7 +5337,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "UNI-T": {
                 "generations": [
                     {
-                        "name": "UNI-T (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "UNI-T (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo BlueCore (180 hp)",
@@ -5359,7 +5359,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "UNI-K": {
                 "generations": [
                     {
-                        "name": "UNI-K (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "UNI-K (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "2.0L Turbo BlueCore (233 hp)",
@@ -5385,7 +5385,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Haval H6": {
                 "generations": [
                     {
-                        "name": "H6 3rd Gen (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "H6 3rd Gen (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo GDIT (152 hp)",
@@ -5407,7 +5407,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Haval Jolion": {
                 "generations": [
                     {
-                        "name": "Jolion (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Jolion (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (148 hp)",
@@ -5425,7 +5425,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Jolion Pro (2024-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Jolion Pro (2024-Present)",
                         "startYear": 2024,
                         "endYear": 2026,
                         "engine": "1.5L Turbo GDIT (150 hp)",
@@ -5451,7 +5451,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Baic X3": {
                 "generations": [
                     {
-                        "name": "X3 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X3 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L A151 (116 hp)",
@@ -5473,7 +5473,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Baic X55": {
                 "generations": [
                     {
-                        "name": "X55 II (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X55 II (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.5L Turbo VGT (188 hp)",
@@ -5495,7 +5495,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Baic X7": {
                 "generations": [
                     {
-                        "name": "X7 (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X7 (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (188 hp)",
@@ -5521,7 +5521,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Glory 330": {
                 "generations": [
                     {
-                        "name": "Glory 330 (2016-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Glory 330 (2016-Present)",
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "1.2L / 1.5L DK15 (115 hp)",
@@ -5543,7 +5543,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Glory 580": {
                 "generations": [
                     {
-                        "name": "Glory 580 7-Seater (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Glory 580 7-Seater (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.5L Turbo SFG15T (148 hp)",
@@ -5565,7 +5565,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Glory IX5": {
                 "generations": [
                     {
-                        "name": "Eagle IX5 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Eagle IX5 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L Turbo (150 hp)",
@@ -5591,7 +5591,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Civic": {
                 "generations": [
                     {
-                        "name": "Civic 9th Gen (2012-2016) - جنزير حديد [Timing Chain]",
+                        "name": "Civic 9th Gen (2012-2016)",
                         "startYear": 2012,
                         "endYear": 2016,
                         "engine": "1.6L i-VTEC (125 hp)",
@@ -5609,7 +5609,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Civic 10th Gen (2016-2021) - جنزير حديد [Timing Chain]",
+                        "name": "Civic 10th Gen (2016-2021)",
                         "startYear": 2016,
                         "endYear": 2021,
                         "engine": "1.6L i-VTEC / 1.5L Turbo (180 hp)",
@@ -5627,7 +5627,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Civic 11th Gen (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Civic 11th Gen (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L VTEC Turbo (180 hp)",
@@ -5649,7 +5649,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "City": {
                 "generations": [
                     {
-                        "name": "City Gen 5 (2014-2020) - جنزير حديد [Timing Chain]",
+                        "name": "City Gen 5 (2014-2020)",
                         "startYear": 2014,
                         "endYear": 2020,
                         "engine": "1.5L i-VTEC (118 hp)",
@@ -5667,7 +5667,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "City Gen 6 (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "City Gen 6 (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L DOHC i-VTEC (121 hp)",
@@ -5689,7 +5689,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "CR-V": {
                 "generations": [
                     {
-                        "name": "CR-V Gen 5 (2017-2022) - جنزير حديد [Timing Chain]",
+                        "name": "CR-V Gen 5 (2017-2022)",
                         "startYear": 2017,
                         "endYear": 2022,
                         "engine": "1.5L VTEC Turbo (190 hp)",
@@ -5707,7 +5707,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "CR-V Gen 6 (2023-Present) - جنزير حديد [Timing Chain]",
+                        "name": "CR-V Gen 6 (2023-Present)",
                         "startYear": 2023,
                         "endYear": 2026,
                         "engine": "1.5L VTEC Turbo (190 hp)",
@@ -5729,7 +5729,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "HR-V": {
                 "generations": [
                     {
-                        "name": "HR-V (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "HR-V (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L i-VTEC (121 hp)",
@@ -5751,7 +5751,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Accord": {
                 "generations": [
                     {
-                        "name": "Accord 10th Gen (2018-2023) - جنزير حديد [Timing Chain]",
+                        "name": "Accord 10th Gen (2018-2023)",
                         "startYear": 2018,
                         "endYear": 2023,
                         "engine": "1.5L VTEC Turbo (192 hp)",
@@ -5777,7 +5777,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Mazda 3": {
                 "generations": [
                     {
-                        "name": "Mazda 3 Gen 2 (2009-2013) - جنزير حديد [Timing Chain]",
+                        "name": "Mazda 3 Gen 2 (2009-2013)",
                         "startYear": 2009,
                         "endYear": 2013,
                         "engine": "1.6L MZR (105 hp)",
@@ -5797,7 +5797,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterMonths": 24
                     },
                     {
-                        "name": "Mazda 3 Gen 3 (2014-2019) - جنزير حديد [Timing Chain]",
+                        "name": "Mazda 3 Gen 3 (2014-2019)",
                         "startYear": 2014,
                         "endYear": 2019,
                         "engine": "1.6L / 2.0L SkyActiv-G (120 hp)",
@@ -5815,7 +5815,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Mazda 3 Gen 4 (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Mazda 3 Gen 4 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L / 2.0L SkyActiv-G (155 hp)",
@@ -5837,7 +5837,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Mazda 6": {
                 "generations": [
                     {
-                        "name": "Mazda 6 (2014-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Mazda 6 (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "2.0L / 2.5L SkyActiv-G (187 hp)",
@@ -5859,7 +5859,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "CX-30": {
                 "generations": [
                     {
-                        "name": "CX-30 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "CX-30 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "2.0L SkyActiv-G (155 hp)",
@@ -5881,7 +5881,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "CX-5": {
                 "generations": [
                     {
-                        "name": "CX-5 (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "CX-5 (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "2.0L / 2.5L SkyActiv-G (187 hp)",
@@ -5907,7 +5907,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "XV / Crosstrek": {
                 "generations": [
                     {
-                        "name": "XV Gen 2 (2018-2023) - جنزير حديد [Timing Chain]",
+                        "name": "XV Gen 2 (2018-2023)",
                         "startYear": 2018,
                         "endYear": 2023,
                         "engine": "1.6L / 2.0L Boxer FB20 AWD",
@@ -5927,7 +5927,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterMonths": 24
                     },
                     {
-                        "name": "Crosstrek (2024-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Crosstrek (2024-Present)",
                         "startYear": 2024,
                         "endYear": 2026,
                         "engine": "2.0L Boxer FB20 AWD (152 hp)",
@@ -5949,7 +5949,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Impreza": {
                 "generations": [
                     {
-                        "name": "Impreza (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Impreza (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.6L / 2.0L Boxer AWD",
@@ -5971,7 +5971,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Forester": {
                 "generations": [
                     {
-                        "name": "Forester (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Forester (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "2.0L / 2.5L Boxer FB25 AWD (182 hp)",
@@ -5997,7 +5997,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "C-Class": {
                 "generations": [
                     {
-                        "name": "C-Class W204 (2008-2014) - جنزير حديد [Timing Chain]",
+                        "name": "C-Class W204 (2008-2014)",
                         "startYear": 2008,
                         "endYear": 2014,
                         "engine": "1.8L Turbo M271 (C180 / C200)",
@@ -6015,7 +6015,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "C-Class W205 (2014-2021) - جنزير حديد [Timing Chain]",
+                        "name": "C-Class W205 (2014-2021)",
                         "startYear": 2014,
                         "endYear": 2021,
                         "engine": "1.6L / 1.5L Turbo M274 / M264 (C180 / C200)",
@@ -6033,7 +6033,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "C-Class W206 (2021-Present) - جنزير حديد [Timing Chain]",
+                        "name": "C-Class W206 (2021-Present)",
                         "startYear": 2021,
                         "endYear": 2026,
                         "engine": "1.5L Turbo Mild Hybrid M254 (C180 / C200)",
@@ -6055,7 +6055,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "E-Class": {
                 "generations": [
                     {
-                        "name": "E-Class W212 (2010-2016) - جنزير حديد [Timing Chain]",
+                        "name": "E-Class W212 (2010-2016)",
                         "startYear": 2010,
                         "endYear": 2016,
                         "engine": "1.8L / 2.0L Turbo M274 (E200 / E250)",
@@ -6073,7 +6073,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "E-Class W213 (2016-2023) - جنزير حديد [Timing Chain]",
+                        "name": "E-Class W213 (2016-2023)",
                         "startYear": 2016,
                         "endYear": 2023,
                         "engine": "2.0L Turbo M274 / M264 (E200 / E300)",
@@ -6091,7 +6091,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "E-Class W214 (2023-Present) - جنزير حديد [Timing Chain]",
+                        "name": "E-Class W214 (2023-Present)",
                         "startYear": 2023,
                         "endYear": 2026,
                         "engine": "2.0L Turbo Mild Hybrid M254 (E200)",
@@ -6113,7 +6113,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "A-Class / CLA": {
                 "generations": [
                     {
-                        "name": "A-Class / CLA W177/C118 (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "A-Class / CLA W177/C118 (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.33L Turbo M282 (A180 / A200 / CLA 200)",
@@ -6135,7 +6135,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "GLA / GLB": {
                 "generations": [
                     {
-                        "name": "GLA / GLB H247 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "GLA / GLB H247 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.33L Turbo (GLA 200 / GLB 200 7-Seats)",
@@ -6157,7 +6157,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "GLC": {
                 "generations": [
                     {
-                        "name": "GLC X253 (2016-2022) - جنزير حديد [Timing Chain]",
+                        "name": "GLC X253 (2016-2022)",
                         "startYear": 2016,
                         "endYear": 2022,
                         "engine": "2.0L Turbo M274 / M264 (GLC 200 / GLC 300)",
@@ -6175,7 +6175,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "GLC X254 (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "GLC X254 (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "2.0L Turbo Mild Hybrid M254 (GLC 200 / GLC 300)",
@@ -6201,7 +6201,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "3-Series": {
                 "generations": [
                     {
-                        "name": "3-Series F30 (2012-2019) - جنزير حديد [Timing Chain]",
+                        "name": "3-Series F30 (2012-2019)",
                         "startYear": 2012,
                         "endYear": 2019,
                         "engine": "1.6L N13 / 2.0L B48 (316i / 318i / 320i)",
@@ -6219,7 +6219,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "3-Series G20 (2019-Present) - جنزير حديد [Timing Chain]",
+                        "name": "3-Series G20 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "2.0L Turbo B48 (320i / 330i)",
@@ -6241,7 +6241,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "5-Series": {
                 "generations": [
                     {
-                        "name": "5-Series F10 (2010-2016) - جنزير حديد [Timing Chain]",
+                        "name": "5-Series F10 (2010-2016)",
                         "startYear": 2010,
                         "endYear": 2016,
                         "engine": "2.0L Turbo N20 (520i / 528i)",
@@ -6259,7 +6259,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "5-Series G30 (2017-2023) - جنزير حديد [Timing Chain]",
+                        "name": "5-Series G30 (2017-2023)",
                         "startYear": 2017,
                         "endYear": 2023,
                         "engine": "2.0L Turbo B48 (520i / 530i)",
@@ -6277,7 +6277,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "5-Series G60 (2024-Present) - جنزير حديد [Timing Chain]",
+                        "name": "5-Series G60 (2024-Present)",
                         "startYear": 2024,
                         "endYear": 2026,
                         "engine": "2.0L Turbo B48 Mild Hybrid (520i)",
@@ -6299,7 +6299,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "1-Series / 2-Series GC": {
                 "generations": [
                     {
-                        "name": "F40 / F44 (2020-Present) - جنزير حديد [Timing Chain]",
+                        "name": "F40 / F44 (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.5L 3-Cyl Turbo B38 (118i / 218i GC)",
@@ -6321,7 +6321,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "X1": {
                 "generations": [
                     {
-                        "name": "X1 F48 (2015-2022) - جنزير حديد [Timing Chain]",
+                        "name": "X1 F48 (2015-2022)",
                         "startYear": 2015,
                         "endYear": 2022,
                         "engine": "1.5L Turbo B38 (sDrive18i) / 2.0L",
@@ -6339,7 +6339,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "X1 U11 (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X1 U11 (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.5L Turbo B38 (sDrive18i - 136 hp)",
@@ -6361,7 +6361,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "X3": {
                 "generations": [
                     {
-                        "name": "X3 G01 (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X3 G01 (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "2.0L Turbo B48 (xDrive20i / 30i)",
@@ -6383,7 +6383,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "X5": {
                 "generations": [
                     {
-                        "name": "X5 G05 (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "X5 G05 (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "3.0L Turbo B58 (xDrive40i - 340 hp)",
@@ -6409,7 +6409,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "A3": {
                 "generations": [
                     {
-                        "name": "A3 8V (2013-2020) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "A3 8V (2013-2020)",
                         "startYear": 2013,
                         "endYear": 2020,
                         "engine": "1.4L TFSI (122 hp / 150 hp)",
@@ -6427,7 +6427,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "A3 8Y (2020-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "A3 8Y (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.4L TFSI / 1.5L Mild Hybrid (150 hp)",
@@ -6449,7 +6449,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "A4": {
                 "generations": [
                     {
-                        "name": "A4 B9 (2016-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "A4 B9 (2016-Present)",
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "1.4L / 2.0L TFSI (150 hp / 190 hp)",
@@ -6471,7 +6471,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "A6": {
                 "generations": [
                     {
-                        "name": "A6 C8 (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "A6 C8 (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "2.0L TFSI Quattro (245 hp)",
@@ -6493,7 +6493,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Q3": {
                 "generations": [
                     {
-                        "name": "Q3 F3 (2019-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Q3 F3 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.4L TFSI (35 TFSI - 150 hp)",
@@ -6515,7 +6515,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Q5": {
                 "generations": [
                     {
-                        "name": "Q5 FY (2017-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Q5 FY (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "2.0L TFSI Quattro (252 hp)",
@@ -6541,7 +6541,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Ibiza": {
                 "generations": [
                     {
-                        "name": "Ibiza 6J (2009-2017) - جنزير حديد [Timing Chain]",
+                        "name": "Ibiza 6J (2009-2017)",
                         "startYear": 2009,
                         "endYear": 2017,
                         "engine": "1.6L MPI (105 hp)",
@@ -6559,7 +6559,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Ibiza 6F (2017-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Ibiza 6F (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.6L MPI (110 hp) / 1.0L TSI",
@@ -6581,7 +6581,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Leon": {
                 "generations": [
                     {
-                        "name": "Leon 5F (2013-2020) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Leon 5F (2013-2020)",
                         "startYear": 2013,
                         "endYear": 2020,
                         "engine": "1.2L TSI / 1.4L TSI (140 hp / 150 hp)",
@@ -6599,7 +6599,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Leon KL (2020-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Leon KL (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.4L TSI (150 hp)",
@@ -6621,7 +6621,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Ateca": {
                 "generations": [
                     {
-                        "name": "Ateca (2017-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Ateca (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.4L TSI (150 hp)",
@@ -6643,7 +6643,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Arona": {
                 "generations": [
                     {
-                        "name": "Arona (2018-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Arona (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.6L MPI (110 hp) / 1.0L TSI",
@@ -6665,7 +6665,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Tarraco": {
                 "generations": [
                     {
-                        "name": "Tarraco 7-Seater (2019-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Tarraco 7-Seater (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.4L TSI (150 hp)",
@@ -6691,7 +6691,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Astra": {
                 "generations": [
                     {
-                        "name": "Astra J (2010-2016) 1.6L - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Astra J (2010-2016) 1.6L",
                         "startYear": 2010,
                         "endYear": 2016,
                         "engine": "1.6L Ecotec (A16XER 115hp)",
@@ -6718,7 +6718,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "مواصفة قياسية أوروبية قطب غاطس (DIN)"
                     },
                     {
-                        "name": "Astra J (2010-2016) 1.4L Turbo - جنزير حديد [Timing Chain]",
+                        "name": "Astra J (2010-2016) 1.4L Turbo",
                         "startYear": 2010,
                         "endYear": 2016,
                         "engine": "1.4L Turbo Ecotec (A14NET 140hp)",
@@ -6743,7 +6743,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "batteryNotes": "مواصفة قياسية أوروبية قطب غاطس (DIN)"
                     },
                     {
-                        "name": "Astra K (2016-2021) - جنزير حديد [Timing Chain]",
+                        "name": "Astra K (2016-2021)",
                         "startYear": 2016,
                         "endYear": 2021,
                         "engine": "1.4L Turbo Direct Injection (150 hp)",
@@ -6761,7 +6761,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Astra L (2022-Present) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "Astra L (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "1.2L PureTech Turbo (130 hp)",
@@ -6783,7 +6783,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Corsa": {
                 "generations": [
                     {
-                        "name": "Corsa E (2015-2019) - جنزير حديد [Timing Chain]",
+                        "name": "Corsa E (2015-2019)",
                         "startYear": 2015,
                         "endYear": 2019,
                         "engine": "1.4L Ecotec (90 hp)",
@@ -6801,7 +6801,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Corsa F (2020-Present) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "Corsa F (2020-Present)",
                         "startYear": 2020,
                         "endYear": 2026,
                         "engine": "1.2L PureTech Turbo (130 hp)",
@@ -6823,7 +6823,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Crossland": {
                 "generations": [
                     {
-                        "name": "Crossland (2018-Present) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "Crossland (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.2L PureTech Turbo (110 hp)",
@@ -6845,7 +6845,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Grandland": {
                 "generations": [
                     {
-                        "name": "Grandland X (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Grandland X (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "1.6L THP Turbo (163 hp)",
@@ -6867,7 +6867,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Insignia": {
                 "generations": [
                     {
-                        "name": "Insignia A (2009-2017) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Insignia A (2009-2017)",
                         "startYear": 2009,
                         "endYear": 2017,
                         "engine": "1.6L Turbo Ecotec (170 hp)",
@@ -6885,7 +6885,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Insignia Grand Sport (2017-2022) - جنزير حديد [Timing Chain]",
+                        "name": "Insignia Grand Sport (2017-2022)",
                         "startYear": 2017,
                         "endYear": 2022,
                         "engine": "1.5L Turbo (165 hp)",
@@ -6911,7 +6911,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Focus": {
                 "generations": [
                     {
-                        "name": "Focus Mk3 (2011-2018) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Focus Mk3 (2011-2018)",
                         "startYear": 2011,
                         "endYear": 2018,
                         "engine": "1.6L Ti-VCT / 1.5L EcoBoost Turbo (150 hp)",
@@ -6929,7 +6929,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Focus Mk4 (2019-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Focus Mk4 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "1.5L 3-Cyl Dragon (123 hp) / 1.5L EcoBoost",
@@ -6951,7 +6951,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Fiesta": {
                 "generations": [
                     {
-                        "name": "Fiesta (2012-2019) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "Fiesta (2012-2019)",
                         "startYear": 2012,
                         "endYear": 2019,
                         "engine": "1.0L EcoBoost / 1.25L / 1.6L",
@@ -6973,7 +6973,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "EcoSport": {
                 "generations": [
                     {
-                        "name": "EcoSport (2014-Present) - سير كاتينة رطب بالزيت [Wet Belt in Oil]",
+                        "name": "EcoSport (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "1.0L EcoBoost (125 hp) / 1.5L Ti-VCT",
@@ -6995,7 +6995,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Kuga": {
                 "generations": [
                     {
-                        "name": "Kuga (2014-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Kuga (2014-Present)",
                         "startYear": 2014,
                         "endYear": 2026,
                         "engine": "1.5L EcoBoost Turbo AWD (180 hp)",
@@ -7021,7 +7021,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Grand Cherokee": {
                 "generations": [
                     {
-                        "name": "Grand Cherokee WK2 (2011-2021) - جنزير حديد [Timing Chain]",
+                        "name": "Grand Cherokee WK2 (2011-2021)",
                         "startYear": 2011,
                         "endYear": 2021,
                         "engine": "5.7L Hemi V8 (360 hp) / 3.6L Pentastar V6",
@@ -7039,7 +7039,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Grand Cherokee WL (2022-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Grand Cherokee WL (2022-Present)",
                         "startYear": 2022,
                         "endYear": 2026,
                         "engine": "3.6L Pentastar V6 (293 hp) / 2.0L Turbo 4xe",
@@ -7061,7 +7061,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Renegade": {
                 "generations": [
                     {
-                        "name": "Renegade (2015-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Renegade (2015-Present)",
                         "startYear": 2015,
                         "endYear": 2026,
                         "engine": "1.4L MultiAir Turbo (140 hp)",
@@ -7083,7 +7083,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Wrangler": {
                 "generations": [
                     {
-                        "name": "Wrangler JK (2007-2018) - جنزير حديد [Timing Chain]",
+                        "name": "Wrangler JK (2007-2018)",
                         "startYear": 2007,
                         "endYear": 2018,
                         "engine": "3.6L Pentastar V6 (285 hp)",
@@ -7101,7 +7101,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
                         "fuelFilterLocation": "In-Tank Module (فلتر غاطس داخل تانك الوقود مدمج مع طلمبة البنزين)"
                     },
                     {
-                        "name": "Wrangler JL (2018-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Wrangler JL (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "3.6L Pentastar V6 / 2.0L Turbo Hurricane (270 hp)",
@@ -7123,7 +7123,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Compass": {
                 "generations": [
                     {
-                        "name": "Compass (2017-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "Compass (2017-Present)",
                         "startYear": 2017,
                         "endYear": 2026,
                         "engine": "1.4L MultiAir Turbo (140 hp) / 2.4L",
@@ -7149,7 +7149,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Charger": {
                 "generations": [
                     {
-                        "name": "Charger LD (2011-2023) - جنزير حديد [Timing Chain]",
+                        "name": "Charger LD (2011-2023)",
                         "startYear": 2011,
                         "endYear": 2023,
                         "engine": "3.6L Pentastar V6 (292 hp) / 5.7L Hemi V8 (370 hp)",
@@ -7171,7 +7171,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Challenger": {
                 "generations": [
                     {
-                        "name": "Challenger (2011-2023) - جنزير حديد [Timing Chain]",
+                        "name": "Challenger (2011-2023)",
                         "startYear": 2011,
                         "endYear": 2023,
                         "engine": "3.6L Pentastar V6 / 5.7L Hemi V8",
@@ -7193,7 +7193,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Durango": {
                 "generations": [
                     {
-                        "name": "Durango WD 7-Seater (2011-Present) - جنزير حديد [Timing Chain]",
+                        "name": "Durango WD 7-Seater (2011-Present)",
                         "startYear": 2011,
                         "endYear": 2026,
                         "engine": "3.6L Pentastar V6 / 5.7L Hemi V8 (360 hp)",
@@ -7219,7 +7219,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "XC60": {
                 "generations": [
                     {
-                        "name": "XC60 Gen 2 (2018-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "XC60 Gen 2 (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "2.0L Turbo Drive-E B5 / T5 (250 hp)",
@@ -7243,7 +7243,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "XC40": {
                 "generations": [
                     {
-                        "name": "XC40 (2018-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "XC40 (2018-Present)",
                         "startYear": 2018,
                         "endYear": 2026,
                         "engine": "2.0L Turbo Drive-E B4 / T4 (197 hp)",
@@ -7265,7 +7265,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "XC90": {
                 "generations": [
                     {
-                        "name": "XC90 Gen 2 (2016-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "XC90 Gen 2 (2016-Present)",
                         "startYear": 2016,
                         "endYear": 2026,
                         "engine": "2.0L Turbo/Supercharged B6 / T6 AWD (316 hp)",
@@ -7289,7 +7289,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "S60": {
                 "generations": [
                     {
-                        "name": "S60 Gen 3 (2019-Present) - سير كاتينة كاوتش [Timing Belt]",
+                        "name": "S60 Gen 3 (2019-Present)",
                         "startYear": 2019,
                         "endYear": 2026,
                         "engine": "2.0L Turbo Drive-E T4 / T5 (190 hp)",
@@ -7315,7 +7315,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "طراز مخصص (Custom Model)": {
                 "generations": [
                     {
-                        "name": "طراز قياسي عام - جنزير حديد [Timing Chain]",
+                        "name": "طراز قياسي عام",
                         "startYear": 1950,
                         "endYear": 2026,
                         "engine": "محرك قياسي",
@@ -7341,7 +7341,7 @@ _targetScope.CAR_BRANDS_CATALOG = {
             "Custom Model": {
                 "generations": [
                     {
-                        "name": "Standard Generation - جنزير حديد [Timing Chain]",
+                        "name": "Standard Generation (طراز قياسي)",
                         "startYear": 1950,
                         "endYear": 2026,
                         "engine": "Standard Engine",
