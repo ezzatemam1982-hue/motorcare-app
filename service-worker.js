@@ -1,4 +1,4 @@
-// MotorCare Service Worker v1.9.9
+// MotorCare Service Worker v2.0.0
 // توفير الدعم الكامل للعمل دون اتصال بالإنترنت (Offline Mode) وتجربة PWA متكاملة
 // نظام إشعارات الموبايل لمواعيد الصيانة الدورية والطارئة (Mobile Push & Local Notifications)
 // استراتيجية التخزين: Cache First, then Network لملفات الواجهة الثابتة لضمان الفتح الفوري بدون إنترنت
@@ -105,27 +105,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // بالنسبة لصفحة HTML الرئيسية (Navigation requests):
-  // استراتيجية Network First مع السقوط الآمن للكاش (Network First, Cache Fallback)
-  // هذا يضمن أن المستخدم يرى دائماً آخر التحديثات فوراً عند اتصاله بالإنترنت، مع الحفاظ على العمل أوفلاين 100%
-  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
-    event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const copy = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          return caches.match(event.request)
-            .then(cached => cached || caches.match('./index.html') || caches.match('./'));
-        })
-    );
-    return;
-  }
-
   // استراتيجية Cache First, then Network لكافة الأصول الثابتة وصفحات الواجهة
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
@@ -188,7 +167,8 @@ self.addEventListener('push', (event) => {
       partId: data.partId || ''
     },
     actions: [
-      { action: 'open_maintenance', title: 'سجل الصيانة الآن 🛠️' }
+      { action: 'open_maintenance', title: 'سجل الصيانة الآن 🛠️' },
+      { action: 'snooze', title: 'تأجيل 24 ساعة ⏰' }
     ]
   };
   event.waitUntil(self.registration.showNotification(title, options));
@@ -198,9 +178,22 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const notifData = event.notification.data || {};
+  const action = event.action;
   const partId = notifData.partId || '';
 
-  // التوجيه المباشر بنسبة 100%: أي نقرة على الإشعار أو أزراره تفتح التطبيق وشاشة تسجيل الصيانة للبند المطلوب فوراً
+  if (action === 'snooze') {
+    // إرسال أمر تأجيل الإشعار إلى صفحات التطبيق المفتوحة
+    event.waitUntil(
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        clientList.forEach((c) => {
+          c.postMessage({ type: 'MOTORCARE_SNOOZE_NOTIFICATION', partId: partId });
+        });
+      })
+    );
+    return;
+  }
+
+  // فتح التطبيق وتوجيهه مباشرة لتبويب الصيانة وبند الصيانة المحدد
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
@@ -236,7 +229,8 @@ self.addEventListener('message', (event) => {
       renotify: true,
       data: payload.data || { tab: 'maintenance', partId: payload.partId || '' },
       actions: [
-        { action: 'open_maintenance', title: 'سجل الصيانة الآن 🛠️' }
+        { action: 'open_maintenance', title: 'سجل الصيانة الآن 🛠️' },
+        { action: 'snooze', title: 'تأجيل 24 ساعة ⏰' }
       ]
     };
     event.waitUntil(self.registration.showNotification(title, options));

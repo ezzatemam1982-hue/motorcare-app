@@ -1,0 +1,23 @@
+Created At: 2026-09-17T12:56:31+03:00
+Completed At: 2026-09-17T12:56:31+03:00
+File Path: `file:///d:/car/MotorCare-App/sw.js`
+Total Lines: 220
+Total Bytes: 9782
+Showing lines 1 to 15
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: // MotorCare Service Worker v1.6.4
+2: // توفير الدعم الكامل للعمل دون اتصال بالإنترنت (Offline Mode) وتجربة PWA متكاملة
+3: // نظام إشعارات الموبايل لمواعيد الصيانة الدورية والطارئة (Mobile Push & Local Notifications)
+4: // استراتيجية التخزين: Cache First, then Network لملفات الواجهة الثابتة لضمان الفتح الفوري بدون إنترنت
+5: 
+6: const CACHE_NAME = 'motorcare-cache-v1.6.4';
+7: 
+8: // 1. قائمة الأصول الثابتة الأساسية للتطبيق (Core Static Assets)
+9: const PRECACHE_ASSETS = [
+10:   './',
+11:   './index.html',
+12:   './obd_codes.json',
+13:   './obd_codes.js',
+14:   './manifest.json',
+15:   './icon.png',
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

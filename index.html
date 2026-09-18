@@ -37,22 +37,400 @@
            [LOCAL STORAGE & OFFLINE ENGINE] محرك التخزين المحلي الآمن وقراءة البيانات فوراً
            ========================================================================== */
         const SafeStorage = {
-            getItem(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
-            setItem(key, val) {
+            _memory: {},
+            _isAvailable: null,
+
+            // اختبار سلامة التخزين المحلي للكشف عن وضع التصفح المتخفي أو الصلاحيات المقيدة
+            checkAvailability() {
+                if (this._isAvailable !== null) return this._isAvailable;
                 try {
-                    localStorage.setItem(key, val);
+                    const testKey = '__mc_probe__';
+                    localStorage.setItem(testKey, testKey);
+                    localStorage.removeItem(testKey);
+                    this._isAvailable = true;
                 } catch(e) {
-                    console.error('LocalStorage error:', e);
+                    this._isAvailable = false;
+                    console.warn('[MotorCare SafeStorage] LocalStorage is unavailable or restricted. Memory fallback active.');
+                }
+                return this._isAvailable;
+            },
+
+            getItem(key) {
+                try {
+                    if (this.checkAvailability()) {
+                        const val = localStorage.getItem(key);
+                        if (val !== null) return val;
+                    }
+                } catch(e) {
+                    console.warn(`[MotorCare SafeStorage] getItem error for "${key}":`, e);
+                }
+                return this._memory[key] !== undefined ? this._memory[key] : null;
+            },
+
+            setItem(key, val) {
+                const strVal = String(val);
+                this._memory[key] = strVal;
+                let writtenToLocal = false;
+                try {
+                    if (this.checkAvailability()) {
+                        localStorage.setItem(key, strVal);
+                        writtenToLocal = true;
+                    }
+                } catch(e) {
+                    console.error(`[MotorCare SafeStorage] setItem failed for "${key}":`, e);
                     if (e && (e.name === 'QuotaExceededError' || e.code === 22 || e.number === -2147024882)) {
                         const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-                        alert(isEn 
-                            ? 'Warning: Local storage limit reached! Please export a JSON backup to keep your records safe.' 
-                            : 'تنبيه: اقتربت مساحة التخزين من الامتلاء! يُرجى تصدير نسخة احتياطية (JSON) لحفظ بياناتك بأمان.');
+                        if (typeof showNotification === 'function') {
+                            showNotification(isEn 
+                                ? 'Local storage full! Cloud & IndexedDB backups active.' 
+                                : 'تنبيه: اقتربت مساحة التخزين من الامتلاء! تم تفعيل الحفظ الاحتياطي في قاعدة IndexedDB والسحاب.', 'warning');
+                        }
                     }
                 }
+
+                // النسخ الاحتياطي التلقائي المتزامن في IndexedDB لبيانات التطبيق والكراج
+                if (key === 'motorCare_AppState_v140' && typeof MotorCareIndexedDB !== 'undefined') {
+                    try {
+                        const parsedObj = JSON.parse(strVal);
+                        MotorCareIndexedDB.setItem(key, parsedObj).catch(() => {});
+                    } catch(jsonErr) {}
+                }
+
+                return writtenToLocal;
             },
-            removeItem(key) { try { localStorage.removeItem(key); } catch(e) {} }
+
+            removeItem(key) {
+                delete this._memory[key];
+                try {
+                    if (this.checkAvailability()) {
+                        localStorage.removeItem(key);
+                    }
+                } catch(e) {}
+                if (typeof MotorCareIndexedDB !== 'undefined') {
+                    MotorCareIndexedDB.removeItem(key).catch(() => {});
+                }
+            },
+
+            // استرجاع آمن ومباشر لكائنات JSON مع معالجة الأخطاء والقيم البديلة
+            getJSON(key, fallback = null) {
+                const raw = this.getItem(key);
+                if (!raw || typeof raw !== 'string') return fallback;
+                try {
+                    const parsed = JSON.parse(raw);
+                    return (parsed !== null && parsed !== undefined) ? parsed : fallback;
+                } catch(e) {
+                    console.warn(`[MotorCare SafeStorage] Corrupted JSON in key "${key}":`, e);
+                    return fallback;
+                }
+            },
+
+            // حفظ آمن ومباشر لكائنات JSON مع معالجة التسلسل والمراجع الدائرية
+            setJSON(key, obj) {
+                try {
+                    const str = JSON.stringify(obj);
+                    return this.setItem(key, str);
+                } catch(e) {
+                    console.error(`[MotorCare SafeStorage] setJSON serialization error for "${key}":`, e);
+                    return false;
+                }
+            }
         };
+
+        /* ==========================================================================
+           [INDEXED-DB OFFLINE PERSISTENCE] محرك التخزين المستقل عالي السعة (IndexedDB)
+           ========================================================================== */
+        const MotorCareIndexedDB = {
+            dbName: 'MotorCareAppDB',
+            dbVersion: 1,
+            storeName: 'app_backup_store',
+            _dbInstance: null,
+
+            async getDB() {
+                if (this._dbInstance) return this._dbInstance;
+                if (typeof window === 'undefined' || !window.indexedDB) return null;
+
+                return new Promise((resolve) => {
+                    try {
+                        const request = window.indexedDB.open(this.dbName, this.dbVersion);
+                        request.onupgradeneeded = (e) => {
+                            const db = e.target.result;
+                            if (!db.objectStoreNames.contains(this.storeName)) {
+                                db.createObjectStore(this.storeName, { keyPath: 'key' });
+                            }
+                        };
+                        request.onsuccess = (e) => {
+                            this._dbInstance = e.target.result;
+                            resolve(this._dbInstance);
+                        };
+                        request.onerror = (e) => {
+                            console.warn('[MotorCare IndexedDB] Open failed:', e);
+                            resolve(null);
+                        };
+                    } catch (err) {
+                        console.warn('[MotorCare IndexedDB] Exception during open:', err);
+                        resolve(null);
+                    }
+                });
+            },
+
+            async setItem(key, value) {
+                try {
+                    const db = await this.getDB();
+                    if (!db) return false;
+                    return new Promise((resolve) => {
+                        const tx = db.transaction([this.storeName], 'readwrite');
+                        const store = tx.objectStore(this.storeName);
+                        const putReq = store.put({ key, value, timestamp: Date.now() });
+                        putReq.onsuccess = () => resolve(true);
+                        putReq.onerror = () => resolve(false);
+                    });
+                } catch(e) {
+                    return false;
+                }
+            },
+
+            async getItem(key) {
+                try {
+                    const db = await this.getDB();
+                    if (!db) return null;
+                    return new Promise((resolve) => {
+                        const tx = db.transaction([this.storeName], 'readonly');
+                        const store = tx.objectStore(this.storeName);
+                        const getReq = store.get(key);
+                        getReq.onsuccess = (e) => {
+                            const record = e.target.result;
+                            resolve(record ? record.value : null);
+                        };
+                        getReq.onerror = () => resolve(null);
+                    });
+                } catch(e) {
+                    return null;
+                }
+            },
+
+            async removeItem(key) {
+                try {
+                    const db = await this.getDB();
+                    if (!db) return false;
+                    return new Promise((resolve) => {
+                        const tx = db.transaction([this.storeName], 'readwrite');
+                        const store = tx.objectStore(this.storeName);
+                        const delReq = store.delete(key);
+                        delReq.onsuccess = () => resolve(true);
+                        delReq.onerror = () => resolve(false);
+                    });
+                } catch(e) {
+                    return false;
+                }
+            }
+        };
+
+        /* ==========================================================================
+           [DATA INTEGRITY & STATE SANITIZATION] طبقة تدقيق وحماية بيانات السيارة والتخزين
+           ========================================================================== */
+        function validateAndSanitizeAppState(state) {
+            if (!state || typeof state !== 'object') {
+                state = {};
+            }
+            if (typeof state.darkMode !== 'boolean') state.darkMode = false;
+            if (state.lang !== 'en' && state.lang !== 'ar') state.lang = 'ar';
+            if (!Array.isArray(state.cars)) state.cars = [];
+
+            // فحص وتدقيق كل سيارة داخل الكراج لمنع أي انهيار في شاشات العرض
+            state.cars = state.cars.filter(car => car && typeof car === 'object').map((car, idx) => {
+                // تدقيق قراءة العداد كعدد صحيح موجب
+                car.odometer = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.parsePositiveInt)
+                    ? MotorCareSecurity.parsePositiveInt(car.odometer, 0, 0, 5000000)
+                    : (Math.max(0, parseInt(car.odometer, 10) || 0));
+
+                car.year = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.parsePositiveInt)
+                    ? MotorCareSecurity.parsePositiveInt(car.year, new Date().getFullYear(), 1950, 2030)
+                    : (parseInt(car.year, 10) || new Date().getFullYear());
+
+                car.dailyKm = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.parsePositiveInt)
+                    ? MotorCareSecurity.parsePositiveInt(car.dailyKm, 40, 1, 2000)
+                    : (parseInt(car.dailyKm, 10) || 40);
+
+                // تنقية النصوص الأساسية
+                car.id = car.id || ('car_' + Date.now() + '_' + idx);
+                car.brand = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.sanitizeText)
+                    ? MotorCareSecurity.sanitizeText(car.brand || 'Unknown', 60)
+                    : String(car.brand || 'Unknown').slice(0, 60);
+
+                car.model = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.sanitizeText)
+                    ? MotorCareSecurity.sanitizeText(car.model || 'Model', 60)
+                    : String(car.model || 'Model').slice(0, 60);
+
+                car.generation = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.sanitizeText)
+                    ? MotorCareSecurity.sanitizeText(car.generation || '', 80)
+                    : String(car.generation || '').slice(0, 80);
+
+                car.license = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.sanitizeText)
+                    ? MotorCareSecurity.sanitizeText(car.license || '', 30)
+                    : String(car.license || '').slice(0, 30);
+
+                car.color = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.sanitizeText)
+                    ? MotorCareSecurity.sanitizeText(car.color || '', 40)
+                    : String(car.color || '').slice(0, 40);
+
+                car.vin = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.sanitizeText)
+                    ? MotorCareSecurity.sanitizeText(car.vin || '', 30)
+                    : String(car.vin || '').slice(0, 30);
+
+                // ضمان سلامة المصفوفات التابعة لمنع أخطاء TypeError (reading 'filter' or 'length')
+                if (!Array.isArray(car.history)) car.history = [];
+                if (!Array.isArray(car.fuelLogs)) car.fuelLogs = [];
+                if (!Array.isArray(car.driverNotes)) car.driverNotes = [];
+                if (!Array.isArray(car.trips)) car.trips = [];
+                if (!Array.isArray(car.expenses)) car.expenses = [];
+                if (!Array.isArray(car.customPMItems)) car.customPMItems = [];
+                if (!car.wearOverrides || typeof car.wearOverrides !== 'object') car.wearOverrides = {};
+                if (!car.battery || typeof car.battery !== 'object') {
+                    car.battery = { brand: '', capacity: '', techType: '', purchaseDate: '', warrantyMonths: 0, isConfigured: false };
+                }
+                if (!car.tiresInfo || typeof car.tiresInfo !== 'object') {
+                    car.tiresInfo = { size: '', dotCode: '', frontPsi: 32, rearPsi: 30, isConfigured: false };
+                }
+                if (!car.documents || typeof car.documents !== 'object') car.documents = {};
+
+                return car;
+            });
+
+            // ضبط مؤشر السيارة النشطة
+            if (typeof state.currentCarIndex !== 'number' || isNaN(state.currentCarIndex) || state.currentCarIndex < 0 || (state.cars.length > 0 && state.currentCarIndex >= state.cars.length)) {
+                state.currentCarIndex = 0;
+            }
+
+            if (typeof state.activeFilter !== 'string') state.activeFilter = 'all';
+
+            return state;
+        }
+
+        // المحرك المركزي الموحد لحفظ حالة التطبيق محلياً وسحابياً بأمان تام
+        function saveAppState(triggerReason = 'general_update') {
+            try {
+                if (typeof validateAndSanitizeAppState === 'function') {
+                    appState = validateAndSanitizeAppState(appState);
+                }
+                SafeStorage.setJSON('motorCare_AppState_v140', appState);
+                if (typeof syncUserDataToCloud === 'function') {
+                    try {
+                        syncUserDataToCloud(triggerReason);
+                    } catch (cloudErr) {
+                        console.warn('[MotorCare Cloud] Non-blocking sync notice:', cloudErr);
+                    }
+                }
+                return true;
+            } catch (err) {
+                console.error('[MotorCare Storage] Critical saveAppState error:', err);
+                return false;
+            }
+        }
+
+        /* ==========================================================================
+           [SECURITY & INPUT SANITIZATION] طبقة الأمان والتحقق وتنقية المدخلات ومنع ثغرات XSS
+           ========================================================================== */
+        const MotorCareSecurity = {
+            // تنظيف وترميز النصوص لمنع هجمات الحقن Cross-Site Scripting (XSS)
+            escapeHtml(str) {
+                if (str === null || str === undefined) return '';
+                return String(str).replace(/[&<>"'/]/g, function (s) {
+                    return {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;',
+                        '/': '&#x2F;'
+                    }[s];
+                });
+            },
+
+            // تنقية النصوص وإزالة محارف التحكم الخفية والحد من الطول الأقصى
+            sanitizeText(str, maxLength = 300) {
+                if (str === null || str === undefined) return '';
+                return String(str)
+                    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // إزالة محارف التحكم غير المرئية
+                    .trim()
+                    .slice(0, maxLength);
+            },
+
+            // التحقق الصارم من الأعداد الصحيحة الموجبة فقط (عداد الكيلومترات، سنة الصنع، الأرقام)
+            parsePositiveInt(val, fallback = 0, min = 0, max = 99999999) {
+                if (val === null || val === undefined) return fallback;
+                const clean = String(val).replace(/[^\d]/g, '');
+                if (!clean) return fallback;
+                const num = parseInt(clean, 10);
+                if (isNaN(num) || !isFinite(num)) return fallback;
+                return Math.min(Math.max(num, min), max);
+            },
+
+            // التحقق الصارم من الأعداد العشرية الموجبة فقط (المسافات، اللترات، التكاليف، الرسوم)
+            parsePositiveFloat(val, fallback = 0, min = 0, max = 99999999) {
+                if (val === null || val === undefined) return fallback;
+                const clean = String(val).replace(/[^\d.]/g, '').replace(/(\..*?)\..*/g, '$1');
+                if (!clean) return fallback;
+                const num = parseFloat(clean);
+                if (isNaN(num) || !isFinite(num)) return fallback;
+                return Math.min(Math.max(num, min), max);
+            },
+
+            // حماية حقول الإدخال في الواجهة لحظياً ضد الأرقام السالبة والرموز غير المسموحة
+            initInputGuards() {
+                // 1. حقول الأعداد الصحيحة (عدادات، سنوات صنع، أيام، ضغط الإطارات)
+                const integerInputIds = [
+                    'newOdometerValueInput', 'newCarOdoInput', 'newCarYearInput',
+                    'editCarOdoInput', 'editCarYearInput', 'fuelOdometerInput',
+                    'recordOdometerInput', 'dtExpenseOdometerInput', 'dtTripOdoStartInput',
+                    'dtTripOdoEndInput', 'customPMKmInput', 'customPMMonthsInput',
+                    'editItemKmInput', 'editItemMonthsInput', 'tiresFrontPsiInput', 'tiresRearPsiInput'
+                ];
+
+                integerInputIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.setAttribute('min', '0');
+                        el.setAttribute('inputmode', 'numeric');
+                        el.addEventListener('keydown', function(e) {
+                            if (e.key === '-' || e.key === '+' || e.key === 'e' || e.key === 'E') {
+                                e.preventDefault();
+                            }
+                        });
+                        el.addEventListener('input', function() {
+                            this.value = this.value.replace(/[^\d]/g, '');
+                        });
+                    }
+                });
+
+                // 2. حقول الأعداد العشرية الموجبة (تكاليف، لترات، استهلاك، أسعار، مسافات)
+                const decimalInputIds = [
+                    'recordPartsCostInput', 'recordLaborCostInput', 'fuelLitersInput',
+                    'fuelCostInput', 'dtExpenseAmountInput', 'dtTripDistanceInput',
+                    'dtTripTollsInput', 'dtTripConsumptionInput', 'dtTripFuelPriceInput'
+                ];
+
+                decimalInputIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.setAttribute('min', '0');
+                        el.setAttribute('inputmode', 'decimal');
+                        el.addEventListener('keydown', function(e) {
+                            if (e.key === '-' || e.key === '+' || e.key === 'e' || e.key === 'E') {
+                                e.preventDefault();
+                            }
+                        });
+                        el.addEventListener('input', function() {
+                            this.value = this.value.replace(/[^\d.]/g, '').replace(/(\..*?)\..*/g, '$1');
+                        });
+                    }
+                });
+            }
+        };
+
+        // تصدير دوال الأمان عالمياً لتسهيل الاستخدام
+        window.MotorCareSecurity = MotorCareSecurity;
+        window.escapeHtml = MotorCareSecurity.escapeHtml;
+        window.sanitizeText = MotorCareSecurity.sanitizeText;
 
         /* ==========================================================================
            [PWA SERVICE WORKER REGISTRATION] تسجيل السيرفيس وركر فورياً عند بداية إقلاع التطبيق
@@ -4143,16 +4521,17 @@ ${verifyUrl}
                 </div>
             </div>
 
-            <!-- زر الانتقال المباشر للبوابة الرسمية الموحدة للنيابة العامة -->
+            <!-- أزرار الانتقال المباشر للبوابات الرسمية المعتمدة في مصر -->
             <div class="space-y-2.5">
-                <a href="https://ppo.gov.eg/ppo/r/ppoportal/ppoportal/traffic?session=8134913289189" target="_blank" rel="noopener noreferrer" class="w-full p-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl flex items-center justify-between gap-3 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer block border border-emerald-400/30 active:scale-98">
-                    <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-white text-xl shrink-0">
+                <!-- 1. بوابة النيابة العامة الرسمية (الرابط الدائم المعتمد) -->
+                <a href="https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices" onclick="openExternalTrafficPortal('https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices'); return false;" target="_blank" rel="noopener noreferrer" class="w-full p-3.5 sm:p-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl flex items-center justify-between gap-3 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer block border border-emerald-400/30 active:scale-98">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white/20 flex items-center justify-center text-white text-xl shrink-0">
                             <i class="fa-solid fa-scale-balanced"></i>
                         </div>
-                        <div class="text-start">
-                            <div class="text-xs sm:text-sm font-black">بوابة النيابة العامة لمخالفات المرور الرسمية 🔗</div>
-                            <div class="text-[11px] text-emerald-100 font-normal">استعلام وسداد مخالفات رخص المركبات ورخص القيادة الموحد</div>
+                        <div class="text-start min-w-0">
+                            <div class="text-xs sm:text-sm font-black truncate">بوابة النيابة العامة لمخالفات المرور الرسمية 🔗</div>
+                            <div class="text-[11px] text-emerald-100 font-normal truncate">استعلام وسداد مخالفات رخص المركبات والقيادة الموحد</div>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 text-xs font-bold bg-white/20 px-3 py-1.5 rounded-xl shrink-0">
@@ -4160,6 +4539,29 @@ ${verifyUrl}
                         <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
                     </div>
                 </a>
+
+                <!-- 2. بوابة مصر الرقمية (البديل السريع المعتمد) -->
+                <a href="https://digital.gov.eg/" onclick="openExternalTrafficPortal('https://digital.gov.eg/'); return false;" target="_blank" rel="noopener noreferrer" class="w-full p-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-800 dark:text-slate-100 rounded-2xl flex items-center justify-between gap-3 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer active:scale-98">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-base shrink-0">
+                            <i class="fa-solid fa-landmark"></i>
+                        </div>
+                        <div class="text-start min-w-0">
+                            <div class="text-xs font-black truncate">بوابة مصر الرقمية (خدمات مركباتي) 🏛️</div>
+                            <div class="text-[10px] text-slate-500 dark:text-slate-400 truncate">سداد المخالفات وبراءة الذمة والتظلمات إلكترونياً</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1 text-[11px] font-bold text-sky-600 dark:text-sky-400 shrink-0">
+                        <span>دخول</span>
+                        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                    </div>
+                </a>
+
+                <!-- 3. زر نسخ رابط البوابة المباشر للمتصفح الخارجي -->
+                <button type="button" onclick="copyTrafficPortalUrl()" class="w-full py-2 px-3 bg-slate-100 dark:bg-slate-800/60 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700/80 cursor-pointer transition-all">
+                    <i class="fa-solid fa-link text-xs text-sky-500"></i>
+                    <span>إذا لم تفتح الصفحة في هاتفك: اضغط هنا لنسخ الرابط المباشر للمتصفح</span>
+                </button>
             </div>
 
             <!-- إرشادات سريعة واضحة -->
@@ -4186,20 +4588,20 @@ ${verifyUrl}
          [MODAL] دليل مراكز الخدمة المعتمدة والتوكيلات في مصر (Service Centers & Dealerships)
          Smart Dynamic Filtering by Car, Brand, Governorate, and Live GPS Navigation
          ========================================================================== -->
-    <div id="serviceCentersModal" class="fixed inset-0 z-50 bg-black/75 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-xs transition-all">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl p-4 sm:p-6 space-y-4 text-start shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92vh] flex flex-col safe-area-pb">
-            <!-- رأس النافذة -->
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center text-lg shadow-md shadow-sky-500/20">
+    <div id="serviceCentersModal" class="fixed inset-0 z-50 bg-black/75 hidden flex items-center justify-center p-2 sm:p-4 backdrop-blur-xs transition-all">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92vh] flex flex-col safe-area-pb">
+            <!-- 1. رأس النافذة المدمج الأنيق (Sticky Header) -->
+            <div class="px-4 py-3 sm:px-6 sm:py-3.5 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center text-base shadow-sm">
                         <i class="fa-solid fa-building-shield"></i>
                     </div>
                     <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">دليل مراكز الخدمة والتوكيلات</h3>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-500 text-white">مصر 🇪🇬</span>
+                        <div class="flex items-center gap-1.5">
+                            <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">دليل مراكز الخدمة والتوكيلات</h3>
+                            <span class="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-sky-500 text-white">مصر 🇪🇬</span>
                         </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">التوكيلات والمراكز المعتمدة مع ملاحة GPS وأرقام الهواتف الرسمية</p>
+                        <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">124 مركز توكيل وخدمة معتمد مع ملاحة GPS الرسمية</p>
                     </div>
                 </div>
                 <button onclick="closeServiceCentersModal()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer transition-colors">
@@ -4207,94 +4609,69 @@ ${verifyUrl}
                 </button>
             </div>
 
-            <!-- بطاقة التصفية التلقائية الذكية لسيارة المستخدم الحالية -->
-            <div class="p-3 rounded-2xl bg-gradient-to-r from-sky-50 via-indigo-50/40 to-slate-50 dark:from-sky-950/40 dark:via-indigo-950/20 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/60 flex items-center justify-between gap-2 shrink-0">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <!-- 2. شريط البحث والفلترة المدمج فائق الخفة (Compact Sticky Filter Bar) -->
+            <div class="p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 shrink-0 space-y-2">
+                <!-- شريط التصفية التلقائية الذكية لسيارة المستخدم الحالية -->
+                <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-xl bg-sky-100/70 dark:bg-sky-950/50 border border-sky-200/80 dark:border-sky-800/60 text-[11px]">
+                    <div class="flex items-center gap-1.5 truncate">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sky-600 dark:text-sky-400 text-xs shrink-0"></i>
+                        <span class="text-slate-500 dark:text-slate-400 font-bold shrink-0">تصفية لسيارتك:</span>
+                        <strong id="scCurrentCarBadge" class="text-sky-900 dark:text-sky-200 font-black truncate">-</strong>
                     </div>
-                    <div class="text-[11px] leading-tight min-w-0">
-                        <span class="text-slate-500 dark:text-slate-400 block font-bold">تصفية تلقائية ذكية لسيارتك:</span>
-                        <strong id="scCurrentCarBadge" class="text-slate-900 dark:text-white font-black truncate block text-xs">-</strong>
-                    </div>
+                    <button type="button" onclick="resetServiceCenterFilters()" class="px-2 py-0.5 text-[10px] font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-200/60 dark:hover:bg-sky-900/60 rounded-lg transition-colors shrink-0 bg-white/80 dark:bg-slate-900/80 border border-sky-300/60 dark:border-sky-700/60">
+                        عرض كافة الماركات
+                    </button>
                 </div>
-                <button type="button" onclick="resetServiceCenterFilters()" class="px-2.5 py-1 text-[11px] font-bold text-sky-600 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/60 rounded-xl transition-colors shrink-0 border border-sky-200 dark:border-sky-800/80">
-                    عرض كافة الماركات
-                </button>
-            </div>
 
-            <!-- تنبيه رسمي بخصوص مواعيد العمل والتأكد المسبق من الفرع -->
-            <div class="px-3.5 py-2.5 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/90 dark:border-amber-800/70 flex items-start gap-2.5 shrink-0 text-amber-800 dark:text-amber-200">
-                <i class="fa-solid fa-clock-rotate-left text-amber-600 dark:text-amber-400 text-xs mt-0.5 shrink-0"></i>
-                <p class="text-[11px] font-bold leading-relaxed">
-                    *تنبيه: يمكن للمواعيد أن تتغير أحياناً على حسب الفرع المطلوب وللتأكد يمكنك الاتصال على الأرقام الموضحة بكل فرع.
-                </p>
-            </div>
-
-            <!-- أدوات التصفية المرنة (Brand & Governorate Switcher & Search) -->
-            <div class="space-y-2 shrink-0 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/60">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <!-- فلتر الماركة -->
+                <!-- شبكة الفلاتر المضغوطة: 3 قوائم منسدلة في صف واحد متجاوب -->
+                <div class="grid grid-cols-3 gap-1.5">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">ماركة السيارة:</label>
-                        <select id="scBrandFilter" onchange="applyServiceCenterFilters()" class="w-full px-2.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:outline-hidden transition-all">
-                            <option value="all">جميع الماركات (All Brands)</option>
+                        <select id="scBrandFilter" onchange="applyServiceCenterFilters()" class="w-full px-2 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-800 dark:text-slate-100 focus:ring-1 focus:ring-sky-500 focus:outline-hidden transition-all truncate">
+                            <option value="all">كل الماركات</option>
                         </select>
                     </div>
-
-                    <!-- فلتر المحافظة -->
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">المحافظة:</label>
-                        <select id="scGovFilter" onchange="applyServiceCenterFilters()" class="w-full px-2.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:outline-hidden transition-all">
-                            <option value="all">جميع المحافظات</option>
-                            <option value="القاهرة">القاهرة (Cairo)</option>
-                            <option value="الجيزة">الجيزة (Giza)</option>
-                            <option value="الإسكندرية">الإسكندرية (Alexandria)</option>
-                            <option value="القليوبية">القليوبية (العبور / قليوب)</option>
+                        <select id="scGovFilter" onchange="applyServiceCenterFilters()" class="w-full px-2 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-800 dark:text-slate-100 focus:ring-1 focus:ring-sky-500 focus:outline-hidden transition-all truncate">
+                            <option value="all">كل المحافظات</option>
+                            <option value="القاهرة">القاهرة</option>
+                            <option value="الجيزة">الجيزة</option>
+                            <option value="الإسكندرية">الإسكندرية</option>
+                            <option value="القليوبية">القليوبية</option>
                             <option value="الغربية">الغربية (طنطا)</option>
                             <option value="الدقهلية">الدقهلية (المنصورة)</option>
-                            <option value="الشرقية">الشرقية (العاشر / الزقازيق)</option>
-                            <option value="أسيوط">أسيوط ومحافظات الصعيد</option>
-                            <option value="البحر الأحمر">البحر الأحمر والسويس</option>
+                            <option value="الشرقية">الشرقية</option>
+                            <option value="أسيوط">أسيوط والصعيد</option>
+                            <option value="البحر الأحمر">البحر الأحمر</option>
                         </select>
                     </div>
-
-                    <!-- فلتر تصنيف المركز -->
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">نوع المركز:</label>
-                        <select id="scTypeFilter" onchange="applyServiceCenterFilters()" class="w-full px-2.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-sky-500 focus:outline-hidden transition-all">
-                            <option value="all">كافة المراكز والتوكيلات</option>
-                            <option value="official_dealership">توكيلات رئيسية معتمدة 🏢</option>
-                            <option value="trusted_center">مراكز صيانة معتمدة موثوقة ⭐</option>
-                            <option value="quick_service">مراكز صيانة سريعة وفحص ⚡</option>
+                        <select id="scTypeFilter" onchange="applyServiceCenterFilters()" class="w-full px-2 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-[11px] font-bold text-slate-800 dark:text-slate-100 focus:ring-1 focus:ring-sky-500 focus:outline-hidden transition-all truncate">
+                            <option value="all">كل الأنواع</option>
+                            <option value="official_dealership">توكيلات معتمدة 🏢</option>
+                            <option value="trusted_center">مراكز موثوقة ⭐</option>
+                            <option value="quick_service">صيانة سريعة ⚡</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- شريط البحث السريع الحي -->
+                <!-- شريط البحث الحي السريع -->
                 <div class="relative">
-                    <i class="fa-solid fa-magnifying-glass absolute start-3 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
-                    <input type="text" id="scSearchInput" oninput="applyServiceCenterFilters()" placeholder="ابحث باسم المركز، الوكيل، المنطقة (أبورواش، العبور، التجمع، سموحة...)" class="w-full ps-9 pe-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500 focus:outline-hidden transition-all">
-                </div>
-
-                <!-- عداد النتائج الذكي -->
-                <div id="scResultsSummary" class="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300 pt-1">
-                    <span>جاري تحميل المراكز...</span>
+                    <i class="fa-solid fa-magnifying-glass absolute start-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
+                    <input type="text" id="scSearchInput" oninput="applyServiceCenterFilters()" placeholder="ابحث باسم المركز أو الوكيل أو المنطقة (أبورواش، العبور، التجمع...)" class="w-full ps-8 pe-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus:ring-1 focus:ring-sky-500 focus:outline-hidden transition-all">
                 </div>
             </div>
 
-            <!-- حاوية كروت المراكز المعتمدة (Scrollable Cards Container) -->
-            <div id="scCardsContainer" class="flex-1 overflow-y-auto space-y-2.5 pe-1 min-h-[220px]">
+            <!-- 3. حاوية الكروت القابلة للتمرير بكامل الارتفاع (Full-Height Scrollable Body) -->
+            <div id="scCardsContainer" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2.5">
                 <!-- يتم التوليد التفاعلي برمجياً عبر renderServiceCenters() -->
             </div>
 
-            <!-- زر الإغلاق السفلي -->
-            <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
-                <div class="text-[10px] text-slate-400">
-                    <i class="fa-solid fa-circle-check text-emerald-500 me-1"></i>
-                    <span>بيانات موثقة ومعتمدة رسمياً ومتاحة دون اتصال بالإنترنت</span>
+            <!-- 4. الشريط السفلي الثابت (Sticky Footer) -->
+            <div class="px-4 py-2.5 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+                <div id="scResultsSummary" class="text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                    <span>جاري تحميل المراكز...</span>
                 </div>
-                <button onclick="closeServiceCentersModal()" class="px-5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold cursor-pointer transition-colors">
+                <button onclick="closeServiceCentersModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold cursor-pointer transition-colors">
                     إغلاق
                 </button>
             </div>
@@ -15633,12 +16010,34 @@ ${verifyUrl}
         };
 
         function getCurrentCar() {
-            if (!appState.cars || !Array.isArray(appState.cars) || appState.cars.length === 0) return null;
-            if (appState.currentCarIndex >= appState.cars.length) appState.currentCarIndex = 0;
+            if (!appState || !appState.cars || !Array.isArray(appState.cars) || appState.cars.length === 0) return null;
+            if (typeof appState.currentCarIndex !== 'number' || isNaN(appState.currentCarIndex) || appState.currentCarIndex < 0 || appState.currentCarIndex >= appState.cars.length) {
+                appState.currentCarIndex = 0;
+            }
             const car = appState.cars[appState.currentCarIndex];
+            if (!car || typeof car !== 'object') return null;
+
+            // حماية سلامة البيانات الأساسية في الذاكرة لتفادي أخطاء العرض
+            if (typeof car.odometer !== 'number' || isNaN(car.odometer) || car.odometer < 0) {
+                car.odometer = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.parsePositiveInt)
+                    ? MotorCareSecurity.parsePositiveInt(car.odometer, 0, 0, 5000000)
+                    : (Math.max(0, parseInt(car.odometer, 10) || 0));
+            }
+            if (!Array.isArray(car.history)) car.history = [];
+            if (!Array.isArray(car.fuelLogs)) car.fuelLogs = [];
+            if (!Array.isArray(car.driverNotes)) car.driverNotes = [];
+            if (!Array.isArray(car.trips)) car.trips = [];
+            if (!Array.isArray(car.expenses)) car.expenses = [];
+            if (!Array.isArray(car.customPMItems)) car.customPMItems = [];
+            if (!car.wearOverrides || typeof car.wearOverrides !== 'object') car.wearOverrides = {};
+
             if (car && typeof migrateAndAuditCarsCatalog === 'function' && !car._audited_v143) {
-                migrateAndAuditCarsCatalog([car]);
-                car._audited_v143 = true;
+                try {
+                    migrateAndAuditCarsCatalog([car]);
+                    car._audited_v143 = true;
+                } catch(e) {
+                    console.warn('[MotorCare] Catalog migration error:', e);
+                }
             }
             return car;
         }
@@ -15687,6 +16086,35 @@ ${verifyUrl}
                 });
             } else {
                 showNotification(`رقم اللوحة: ${plate}`, 'info');
+        }
+
+        function openExternalTrafficPortal(url) {
+            if (!url) url = 'https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices';
+            try {
+                if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+                    window.Capacitor.Plugins.Browser.open({ url: url });
+                    return;
+                }
+                const win = window.open(url, '_blank', 'noopener,noreferrer');
+                if (!win || win.closed || typeof win.closed === 'undefined') {
+                    window.location.href = url;
+                }
+            } catch(e) {
+                window.location.href = url;
+            }
+        }
+
+        function copyTrafficPortalUrl() {
+            const url = 'https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices';
+            const isEn = appState.lang === 'en';
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification(isEn ? 'Traffic portal link copied to clipboard!' : 'تم نسخ رابط بوابة المرور! يمكنك الآن لصقه في متصفح كروم أو سفاري مباشرة', 'success');
+                }).catch(() => {
+                    showNotification(url, 'info');
+                });
+            } else {
+                showNotification(url, 'info');
             }
         }
 
@@ -15886,7 +16314,8 @@ ${verifyUrl}
                 return;
             }
 
-            container.innerHTML = filtered.map(c => {
+            container.scrollTop = 0;
+            const cardsHtml = filtered.map(c => {
                 const isOfficial = c.type === 'official_dealership';
                 const typeBadgeClass = isOfficial 
                     ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
@@ -15912,8 +16341,8 @@ ${verifyUrl}
                     <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-700 shadow-xs hover:shadow-md transition-all space-y-2.5">
                         <!-- الرأس واسم المركز والنوع والتقييم -->
                         <div class="flex items-start justify-between gap-2">
-                            <div class="min-w-0">
-                                <h4 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-snug">${c.name}</h4>
+                            <div class="min-w-0 flex-1">
+                                <h4 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug">${c.name}</h4>
                                 <div class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-0.5 flex items-center gap-2 flex-wrap">
                                     <span class="flex items-center gap-1 text-sky-600 dark:text-sky-400"><i class="fa-solid fa-certificate text-[10px]"></i> <span class="truncate">${c.agency}</span></span>
                                     <span class="text-slate-300 dark:text-slate-600">•</span>
@@ -15962,6 +16391,15 @@ ${verifyUrl}
                     </div>
                 `;
             }).join('');
+
+            const noticeHtml = `
+                <div class="p-2.5 sm:p-3 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-200 flex items-center gap-2 mt-2">
+                    <i class="fa-solid fa-circle-info text-amber-600 dark:text-amber-400 text-xs shrink-0"></i>
+                    <span>*تنبيه: يمكن للمواعيد أن تتغير أحياناً في العطلات أو حسب الفرع، وللتأكد يرجى الاتصال بالأرقام الموضحة قبل التوجه للفرع.</span>
+                </div>
+            `;
+
+            container.innerHTML = cardsHtml + noticeHtml;
         }
 
         /* [UI ENHANCEMENT] وظائف القائمة المنسدلة العلوية (Top Header Hamburger Menu) */
@@ -17844,7 +18282,7 @@ ${verifyUrl}
             let partId, pName, category = 'other';
 
             const odoInput = document.getElementById('recordOdometerInput');
-            const odo = odoInput ? parseInt(odoInput.value) || car.odometer : car.odometer;
+            const odo = MotorCareSecurity.parsePositiveInt(odoInput?.value, car.odometer, 0, 5000000);
 
             const dateInput = document.getElementById('recordDateInput');
             const date = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
@@ -17855,7 +18293,7 @@ ${verifyUrl}
                     alert(appState.lang === 'en' ? 'Please enter a description for the corrective maintenance/repair.' : 'يرجى كتابة وصف العطل / الإصلاح الطارئ');
                     return;
                 }
-                pName = customInput.value.trim();
+                pName = MotorCareSecurity.sanitizeText(customInput.value.trim(), 150);
                 const catSel = document.getElementById('recordCmCategorySelect');
                 category = catSel ? catSel.value : 'other';
 
@@ -17947,16 +18385,16 @@ ${verifyUrl}
             }
 
             const partsInput = document.getElementById('recordPartsCostInput');
-            const parts = partsInput ? parseFloat(partsInput.value) || 0 : 0;
+            const parts = MotorCareSecurity.parsePositiveFloat(partsInput?.value, 0, 0, 1000000);
 
             const laborInput = document.getElementById('recordLaborCostInput');
-            const labor = laborInput ? parseFloat(laborInput.value) || 0 : 0;
+            const labor = MotorCareSecurity.parsePositiveFloat(laborInput?.value, 0, 0, 1000000);
 
             const wInput = document.getElementById('recordWorkshopInput');
-            const workshop = wInput ? wInput.value.trim() : '';
+            const workshop = MotorCareSecurity.sanitizeText(wInput?.value || '', 100);
 
             const pInput = document.getElementById('recordPhoneInput');
-            const phone = pInput ? pInput.value.trim() : '';
+            const phone = MotorCareSecurity.sanitizeText(pInput?.value || '', 30);
 
             if (odo > car.odometer) car.odometer = odo;
             if (!car.history) car.history = [];
@@ -18050,8 +18488,10 @@ ${verifyUrl}
             let html = `<div class="overflow-x-auto"><table class="w-full text-xs text-start"><thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 border-b border-slate-200 dark:border-slate-800"><tr><th class="p-3">${thDate}</th><th class="p-3">${thItem}</th><th class="p-3">${thOdo}</th><th class="p-3">${thWorkshop}</th><th class="p-3">${thInvoice}</th><th class="p-3">${thCost}</th><th class="p-3 text-center">${thActions}</th></tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">`;
 
             car.history.forEach(h => {
-                const workshopName = h.workshop ? h.workshop.trim() : '';
-                const phoneNum = h.phone ? h.phone.trim() : '';
+                const rawWorkshop = h.workshop ? h.workshop.trim() : '';
+                const rawPhone = h.phone ? h.phone.trim() : '';
+                const workshopName = MotorCareSecurity.escapeHtml(rawWorkshop);
+                const phoneNum = MotorCareSecurity.escapeHtml(rawPhone);
 
                 let workshopHtml = '-';
                 if (workshopName || phoneNum) {
@@ -18067,8 +18507,8 @@ ${verifyUrl}
                     : `<span class="inline-block bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-[10px] px-1.5 py-0.5 rounded ml-1 font-bold">CM</span>`;
 
                 html += `<tr>
-                    <td class="p-3">${h.date || '-'}</td>
-                    <td class="p-3 font-bold text-slate-900 dark:text-white">${typeBadge} ${localizedPart}</td>
+                    <td class="p-3">${MotorCareSecurity.escapeHtml(h.date || '-')}</td>
+                    <td class="p-3 font-bold text-slate-900 dark:text-white">${typeBadge} ${MotorCareSecurity.escapeHtml(localizedPart)}</td>
                     <td class="p-3">${h.odometer ? Number(h.odometer).toLocaleString() + (isEn ? ' km' : ' كم') : '-'}</td>
                     <td class="p-3">${workshopHtml}</td>
                     <td class="p-3">${h.invoiceImage ? `<button onclick="openImageViewer('${h.invoiceImage}')" class="text-sky-500 font-bold underline cursor-pointer"><i class="fa-solid fa-file-invoice ml-1"></i> ${viewTxt}</button>` : '-'}</td>
@@ -18135,10 +18575,32 @@ ${verifyUrl}
 
         function saveFuelLog() {
             const car = getCurrentCar();
-            const odo = parseInt(document.getElementById('fuelOdometerInput').value) || car.odometer;
-            const liters = parseFloat(document.getElementById('fuelLitersInput').value) || 0;
-            const cost = parseFloat(document.getElementById('fuelCostInput').value) || 0;
-            const octane = document.getElementById('fuelOctaneSelect').value;
+            if (!car) return;
+            const isEn = appState.lang === 'en';
+
+            const odoRaw = document.getElementById('fuelOdometerInput')?.value;
+            const odo = MotorCareSecurity.parsePositiveInt(odoRaw, car.odometer, 0, 5000000);
+
+            const litersRaw = document.getElementById('fuelLitersInput')?.value;
+            const liters = MotorCareSecurity.parsePositiveFloat(litersRaw, 0, 0, 1000);
+
+            const costRaw = document.getElementById('fuelCostInput')?.value;
+            const cost = MotorCareSecurity.parsePositiveFloat(costRaw, 0, 0, 500000);
+
+            if (liters <= 0) {
+                alert(isEn ? 'Please enter a valid positive fuel amount in liters.' : 'يرجى إدخال كمية بنزين موجبة وصحيحة باللتر.');
+                document.getElementById('fuelLitersInput')?.focus();
+                return;
+            }
+
+            if (cost < 0) {
+                alert(isEn ? 'Fuel cost cannot be negative.' : 'لا يمكن أن تكون تكلفة البنزين قيمة سالبة.');
+                document.getElementById('fuelCostInput')?.focus();
+                return;
+            }
+
+            const octaneRaw = document.getElementById('fuelOctaneSelect')?.value || 'بنزين 92';
+            const octane = MotorCareSecurity.sanitizeText(octaneRaw, 40);
             const dateVal = document.getElementById('fuelDateInput')?.value || new Date().toISOString().split('T')[0];
             const receiptImg = tempImages['fuel'] || '';
 
@@ -18529,7 +18991,7 @@ ${verifyUrl}
 
         function switchCar(idx) {
             appState.currentCarIndex = idx;
-            SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
+            saveAppState('car_switched');
             closeGarageModal();
             renderDashboard();
         }
@@ -18546,8 +19008,7 @@ ${verifyUrl}
                 if (appState.currentCarIndex >= appState.cars.length) {
                     appState.currentCarIndex = appState.cars.length - 1;
                 }
-                SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
-                syncUserDataToCloud('car_deleted');
+                saveAppState('car_deleted');
                 openGarageModal();
                 renderDashboard();
                 showNotification(isEn ? 'Vehicle deleted from garage.' : 'تم حذف السيارة من الكراج بنجاح.', 'success');
@@ -18601,25 +19062,28 @@ ${verifyUrl}
             const car = getCurrentCar();
             if (!car) return;
 
+            const isEn = appState.lang === 'en';
             const yInput = document.getElementById('editCarYearInput');
-            let year = parseInt(yInput.value);
-            const minYear = parseInt(yInput.min) || 1950;
-            const maxYear = parseInt(yInput.max) || new Date().getFullYear() + 1;
+            const minYear = parseInt(yInput?.min) || 1950;
+            const maxYear = parseInt(yInput?.max) || new Date().getFullYear() + 1;
+            const year = MotorCareSecurity.parsePositiveInt(yInput?.value, car.year, minYear, maxYear);
 
             if (year < minYear || year > maxYear) {
-                alert(appState.lang === 'en' ? `Production year must be between ${minYear} and ${maxYear}` : `سنة الصنع غير صحيحة لهذا الجيل. يجب أن تكون بين ${minYear} و ${maxYear}`);
+                alert(isEn ? `Production year must be between ${minYear} and ${maxYear}` : `سنة الصنع غير صحيحة لهذا الجيل. يجب أن تكون بين ${minYear} و ${maxYear}`);
                 return;
             }
 
             car.year = year;
-            car.odometer = parseInt(document.getElementById('editCarOdoInput')?.value) || car.odometer;
-            car.license = document.getElementById('editCarLicenseInput')?.value.trim() || car.license;
-            car.color = document.getElementById('editCarColorInput')?.value.trim() || car.color;
-            car.vin = document.getElementById('editCarVinInput')?.value.trim() || car.vin;
-            car.notes = document.getElementById('editCarNotesInput')?.value.trim() || car.notes;
+            const odoRaw = document.getElementById('editCarOdoInput')?.value;
+            if (odoRaw !== undefined && odoRaw !== '') {
+                car.odometer = MotorCareSecurity.parsePositiveInt(odoRaw, car.odometer, 0, 5000000);
+            }
+            car.license = MotorCareSecurity.sanitizeText(document.getElementById('editCarLicenseInput')?.value || car.license, 30);
+            car.color = MotorCareSecurity.sanitizeText(document.getElementById('editCarColorInput')?.value || car.color, 40);
+            car.vin = MotorCareSecurity.sanitizeText(document.getElementById('editCarVinInput')?.value || car.vin, 30);
+            car.notes = MotorCareSecurity.sanitizeText(document.getElementById('editCarNotesInput')?.value || car.notes, 500);
 
-            SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
-            syncUserDataToCloud('car_edited');
+            saveAppState('car_edited');
             closeEditCarModal();
             renderDashboard();
         }
@@ -18764,33 +19228,38 @@ ${verifyUrl}
         }
 
         function saveNewCar() {
-            const brand = document.getElementById('newCarBrandSelect').value;
-            const model = document.getElementById('newCarModelSelect').value;
-            const genIdx = parseInt(document.getElementById('newCarGenerationSelect').value) || 0;
+            const isEn = appState.lang === 'en';
+            const brand = MotorCareSecurity.sanitizeText(document.getElementById('newCarBrandSelect')?.value || '', 60);
+            const model = MotorCareSecurity.sanitizeText(document.getElementById('newCarModelSelect')?.value || '', 60);
+            const genIdx = MotorCareSecurity.parsePositiveInt(document.getElementById('newCarGenerationSelect')?.value, 0, 0, 50);
             const yearInput = document.getElementById('newCarYearInput');
-            let year = parseInt(yearInput.value) || 2024;
             
-            const min = parseInt(yearInput.min) || 1950;
-            const max = parseInt(yearInput.max) || new Date().getFullYear() + 1;
+            const min = parseInt(yearInput?.min) || 1950;
+            const max = parseInt(yearInput?.max) || new Date().getFullYear() + 1;
+            const rawYear = yearInput ? yearInput.value.trim() : '';
+            const year = MotorCareSecurity.parsePositiveInt(rawYear, 0, min, max);
+
             if (year < min || year > max) {
-                alert(appState.lang === 'en' ? `Production year must be between ${min} and ${max}` : `سنة الصنع غير صحيحة لهذا الجيل. يجب أن تكون بين ${min} و ${max}`);
+                alert(isEn ? `Production year must be between ${min} and ${max}` : `سنة الصنع غير صحيحة لهذا الجيل. يجب أن تكون بين ${min} و ${max}`);
+                if (yearInput) yearInput.focus();
                 return;
             }
 
-            const engine = document.getElementById('newCarEngineInput').value.trim() || '1.6L';
+            const engine = MotorCareSecurity.sanitizeText(document.getElementById('newCarEngineInput')?.value || '1.6L', 60);
             const odoInput = document.getElementById('newCarOdoInput');
             const odoVal = odoInput ? odoInput.value.trim() : '';
-            if (!odoVal || isNaN(odoVal) || parseInt(odoVal) < 0) {
-                alert(appState.lang === 'en' ? 'Please enter your vehicle actual odometer reading!' : 'يرجى إدخال قراءة عداد الكيلومترات الفعلية لسيارتك للمتابعة بدقة!');
+            const odoClean = MotorCareSecurity.parsePositiveInt(odoVal, -1, 0, 5000000);
+            if (odoClean < 0) {
+                alert(isEn ? 'Please enter a valid positive odometer reading!' : 'يرجى إدخال قراءة عداد موجبة وصحيحة لسيارتك للمتابعة بدقة!');
                 if (odoInput) odoInput.focus();
                 return;
             }
-            const odo = parseInt(odoVal);
+            const odo = odoClean;
             
-            const license = document.getElementById('newCarLicenseInput')?.value.trim() || '';
-            const vin = document.getElementById('newCarVinInput')?.value.trim() || '';
-            const color = document.getElementById('newCarColorInput')?.value.trim() || '';
-            const notes = document.getElementById('newCarNotesInput')?.value.trim() || '';
+            const license = MotorCareSecurity.sanitizeText(document.getElementById('newCarLicenseInput')?.value || '', 30);
+            const vin = MotorCareSecurity.sanitizeText(document.getElementById('newCarVinInput')?.value || '', 30);
+            const color = MotorCareSecurity.sanitizeText(document.getElementById('newCarColorInput')?.value || '', 40);
+            const notes = MotorCareSecurity.sanitizeText(document.getElementById('newCarNotesInput')?.value || '', 500);
 
             const newCatalog = buildSpecificCatalog(brand, model, genIdx, odo);
 
@@ -18816,8 +19285,7 @@ ${verifyUrl}
             });
 
             appState.currentCarIndex = appState.cars.length - 1;
-            SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
-            syncUserDataToCloud('car_added');
+            saveAppState('car_added');
             closeAddNewCarModal();
             renderDashboard();
         }
@@ -18867,7 +19335,7 @@ ${verifyUrl}
                                     : 'هل أنت متأكد من رغبتك في استعادة هذه النسخة الاحتياطية؟ سيتم تحديث بيانات الكراج والصيانة بالبيانات المستوردة.',
                                 () => {
                                     appState = data;
-                                    SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
+                                    saveAppState('backup_restored');
                                     closeGoogleSheetsModal();
                                     if (typeof renderDashboard === 'function') renderDashboard();
                                     showNotification(isEn ? 'Backup restored successfully! 🎉' : 'تم استعادة النسخة الاحتياطية بنجاح! 🎉', 'success');
@@ -21626,11 +22094,11 @@ function doPost(e) {
             const odometerInput = document.getElementById('dtExpenseOdometerInput');
             const notesInput = document.getElementById('dtExpenseNotesInput');
 
-            const amount = parseFloat(amountInput ? amountInput.value : 0) || 0;
-            const category = categorySelect ? categorySelect.value : 'other';
+            const amount = MotorCareSecurity.parsePositiveFloat(amountInput?.value, 0, 0, 1000000);
+            const category = MotorCareSecurity.sanitizeText(categorySelect?.value || 'other', 30);
             const date = (dateInput && dateInput.value) ? dateInput.value : new Date().toISOString().split('T')[0];
-            const odometer = odometerInput && odometerInput.value ? parseInt(odometerInput.value) : null;
-            const notes = notesInput ? notesInput.value.trim() : '';
+            const odometer = odometerInput && odometerInput.value ? MotorCareSecurity.parsePositiveInt(odometerInput.value, null, 0, 5000000) : null;
+            const notes = MotorCareSecurity.sanitizeText(notesInput?.value || '', 300);
 
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
 
@@ -21778,7 +22246,7 @@ function doPost(e) {
                                     <span class="text-[10px] text-slate-400 font-mono">${dateStr}</span>
                                     ${item.odometer ? `<span class="px-1.5 py-0.2 rounded-md text-[10px] font-mono bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">${item.odometer.toLocaleString()} ${isEn ? 'km' : 'كم'}</span>` : ''}
                                 </div>
-                                ${item.notes ? `<p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">${item.notes}</p>` : ''}
+                                ${item.notes ? `<p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">${MotorCareSecurity.escapeHtml(item.notes)}</p>` : ''}
                             </div>
                         </div>
                         <div class="flex items-center gap-1.5 shrink-0">
@@ -22185,7 +22653,7 @@ function doPost(e) {
                                     ${isBeingEdited ? `<span class="px-2 py-0.2 rounded-md text-[9px] font-black bg-amber-500 text-white animate-pulse flex items-center gap-1"><i class="fa-solid fa-pen text-[8px]"></i> ${isEn ? 'Editing now...' : 'جاري التعديل...'}</span>` : ''}
                                     ${note.updatedAt ? `<span class="text-[9px] text-amber-600/80 dark:text-amber-400/80 font-medium"><i class="fa-solid fa-rotate-left text-[8px]"></i> ${isEn ? 'Edited' : 'مُعدلة'}</span>` : ''}
                                 </div>
-                                <p class="text-xs font-semibold text-slate-800 dark:text-slate-100 mt-1 leading-relaxed break-words ${isDone ? 'line-through text-slate-400 dark:text-slate-500' : ''}">${note.text || ''}</p>
+                                <p class="text-xs font-semibold text-slate-800 dark:text-slate-100 mt-1 leading-relaxed break-words ${isDone ? 'line-through text-slate-400 dark:text-slate-500' : ''}">${MotorCareSecurity.escapeHtml(note.text || '')}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-1.5 shrink-0">
@@ -22298,8 +22766,9 @@ function doPost(e) {
 
             const input = document.getElementById('dtNoteTextInput');
             const tagSelect = document.getElementById('dtNoteTagSelect');
-            const text = input ? input.value.trim() : '';
-            const tag = tagSelect ? tagSelect.value : 'general';
+            const rawText = input ? input.value : '';
+            const text = MotorCareSecurity.sanitizeText(rawText, 500);
+            const tag = MotorCareSecurity.sanitizeText(tagSelect ? tagSelect.value : 'general', 30);
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
 
             if (!text) {
@@ -22373,7 +22842,6 @@ function doPost(e) {
             renderDriverNotes();
         }
 
-        
 			/* ==========================================================================
 		   [MODULE - Odometer Management] محرك إدارة وتحديث قراءة العداد
 		   ========================================================================== */
@@ -22398,20 +22866,38 @@ function doPost(e) {
 		}
 
 		function submitNewOdometer() {
-			const car = getCurrentCar();
-			if (!car) return;
-			const input = document.getElementById('newOdometerValueInput');
-			if (!input) return;
-			const val = parseInt(input.value);
-			if (!isNaN(val)) {
+			try {
+				const car = getCurrentCar();
+				if (!car) return;
+				const input = document.getElementById('newOdometerValueInput');
+				if (!input) return;
+				const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+				const rawVal = input.value ? input.value.trim() : '';
+				if (!rawVal) {
+					alert(isEn ? 'Please enter an odometer reading.' : 'يرجى إدخال قراءة العداد.');
+					input.focus();
+					return;
+				}
+				const val = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.parsePositiveInt)
+					? MotorCareSecurity.parsePositiveInt(rawVal, -1, 0, 5000000)
+					: parseInt(rawVal, 10);
+				if (isNaN(val) || val < 0) {
+					alert(isEn ? 'Please enter a valid positive odometer reading.' : 'يرجى إدخال قراءة عداد صحيحة وموجبة بدون رموز.');
+					input.focus();
+					return;
+				}
 				car.odometer = val;
-				SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
-				syncUserDataToCloud('odometer_updated');
+				saveAppState('odometer_updated');
 				closeOdometerModal();
 				renderDashboard();
 				if (typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.checkMaintenanceSchedules) {
 					MotorCareNotifications.checkMaintenanceSchedules({ trigger: 'odometer_update' });
 				}
+				if (typeof showNotification === 'function') {
+					showNotification(isEn ? 'Odometer updated successfully! 🚗' : 'تم تحديث قراءة العداد بنجاح! 🚗', 'success');
+				}
+			} catch (err) {
+				console.error('[MotorCare] Error updating odometer:', err);
 			}
 		}
 		/* ==========================================================================
@@ -24039,10 +24525,12 @@ function doPost(e) {
                 const roleSelect = document.getElementById('emergencyContactRoleSelect');
                 const notesInput = document.getElementById('emergencyContactNotesInput');
 
-                const name = nameInput ? nameInput.value.trim() : '';
-                const phone = phoneInput ? phoneInput.value.trim() : '';
-                const role = roleSelect ? roleSelect.value : 'ميكانيكي خاص';
-                const notes = notesInput ? notesInput.value.trim() : '';
+                const rawName = nameInput ? nameInput.value : '';
+                const rawPhone = phoneInput ? phoneInput.value : '';
+                const name = MotorCareSecurity.sanitizeText(rawName, 80);
+                const phone = MotorCareSecurity.sanitizeText(rawPhone, 30);
+                const role = MotorCareSecurity.sanitizeText(roleSelect ? roleSelect.value : 'ميكانيكي خاص', 50);
+                const notes = MotorCareSecurity.sanitizeText(notesInput ? notesInput.value : '', 150);
 
                 if (!name || !phone) {
                     if (typeof showNotification === 'function') {
@@ -24091,6 +24579,9 @@ function doPost(e) {
                     contacts = contacts.filter(c => c.id !== contactId);
                     this.savePersonalContacts(contacts);
                     this.renderPersonalContacts();
+                    if (typeof showNotification === 'function') {
+                        showNotification(isEn ? 'Contact removed.' : 'تم حذف الرقم بنجاح.', 'info');
+                    }
                 }
             },
 
@@ -24129,6 +24620,12 @@ function doPost(e) {
 
                 let html = '';
                 contacts.forEach(c => {
+                    const safeName = MotorCareSecurity.escapeHtml(c.name || '');
+                    const safeRole = MotorCareSecurity.escapeHtml(c.role || '');
+                    const safePhone = MotorCareSecurity.escapeHtml(c.phone || '');
+                    const safeNotes = MotorCareSecurity.escapeHtml(c.notes || '');
+                    const cleanTel = (c.phone || '').replace(/[^\d+]/g, '');
+
                     html += `
                         <div class="p-3 bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/80 flex flex-wrap items-center justify-between gap-2 shadow-2xs hover:border-indigo-500/50 transition-all">
                             <div class="flex items-center gap-3">
@@ -24137,17 +24634,17 @@ function doPost(e) {
                                 </div>
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <h5 class="text-xs font-black text-slate-900 dark:text-white">${c.name}</h5>
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300">${c.role}</span>
+                                        <h5 class="text-xs font-black text-slate-900 dark:text-white">${safeName}</h5>
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300">${safeRole}</span>
                                     </div>
                                     <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-2">
-                                        <span class="font-mono">${c.phone}</span>
-                                        ${c.notes ? `<span class="text-slate-400 text-[10px] truncate max-w-[200px]">• ${c.notes}</span>` : ''}
+                                        <span class="font-mono">${safePhone}</span>
+                                        ${safeNotes ? `<span class="text-slate-400 text-[10px] truncate max-w-[200px]">• ${safeNotes}</span>` : ''}
                                     </div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-1.5">
-                                <a href="tel:${c.phone}" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 shadow-2xs" title="${isEn ? 'Call directly' : 'اتصال مباشر'}">
+                                <a href="tel:${cleanTel}" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 shadow-2xs" title="${isEn ? 'Call directly' : 'اتصال مباشر'}">
                                     <i class="fa-solid fa-phone text-[10px]"></i>
                                     <span>${isEn ? 'Call' : 'اتصال'}</span>
                                 </a>
@@ -24217,14 +24714,33 @@ function doPost(e) {
         window.addEventListener('DOMContentLoaded', () => {
             initMobilePlatform();
             initNetworkStatusMonitor();
-            const saved = SafeStorage.getItem('motorCare_AppState_v140');
-            if (saved) { 
+            if (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.initInputGuards) {
+                MotorCareSecurity.initInputGuards();
+            }
+            let loaded = SafeStorage.getJSON('motorCare_AppState_v140', null);
+            if (loaded) { 
                 try { 
-                    appState = JSON.parse(saved); 
+                    appState = validateAndSanitizeAppState(loaded); 
                     if (typeof migrateAndAuditCarsCatalog === 'function') {
                         migrateAndAuditCarsCatalog(appState.cars);
                     }
-                } catch(e) {} 
+                } catch(e) {
+                    console.warn('[MotorCare] Error validating loaded state:', e);
+                    appState = validateAndSanitizeAppState(appState);
+                } 
+            } else {
+                // إذا كان التخزين المحلي فارغاً أو تالفاً، استرداد فوري وتلقائي من نسخة IndexedDB الاحتياطية
+                if (typeof MotorCareIndexedDB !== 'undefined' && MotorCareIndexedDB.getItem) {
+                    MotorCareIndexedDB.getItem('motorCare_AppState_v140').then(dbState => {
+                        if (dbState && dbState.cars && Array.isArray(dbState.cars) && dbState.cars.length > 0 && (!appState.cars || appState.cars.length === 0)) {
+                            console.log('[MotorCare Storage] Recovered garage records from IndexedDB mirror!');
+                            appState = validateAndSanitizeAppState(dbState);
+                            SafeStorage.setJSON('motorCare_AppState_v140', appState);
+                            if (typeof renderDashboard === 'function') renderDashboard();
+                        }
+                    }).catch(() => {});
+                }
+                appState = validateAndSanitizeAppState(appState);
             }
             if (appState.darkMode) document.documentElement.classList.add('dark');
             
