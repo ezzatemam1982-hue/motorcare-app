@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>موتور كير | MotorCare v2.0.1</title>
+    <title>موتور كير | MotorCare v2.0.3</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#070a13">
     <meta name="mobile-web-app-capable" content="yes">
@@ -68,7 +68,16 @@
             },
 
             setItem(key, val) {
-                const strVal = String(val);
+                let strVal;
+                if (typeof val === 'object' && val !== null) {
+                    try {
+                        strVal = JSON.stringify(val);
+                    } catch(jsonErr) {
+                        strVal = String(val);
+                    }
+                } else {
+                    strVal = String(val !== undefined && val !== null ? val : '');
+                }
                 this._memory[key] = strVal;
                 let writtenToLocal = false;
                 try {
@@ -91,7 +100,7 @@
                 // النسخ الاحتياطي التلقائي المتزامن في IndexedDB لبيانات التطبيق والكراج
                 if (key === 'motorCare_AppState_v140' && typeof MotorCareIndexedDB !== 'undefined') {
                     try {
-                        const parsedObj = JSON.parse(strVal);
+                        const parsedObj = (typeof val === 'object' && val !== null) ? val : JSON.parse(strVal);
                         MotorCareIndexedDB.setItem(key, parsedObj).catch(() => {});
                     } catch(jsonErr) {}
                 }
@@ -105,7 +114,9 @@
                     if (this.checkAvailability()) {
                         localStorage.removeItem(key);
                     }
-                } catch(e) {}
+                } catch(e) {
+                    console.warn(`[MotorCare SafeStorage] removeItem error for "${key}":`, e);
+                }
                 if (typeof MotorCareIndexedDB !== 'undefined') {
                     MotorCareIndexedDB.removeItem(key).catch(() => {});
                 }
@@ -114,7 +125,7 @@
             // استرجاع آمن ومباشر لكائنات JSON مع معالجة الأخطاء والقيم البديلة
             getJSON(key, fallback = null) {
                 const raw = this.getItem(key);
-                if (!raw || typeof raw !== 'string') return fallback;
+                if (!raw || typeof raw !== 'string' || raw.trim() === '' || raw === '[object Object]') return fallback;
                 try {
                     const parsed = JSON.parse(raw);
                     return (parsed !== null && parsed !== undefined) ? parsed : fallback;
@@ -153,9 +164,13 @@
                     try {
                         const request = window.indexedDB.open(this.dbName, this.dbVersion);
                         request.onupgradeneeded = (e) => {
-                            const db = e.target.result;
-                            if (!db.objectStoreNames.contains(this.storeName)) {
-                                db.createObjectStore(this.storeName, { keyPath: 'key' });
+                            try {
+                                const db = e.target.result;
+                                if (!db.objectStoreNames.contains(this.storeName)) {
+                                    db.createObjectStore(this.storeName, { keyPath: 'key' });
+                                }
+                            } catch(upgErr) {
+                                console.warn('[MotorCare IndexedDB] Upgrade error:', upgErr);
                             }
                         };
                         request.onsuccess = (e) => {
@@ -164,6 +179,10 @@
                         };
                         request.onerror = (e) => {
                             console.warn('[MotorCare IndexedDB] Open failed:', e);
+                            resolve(null);
+                        };
+                        request.onblocked = () => {
+                            console.warn('[MotorCare IndexedDB] Open blocked');
                             resolve(null);
                         };
                     } catch (err) {
@@ -178,11 +197,18 @@
                     const db = await this.getDB();
                     if (!db) return false;
                     return new Promise((resolve) => {
-                        const tx = db.transaction([this.storeName], 'readwrite');
-                        const store = tx.objectStore(this.storeName);
-                        const putReq = store.put({ key, value, timestamp: Date.now() });
-                        putReq.onsuccess = () => resolve(true);
-                        putReq.onerror = () => resolve(false);
+                        try {
+                            const tx = db.transaction([this.storeName], 'readwrite');
+                            const store = tx.objectStore(this.storeName);
+                            const putReq = store.put({ key, value, timestamp: Date.now() });
+                            putReq.onsuccess = () => resolve(true);
+                            putReq.onerror = () => resolve(false);
+                            tx.onerror = () => resolve(false);
+                            tx.onabort = () => resolve(false);
+                        } catch(txErr) {
+                            console.warn('[MotorCare IndexedDB] setItem tx error:', txErr);
+                            resolve(false);
+                        }
                     });
                 } catch(e) {
                     return false;
@@ -194,14 +220,21 @@
                     const db = await this.getDB();
                     if (!db) return null;
                     return new Promise((resolve) => {
-                        const tx = db.transaction([this.storeName], 'readonly');
-                        const store = tx.objectStore(this.storeName);
-                        const getReq = store.get(key);
-                        getReq.onsuccess = (e) => {
-                            const record = e.target.result;
-                            resolve(record ? record.value : null);
-                        };
-                        getReq.onerror = () => resolve(null);
+                        try {
+                            const tx = db.transaction([this.storeName], 'readonly');
+                            const store = tx.objectStore(this.storeName);
+                            const getReq = store.get(key);
+                            getReq.onsuccess = (e) => {
+                                const record = e.target.result;
+                                resolve(record ? record.value : null);
+                            };
+                            getReq.onerror = () => resolve(null);
+                            tx.onerror = () => resolve(null);
+                            tx.onabort = () => resolve(null);
+                        } catch(txErr) {
+                            console.warn('[MotorCare IndexedDB] getItem tx error:', txErr);
+                            resolve(null);
+                        }
                     });
                 } catch(e) {
                     return null;
@@ -213,11 +246,18 @@
                     const db = await this.getDB();
                     if (!db) return false;
                     return new Promise((resolve) => {
-                        const tx = db.transaction([this.storeName], 'readwrite');
-                        const store = tx.objectStore(this.storeName);
-                        const delReq = store.delete(key);
-                        delReq.onsuccess = () => resolve(true);
-                        delReq.onerror = () => resolve(false);
+                        try {
+                            const tx = db.transaction([this.storeName], 'readwrite');
+                            const store = tx.objectStore(this.storeName);
+                            const delReq = store.delete(key);
+                            delReq.onsuccess = () => resolve(true);
+                            delReq.onerror = () => resolve(false);
+                            tx.onerror = () => resolve(false);
+                            tx.onabort = () => resolve(false);
+                        } catch(txErr) {
+                            console.warn('[MotorCare IndexedDB] removeItem tx error:', txErr);
+                            resolve(false);
+                        }
                     });
                 } catch(e) {
                     return false;
@@ -229,7 +269,7 @@
            [DATA INTEGRITY & STATE SANITIZATION] طبقة تدقيق وحماية بيانات السيارة والتخزين
            ========================================================================== */
         function validateAndSanitizeAppState(state) {
-            if (!state || typeof state !== 'object') {
+            if (!state || typeof state !== 'object' || Array.isArray(state)) {
                 state = {};
             }
             if (typeof state.darkMode !== 'boolean') state.darkMode = false;
@@ -237,11 +277,11 @@
             if (!Array.isArray(state.cars)) state.cars = [];
 
             // فحص وتدقيق كل سيارة داخل الكراج لمنع أي انهيار في شاشات العرض
-            state.cars = state.cars.filter(car => car && typeof car === 'object').map((car, idx) => {
+            state.cars = state.cars.filter(car => car && typeof car === 'object' && !Array.isArray(car)).map((car, idx) => {
                 // تدقيق قراءة العداد كعدد صحيح موجب
                 car.odometer = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.parsePositiveInt)
                     ? MotorCareSecurity.parsePositiveInt(car.odometer, 0, 0, 5000000)
-                    : (Math.max(0, parseInt(car.odometer, 10) || 0));
+                    : Math.max(0, Math.min(5000000, parseInt(car.odometer, 10) || 0));
 
                 car.year = (typeof MotorCareSecurity !== 'undefined' && MotorCareSecurity.parsePositiveInt)
                     ? MotorCareSecurity.parsePositiveInt(car.year, new Date().getFullYear(), 1950, 2030)
@@ -277,12 +317,62 @@
                     ? MotorCareSecurity.sanitizeText(car.vin || '', 30)
                     : String(car.vin || '').slice(0, 30);
 
+                // ضمان سلامة جدول الصيانة (catalog)
+                if (!Array.isArray(car.catalog)) {
+                    car.catalog = (typeof buildDefaultCatalogForCar === 'function')
+                        ? buildDefaultCatalogForCar(car.brand, car.model, car.generation, car.year, car.odometer)
+                        : [];
+                } else {
+                    car.catalog = car.catalog.filter(item => item && typeof item === 'object').map(item => {
+                        item.id = String(item.id || ('item_' + Math.random().toString(36).slice(2, 7)));
+                        item.name = String(item.name || 'عنصر صيانة');
+                        item.kmInterval = Math.max(1000, parseInt(item.kmInterval, 10) || 10000);
+                        item.monthInterval = Math.max(1, parseInt(item.monthInterval, 10) || 12);
+                        item.lastKm = Math.max(0, parseInt(item.lastKm, 10) || 0);
+                        item.lastDate = item.lastDate || new Date().toISOString().split('T')[0];
+                        return item;
+                    });
+                }
+
                 // ضمان سلامة المصفوفات التابعة لمنع أخطاء TypeError (reading 'filter' or 'length')
-                if (!Array.isArray(car.history)) car.history = [];
-                if (!Array.isArray(car.fuelLogs)) car.fuelLogs = [];
+                if (Array.isArray(car.history)) {
+                    car.history = car.history.filter(h => h && typeof h === 'object').map(h => {
+                        h.id = h.id || ('hist_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6));
+                        h.km = Math.max(0, parseInt(h.km, 10) || 0);
+                        h.cost = Math.max(0, parseFloat(h.cost) || 0);
+                        h.date = h.date || new Date().toISOString().split('T')[0];
+                        return h;
+                    });
+                } else {
+                    car.history = [];
+                }
+
+                if (Array.isArray(car.fuelLogs)) {
+                    car.fuelLogs = car.fuelLogs.filter(f => f && typeof f === 'object').map(f => {
+                        f.id = f.id || ('fuel_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6));
+                        f.km = Math.max(0, parseInt(f.km, 10) || 0);
+                        f.liters = Math.max(0, parseFloat(f.liters) || 0);
+                        f.cost = Math.max(0, parseFloat(f.cost) || 0);
+                        f.date = f.date || new Date().toISOString().split('T')[0];
+                        return f;
+                    });
+                } else {
+                    car.fuelLogs = [];
+                }
+
+                if (Array.isArray(car.expenses)) {
+                    car.expenses = car.expenses.filter(x => x && typeof x === 'object').map(x => {
+                        x.id = x.id || ('exp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6));
+                        x.amount = Math.max(0, parseFloat(x.amount) || 0);
+                        x.date = x.date || new Date().toISOString().split('T')[0];
+                        return x;
+                    });
+                } else {
+                    car.expenses = [];
+                }
+
                 if (!Array.isArray(car.driverNotes)) car.driverNotes = [];
                 if (!Array.isArray(car.trips)) car.trips = [];
-                if (!Array.isArray(car.expenses)) car.expenses = [];
                 if (!Array.isArray(car.customPMItems)) car.customPMItems = [];
                 if (!car.wearOverrides || typeof car.wearOverrides !== 'object') car.wearOverrides = {};
                 if (!car.battery || typeof car.battery !== 'object') {
@@ -1845,7 +1935,7 @@ ${verifyUrl}
                 </div>
                 <div>
                     <span class="text-sm font-black tracking-tight text-slate-900 dark:text-white">MotorCare</span>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold ml-1">v2.0.1</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 font-bold ml-1">v2.0.3</span>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -1981,7 +2071,7 @@ ${verifyUrl}
 
         <!-- تذييل الصفحة -->
         <footer class="w-full max-w-md mx-auto p-4 text-center text-[11px] text-slate-400 dark:text-slate-600">
-            MotorCare Enterprise Suite v2.0.1 &copy; 2026 - All Rights Reserved
+            MotorCare Enterprise Suite v2.0.3 &copy; 2026 - All Rights Reserved
         </footer>
     </div>
 
@@ -3045,7 +3135,7 @@ ${verifyUrl}
             <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
                 <div class="flex items-center gap-2">
                     <div class="w-6 h-6 rounded-lg bg-sky-500/10 text-sky-500 flex items-center justify-center font-bold text-xs">MC</div>
-                    <span class="font-bold text-slate-700 dark:text-slate-300">MotorCare Suite v2.0.1</span>
+                    <span class="font-bold text-slate-700 dark:text-slate-300">MotorCare Suite v2.0.3</span>
                     <span class="text-slate-400">&copy; 2026</span>
                 </div>
                 <div class="flex items-center gap-4 font-semibold">
@@ -4541,7 +4631,7 @@ ${verifyUrl}
             <!-- أزرار الانتقال المباشر للبوابات الرسمية المعتمدة في مصر -->
             <div class="space-y-2.5">
                 <!-- 1. بوابة النيابة العامة الرسمية (الرابط الدائم المعتمد) -->
-                <a href="https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices" onclick="openExternalTrafficPortal('https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices'); return false;" target="_blank" rel="noopener noreferrer" class="w-full p-3.5 sm:p-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl flex items-center justify-between gap-3 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer block border border-emerald-400/30 active:scale-98">
+                <a href="https://ppo.gov.eg/ppo/r/ppoportal/ppoportal/traffic" onclick="openExternalTrafficPortal('https://ppo.gov.eg/ppo/r/ppoportal/ppoportal/traffic', event);" target="_blank" rel="noopener noreferrer" class="w-full p-3.5 sm:p-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl flex items-center justify-between gap-3 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer block border border-emerald-400/30 active:scale-98">
                     <div class="flex items-center gap-3 min-w-0">
                         <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white/20 flex items-center justify-center text-white text-xl shrink-0">
                             <i class="fa-solid fa-scale-balanced"></i>
@@ -14419,28 +14509,39 @@ ${verifyUrl}
             }
         }
 
-        function openExternalTrafficPortal(url) {
-            if (!url) url = 'https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices';
+        function openExternalTrafficPortal(url, event) {
+            let targetUrl = url || 'https://ppo.gov.eg/ppo/r/ppoportal/ppoportal/traffic';
+            
+            // تنظيف أي session ID قديم من الرابط لتفادي حلقة إعادة التوجيه اللانهائية (302 Redirect Loop) على الهواتف
             try {
-                if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
-                    window.Capacitor.Plugins.Browser.open({ url: url });
-                    return;
+                if (targetUrl.includes('ppo.gov.eg') && targetUrl.includes('session=')) {
+                    targetUrl = targetUrl.replace(/[\?&]session=[^&#]*/g, '').replace(/\?$/, '');
                 }
-                const win = window.open(url, '_blank', 'noopener,noreferrer');
-                if (!win || win.closed || typeof win.closed === 'undefined') {
-                    window.location.href = url;
-                }
-            } catch(e) {
-                window.location.href = url;
+            } catch(e) {}
+
+            // دعم بيئة تطبيقات الهواتف الأصلية Capacitor
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+                if (event && event.preventDefault) event.preventDefault();
+                window.Capacitor.Plugins.Browser.open({ url: targetUrl });
+                return false;
             }
+
+            // في المتصفح العادي أو الـ PWA، السماح للرابط بفتح تبويب خارجي مستقل
+            if (!event) {
+                const win = window.open(targetUrl, '_blank', 'noopener,noreferrer');
+                if (!win || win.closed || typeof win.closed === 'undefined') {
+                    window.location.href = targetUrl;
+                }
+            }
+            return true;
         }
 
         function copyTrafficPortalUrl() {
-            const url = 'https://ppo.gov.eg/webcenter/portal/PPOPortal/pages_publicservices/trafficservices';
+            const url = 'https://ppo.gov.eg/ppo/r/ppoportal/ppoportal/traffic';
             const isEn = appState.lang === 'en';
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(url).then(() => {
-                    showNotification(isEn ? 'Traffic portal link copied to clipboard!' : 'تم نسخ رابط بوابة المرور! يمكنك الآن لصقه في متصفح كروم أو سفاري مباشرة', 'success');
+                    showNotification(isEn ? 'Official traffic portal link copied to clipboard!' : 'تم نسخ رابط بوابة نيابات المرور المباشر! يمكنك الآن لصقه في متصفح هاتفك مباشرة', 'success');
                 }).catch(() => {
                     showNotification(url, 'info');
                 });
@@ -14782,9 +14883,118 @@ ${verifyUrl}
             // تمرير الشاشة تلقائياً للأعلى حتى لا يضطر المستخدم للتمرير لأسفل الشاشة
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            if (tabId === 'maintenance') renderCatalogItems();
             if (tabId === 'hardware') renderHardwareCards();
             if (tabId === 'analytics') setTimeout(renderCharts, 100);
             if (tabId === 'inspection') renderInspectionTab();
+        }
+
+        /* ==========================================================================
+           محرك تقييم حالة بند الصيانة بدقة (Maintenance Item Evaluation Engine)
+           ========================================================================== */
+        function evaluateMaintenanceItem(item, currentOdo = 0, car = null) {
+            if (!item) return { isOverdue: false, isApproaching: false, percent: 0, statusBadgeAr: '', statusBadgeEn: '', reasonTextAr: '', reasonTextEn: '' };
+
+            const lastKm = Number(item.lastKm) || 0;
+            const kmInterval = Number(item.kmInterval) || 10000;
+            const diffKm = currentOdo - lastKm;
+            const remainingKm = Math.max(0, kmInterval - diffKm);
+            const overdueKm = Math.max(0, diffKm - kmInterval);
+            const now = Date.now();
+
+            // نوع البند عاجل طارئ (CM)
+            if (item.type === 'CM') {
+                const isResolved = !!item.isResolved;
+                return {
+                    isOverdue: !isResolved,
+                    isApproaching: false,
+                    isCritical: true,
+                    percent: isResolved ? 0 : 100,
+                    diffKm: 0,
+                    kmInterval: 0,
+                    remainingKm: 0,
+                    overdueKm: 0,
+                    statusBadgeAr: isResolved ? 'تم الإصلاح ✓' : 'مستحق فوراً (عطل طارئ)',
+                    statusBadgeEn: isResolved ? 'Resolved ✓' : 'Urgent (CM Task)',
+                    reasonTextAr: isResolved ? 'تم تسجيل وإصلاح هذا العطل' : 'عطل مسجل يتطلب الصيانة الفورية',
+                    reasonTextEn: isResolved ? 'Issue resolved and logged' : 'Requires immediate corrective service'
+                };
+            }
+
+            // فحص المسافة (الكيلومتر)
+            let isOverdue = diffKm >= kmInterval;
+            let isApproaching = !isOverdue && (remainingKm <= Math.min(1000, Math.max(300, Math.round(kmInterval * 0.15))));
+
+            // فحص التاريخ بالشهور
+            let dateOverdue = false;
+            let dateApproaching = false;
+            let daysRemaining = null;
+            if (item.lastDate && item.monthInterval) {
+                try {
+                    const lastD = new Date(item.lastDate);
+                    if (!isNaN(lastD.getTime())) {
+                        const dueD = new Date(lastD);
+                        dueD.setMonth(dueD.getMonth() + parseInt(item.monthInterval, 10));
+                        daysRemaining = Math.ceil((dueD.getTime() - now) / (1000 * 60 * 60 * 24));
+                        if (daysRemaining <= 0) {
+                            dateOverdue = true;
+                            isOverdue = true;
+                        } else if (daysRemaining <= 15 && !isOverdue) {
+                            dateApproaching = true;
+                            isApproaching = true;
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            const percent = Math.min(100, Math.max(0, Math.round((diffKm / kmInterval) * 100)));
+
+            let statusBadgeAr = 'حالة ممتازة ✓';
+            let statusBadgeEn = 'Good ✓';
+            let reasonTextAr = `متبقي ${remainingKm.toLocaleString()} كم`;
+            let reasonTextEn = `${remainingKm.toLocaleString()} km remaining`;
+
+            if (isOverdue) {
+                statusBadgeAr = 'مستحق الآن ⚠️';
+                statusBadgeEn = 'Overdue ⚠️';
+                if (dateOverdue && overdueKm > 0) {
+                    reasonTextAr = `تجاوز الموعد بـ ${overdueKm.toLocaleString()} كم وتجاوز التاريخ الموصى به`;
+                    reasonTextEn = `Overdue by ${overdueKm.toLocaleString()} km & past recommended date`;
+                } else if (dateOverdue) {
+                    reasonTextAr = `تجاوز تاريخ الصيانة الدوري الموصى به (${item.monthInterval} شهر)`;
+                    reasonTextEn = `Past recommended service period (${item.monthInterval} mos)`;
+                } else {
+                    reasonTextAr = `تجاوز الموعد بـ ${overdueKm.toLocaleString()} كم`;
+                    reasonTextEn = `Overdue by ${overdueKm.toLocaleString()} km`;
+                }
+            } else if (isApproaching) {
+                statusBadgeAr = 'اقترب الموعد ⏳';
+                statusBadgeEn = 'Due Soon ⏳';
+                if (daysRemaining !== null && daysRemaining <= 15) {
+                    reasonTextAr = `اقترب موعد الفحص (متبقي ${daysRemaining} يوم أو ${remainingKm.toLocaleString()} كم)`;
+                    reasonTextEn = `Service approaching (${daysRemaining} days or ${remainingKm.toLocaleString()} km left)`;
+                } else {
+                    reasonTextAr = `اقترب موعد الفحص (متبقي ${remainingKm.toLocaleString()} كم)`;
+                    reasonTextEn = `Service approaching (${remainingKm.toLocaleString()} km left)`;
+                }
+            }
+
+            return {
+                isOverdue,
+                isApproaching,
+                percent,
+                diffKm,
+                kmInterval,
+                remainingKm,
+                overdueKm,
+                dateOverdue,
+                dateApproaching,
+                daysRemaining,
+                statusBadgeAr,
+                statusBadgeEn,
+                reasonTextAr,
+                reasonTextEn
+            };
         }
 
         function renderUrgentAlerts() {
@@ -15939,6 +16149,302 @@ ${verifyUrl}
            ========================================================================== */
         let isFreeEditModeActive = false;
         let currentEditingCatalogItemId = null;
+
+        // فلترة بنود جدول الصيانة وتحديث الواجهة
+        function filterCatalog(filterType) {
+            appState.activeFilter = filterType;
+            
+            // تحديث تصميم أزرار الفئات الرئيسية (Macro level)
+            const isMacroAll = filterType === 'all';
+            const isMacroPM = filterType === 'pm' || ['engine', 'filters', 'brakes', 'belts'].includes(filterType);
+            const isMacroCM = filterType === 'cm';
+
+            const btnAll = document.getElementById('filterBtn-all');
+            const btnPM = document.getElementById('filterBtn-pm');
+            const btnCM = document.getElementById('filterBtn-cm');
+
+            if (btnAll) {
+                btnAll.className = isMacroAll 
+                    ? "px-3.5 py-1.5 bg-sky-600 dark:bg-sky-500 text-white rounded-lg text-xs font-bold cursor-pointer transition-all shadow-xs flex items-center gap-1.5 active:scale-95"
+                    : "px-3.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 active:scale-95";
+            }
+            if (btnPM) {
+                btnPM.className = isMacroPM
+                    ? "px-3.5 py-1.5 bg-emerald-600 dark:bg-emerald-500 text-white rounded-lg text-xs font-bold cursor-pointer transition-all shadow-xs flex items-center gap-1.5 active:scale-95"
+                    : "px-3.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 active:scale-95";
+            }
+            if (btnCM) {
+                btnCM.className = isMacroCM
+                    ? "px-3.5 py-1.5 bg-rose-600 dark:bg-rose-500 text-white rounded-lg text-xs font-bold cursor-pointer transition-all shadow-xs flex items-center gap-1.5 active:scale-95"
+                    : "px-3.5 py-1.5 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 active:scale-95";
+            }
+
+            // تحديث فلاتر الأقسام الفرعية التابعة للـ PM
+            const subContainer = document.getElementById('pmSubCategoriesContainer');
+            if (subContainer) {
+                if (isMacroCM) {
+                    subContainer.classList.add('opacity-40', 'pointer-events-none');
+                } else {
+                    subContainer.classList.remove('opacity-40', 'pointer-events-none');
+                }
+            }
+
+            const subFilters = ['pm-sub', 'engine', 'filters', 'brakes', 'belts'];
+            subFilters.forEach(id => {
+                const b = document.getElementById(`filterBtn-${id}`);
+                if (!b) return;
+                const match = (id === 'pm-sub' && (filterType === 'pm' || filterType === 'all')) || (id === filterType);
+                if (match) {
+                    b.classList.add('bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-900');
+                    b.classList.remove('bg-white', 'text-slate-700', 'dark:bg-slate-800', 'dark:text-slate-300');
+                } else {
+                    b.classList.remove('bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-900');
+                    b.classList.add('bg-white', 'text-slate-700', 'dark:bg-slate-800', 'dark:text-slate-300');
+                }
+            });
+
+            renderCatalogItems();
+        }
+
+        function getCategoryIconHtml(item) {
+            const id = String(item.id || '').toLowerCase();
+            const cat = String(item.category || '').toLowerCase();
+            const name = String(item.name || '').toLowerCase();
+
+            if (id === 'oil' || cat === 'oil' || name.includes('زيت') || name.includes('oil')) {
+                return '<i class="fa-solid fa-oil-can text-amber-500"></i>';
+            }
+            if (id.includes('filter') || cat === 'filters' || name.includes('فلتر') || name.includes('filter')) {
+                return '<i class="fa-solid fa-filter text-sky-500"></i>';
+            }
+            if (id.includes('brake') || cat === 'brakes' || name.includes('فرامل') || name.includes('brake')) {
+                return '<i class="fa-solid fa-compact-disc text-rose-500"></i>';
+            }
+            if (id.includes('belt') || id.includes('timing') || cat === 'belts' || name.includes('سير') || name.includes('كاتينة') || name.includes('belt')) {
+                return '<i class="fa-solid fa-gears text-purple-500"></i>';
+            }
+            if (id.includes('plug') || name.includes('بوجيه') || name.includes('spark')) {
+                return '<i class="fa-solid fa-bolt text-yellow-500"></i>';
+            }
+            if (id.includes('tire') || name.includes('إطار') || name.includes('تريلر') || name.includes('tire')) {
+                return '<i class="fa-solid fa-circle-dot text-indigo-500"></i>';
+            }
+            if (item.type === 'CM') {
+                return '<i class="fa-solid fa-triangle-exclamation text-rose-500"></i>';
+            }
+            return '<i class="fa-solid fa-wrench text-emerald-500"></i>';
+        }
+
+        // محرك رسم وعرض بطاقات جدول الصيانة الدوري والعاجل (PM / CM Grid)
+        function renderCatalogItems() {
+            const grid = document.getElementById('catalogGrid');
+            if (!grid) return;
+
+            const car = getCurrentCar();
+            const isEn = appState.lang === 'en';
+
+            if (!car) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-6 space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-50 dark:bg-sky-950 text-sky-500 flex items-center justify-center text-2xl mx-auto">
+                            <i class="fa-solid fa-car-side"></i>
+                        </div>
+                        <h4 class="text-sm font-black text-slate-800 dark:text-white">${isEn ? 'No Vehicle Selected' : 'لا توجد سيارة محددة'}</h4>
+                        <p class="text-xs text-slate-400 max-w-sm mx-auto">${isEn ? 'Please add a vehicle to view its tailored factory maintenance schedule.' : 'يرجى إضافة سيارة إلى الكراج لمشاهدة جدول صيانتها المعتمد.'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (!car.catalog || !Array.isArray(car.catalog) || car.catalog.length === 0) {
+                if (typeof buildDefaultCatalogForCar === 'function') {
+                    car.catalog = buildDefaultCatalogForCar(car.brand, car.model, car.generation, car.year, car.odometer);
+                } else if (typeof buildSpecificCatalog === 'function') {
+                    car.catalog = buildSpecificCatalog(car.brand, car.model, car.generationIndex || 0, car.odometer || 0);
+                }
+            }
+
+            if (!car.catalog || car.catalog.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-6 space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-50 dark:bg-sky-950 text-sky-500 flex items-center justify-center text-2xl mx-auto">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+                        <h4 class="text-sm font-black text-slate-800 dark:text-white">${isEn ? 'No maintenance items found' : 'جدول الصيانة فارغ حالياً'}</h4>
+                        <p class="text-xs text-slate-400 max-w-sm mx-auto">${isEn ? 'Add custom maintenance tasks or reset to standard catalog.' : 'يمكنك إضافة بنود مخصصة للصيانة أو إعادة تعيين الكتالوج.'}</p>
+                        <button onclick="openAddCustomPMModal('PM')" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-xs inline-flex items-center gap-2">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>${isEn ? 'Add Custom Item' : 'إضافة بند مخصص'}</span>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const currentOdo = Number(car.odometer) || 0;
+            const activeFilter = appState.activeFilter || 'all';
+
+            // تحديث بادج عداد الـ CM
+            const cmItems = car.catalog.filter(i => i.type === 'CM' && !i.isResolved);
+            const cmBadge = document.getElementById('cmFilterBadgeCount');
+            if (cmBadge) {
+                if (cmItems.length > 0) {
+                    cmBadge.innerText = cmItems.length;
+                    cmBadge.classList.remove('hidden');
+                } else {
+                    cmBadge.classList.add('hidden');
+                }
+            }
+
+            // تصفية البنود طبقاً للفلتر المختار
+            const filteredItems = car.catalog.filter(item => {
+                const idLower = String(item.id || '').toLowerCase();
+                const nameLower = String(item.name || '').toLowerCase();
+                const catLower = String(item.category || '').toLowerCase();
+                const isCM = item.type === 'CM';
+
+                if (activeFilter === 'cm') return isCM;
+                if (activeFilter === 'pm') return !isCM;
+                if (activeFilter === 'engine') {
+                    return !isCM && (catLower === 'engine' || catLower === 'oil' || idLower === 'oil' || idLower.includes('oil') || nameLower.includes('زيت') || idLower.includes('coolant') || nameLower.includes('تبريد') || idLower.includes('trans') || nameLower.includes('فتيس') || idLower.includes('plug') || nameLower.includes('بوجيه'));
+                }
+                if (activeFilter === 'filters') {
+                    return !isCM && (catLower === 'filters' || idLower.includes('filter') || nameLower.includes('فلتر'));
+                }
+                if (activeFilter === 'brakes') {
+                    return !isCM && (catLower === 'brakes' || idLower.includes('brake') || nameLower.includes('فرامل'));
+                }
+                if (activeFilter === 'belts') {
+                    return !isCM && (catLower === 'belts' || idLower.includes('belt') || idLower.includes('timing') || nameLower.includes('سير') || nameLower.includes('كاتينة'));
+                }
+                return true; // 'all'
+            });
+
+            if (filteredItems.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-10 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 space-y-2">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-xl mx-auto">
+                            <i class="fa-solid fa-filter"></i>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">${isEn ? 'No items in this category' : 'لا توجد بنود مطابقة لهذا التصنيف'}</h4>
+                        <p class="text-xs text-slate-400">${isEn ? 'Try selecting another category or add a custom task.' : 'جرّب اختيار تصنيف آخر أو إضافة بند مخصص.'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let cardsHtml = '';
+            filteredItems.forEach(item => {
+                const evalResult = evaluateMaintenanceItem(item, currentOdo, car);
+                const isCM = item.type === 'CM';
+                const itemName = (typeof getLocalizedItemName === 'function') ? getLocalizedItemName(item) : item.name;
+                const iconHtml = getCategoryIconHtml(item);
+
+                const lastKm = Number(item.lastKm) || 0;
+                const kmInterval = Number(item.kmInterval) || 10000;
+                const unitStr = item.unit === 'hours' ? (isEn ? 'hrs' : 'ساعة') : (isEn ? 'km' : 'كم');
+                const lastDateStr = item.lastDate ? item.lastDate.split('T')[0] : '--';
+
+                // ألوان شريط التقدم والبادج
+                let barColor = '#10b981';
+                let badgeClass = 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80';
+                if (evalResult.isOverdue) {
+                    barColor = '#f43f5e';
+                    badgeClass = 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 animate-pulse';
+                } else if (evalResult.isApproaching) {
+                    barColor = '#f59e0b';
+                    badgeClass = 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/80';
+                }
+
+                const statusBadgeTxt = isEn ? evalResult.statusBadgeEn : evalResult.statusBadgeAr;
+                const reasonTxt = isEn ? evalResult.reasonTextEn : evalResult.reasonTextAr;
+                const isCustomItem = item.category === 'other' || String(item.id).startsWith('c_') || String(item.id).startsWith('cm_');
+
+                cardsHtml += `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-md transition-all">
+                        <!-- هيدر البطاقة: الأيقونة، الاسم، والنوع والبادج -->
+                        <div class="space-y-2.5">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm shrink-0 shadow-2xs">
+                                        ${iconHtml}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="px-1.5 py-0.2 rounded text-[9px] font-black ${isCM ? 'bg-rose-600 text-white' : 'bg-sky-600 text-white'}">${isCM ? 'CM' : 'PM'}</span>
+                                            <h4 class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate" title="${itemName}">${itemName}</h4>
+                                        </div>
+                                        <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block truncate mt-0.5">${reasonTxt}</span>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-black shrink-0 ${badgeClass}">
+                                    ${statusBadgeTxt}
+                                </span>
+                            </div>
+
+                            ${!isCM ? `
+                            <!-- شريط التقدم ومؤشر الاستهلاك -->
+                            <div class="space-y-1 pt-1">
+                                <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                                    <span>${isEn ? 'Consumption:' : 'نسبة الاستهلاك:'} ${evalResult.percent}%</span>
+                                    <span>${evalResult.isOverdue ? (isEn ? 'Service Overdue' : 'مستحق الآن') : (isEn ? `${evalResult.remainingKm.toLocaleString()} ${unitStr} left` : `متبقي ${evalResult.remainingKm.toLocaleString()} ${unitStr}`)}</span>
+                                </div>
+                                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-500" style="width: ${evalResult.percent}%; background-color: ${barColor};"></div>
+                                </div>
+                            </div>
+                            ` : ''}
+
+                            <!-- تفاصيل الفواصل وآخر صيانة -->
+                            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2.5 grid grid-cols-2 gap-2 text-[11px] border border-slate-100 dark:border-slate-800/80">
+                                <div>
+                                    <span class="text-slate-400 block text-[10px] font-medium">${isEn ? 'Last Service:' : 'آخر صيانة:'}</span>
+                                    <strong class="text-slate-700 dark:text-slate-200 font-bold block truncate font-mono">${lastKm.toLocaleString()} ${unitStr}</strong>
+                                    <span class="text-slate-400 text-[9px] block">${lastDateStr}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block text-[10px] font-medium">${isEn ? 'Service Interval:' : 'فاصل التغيير:'}</span>
+                                    ${isCM ? `
+                                        <strong class="text-rose-600 dark:text-rose-400 font-bold block">${isEn ? 'Urgent / Corrective' : 'عطل طارئ عاجل'}</strong>
+                                    ` : `
+                                        <strong class="text-slate-700 dark:text-slate-200 font-bold block truncate font-mono">${kmInterval.toLocaleString()} ${unitStr}</strong>
+                                        <span class="text-slate-400 text-[9px] block">${item.monthInterval || 12} ${isEn ? 'months' : 'شهر'}</span>
+                                    `}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- أزرار الإجراءات السريعة في أسفل البطاقة -->
+                        <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                            <button type="button" onclick="openRecordModal('${item.id}')" class="flex-1 py-2 px-3 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                                <i class="fa-solid fa-circle-check text-[11px]"></i>
+                                <span>${isEn ? 'Log Service' : 'تسجيل صيانة'}</span>
+                            </button>
+
+                            ${!isCM ? `
+                            <button type="button" onclick="openEditCatalogItemModal('${item.id}')" class="p-2 text-slate-500 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all border border-slate-200 dark:border-slate-700 cursor-pointer shrink-0" title="${isEn ? 'Edit Interval' : 'تعديل الفاصل'}">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </button>
+                            ` : ''}
+
+                            ${(item.isCustomized && !isCustomItem) ? `
+                            <button type="button" onclick="resetPMItemToDefaultDirect('${item.id}')" class="p-2 text-amber-500 hover:text-amber-600 dark:hover:text-amber-400 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-all border border-amber-200 dark:border-amber-800/60 cursor-pointer shrink-0" title="${isEn ? 'Restore Factory Default' : 'استعادة الأصل'}">
+                                <i class="fa-solid fa-arrow-rotate-left text-xs"></i>
+                            </button>
+                            ` : ''}
+
+                            ${isCustomItem ? `
+                            <button type="button" onclick="deleteCustomPMItem('${item.id}')" class="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all border border-slate-200 dark:border-slate-700 cursor-pointer shrink-0" title="${isEn ? 'Delete Custom Item' : 'حذف البند'}">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = cardsHtml;
+        }
 
         function toggleFreeEditMode() {
             isFreeEditModeActive = !isFreeEditModeActive;
@@ -23110,18 +23616,19 @@ function doPost(e) {
                     appState = validateAndSanitizeAppState(appState);
                 } 
             } else {
-                // إذا كان التخزين المحلي فارغاً أو تالفاً، استرداد فوري وتلقائي من نسخة IndexedDB الاحتياطية
-                if (typeof MotorCareIndexedDB !== 'undefined' && MotorCareIndexedDB.getItem) {
-                    MotorCareIndexedDB.getItem('motorCare_AppState_v140').then(dbState => {
-                        if (dbState && dbState.cars && Array.isArray(dbState.cars) && dbState.cars.length > 0 && (!appState.cars || appState.cars.length === 0)) {
-                            console.log('[MotorCare Storage] Recovered garage records from IndexedDB mirror!');
-                            appState = validateAndSanitizeAppState(dbState);
-                            SafeStorage.setJSON('motorCare_AppState_v140', appState);
-                            if (typeof renderDashboard === 'function') renderDashboard();
-                        }
-                    }).catch(() => {});
-                }
                 appState = validateAndSanitizeAppState(appState);
+            }
+
+            // استرداد فوري وتلقائي من نسخة IndexedDB الاحتياطية إذا كان التخزين المحلي فارغاً أو تالفاً أو فُقدت سيارات الكراج
+            if ((!appState.cars || appState.cars.length === 0) && typeof MotorCareIndexedDB !== 'undefined' && MotorCareIndexedDB.getItem) {
+                MotorCareIndexedDB.getItem('motorCare_AppState_v140').then(dbState => {
+                    if (dbState && dbState.cars && Array.isArray(dbState.cars) && dbState.cars.length > 0 && (!appState.cars || appState.cars.length === 0)) {
+                        console.log('[MotorCare Storage] Recovered garage records from IndexedDB mirror!');
+                        appState = validateAndSanitizeAppState(dbState);
+                        SafeStorage.setJSON('motorCare_AppState_v140', appState);
+                        if (typeof renderDashboard === 'function') renderDashboard();
+                    }
+                }).catch(() => {});
             }
             if (appState.darkMode) document.documentElement.classList.add('dark');
             
