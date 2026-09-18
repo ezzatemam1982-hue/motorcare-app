@@ -1995,23 +1995,42 @@ ${verifyUrl}
     <div id="mainAppContainer" style="display: none;" class="flex-1 flex flex-col min-h-screen">
         <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 px-3 sm:px-4 py-2 sm:py-2.5 shadow-xs">
             <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-                <!-- 1. عرض موديل العربية الحالي وإدارتها -->
-                <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                    <div class="flex items-center gap-2 cursor-pointer truncate" onclick="openGarageModal()">
-                        <div id="headerCarBadgeContainer" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-sky-100 dark:bg-sky-950/60 flex items-center justify-center text-sky-600 dark:text-sky-400 font-bold shrink-0 overflow-hidden border border-slate-200/60 dark:border-slate-700/60 p-1 shadow-2xs">
-                            <i class="fa-solid fa-car text-base sm:text-lg"></i>
+                <!-- 1. الملف الشخصي السريع (User Profile) + جرس الإشعارات الذكي (Smart Notifications) -->
+                <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                    <!-- كرت الملف الشخصي المباشر في الهيدر العلوي -->
+                    <button type="button" onclick="openAccountCenter()" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer shadow-2xs active:scale-95 text-start shrink-0" title="الملف الشخصي وإدارة الحساب">
+                        <div class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-sky-500/20 to-indigo-500/20 p-0.5 border border-sky-400/40 shadow-2xs shrink-0">
+                            <img id="headerUserAvatarImg" src="https://api.dicebear.com/7.x/bottts/svg?seed=ezzat" alt="Avatar" class="w-full h-full rounded-[10px] object-cover">
+                            <!-- نقطة المزامنة الخضراء الحية -->
+                            <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 shadow-xs" title="متصل بالسحابة"></span>
                         </div>
-                        <div class="min-w-0">
-                            <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate">
-                                <span id="headerCarTitle" class="truncate">اختر سيارتك</span>
-                                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 shrink-0"></i>
+                        <div class="hidden sm:block min-w-0">
+                            <div class="flex items-center gap-1">
+                                <span id="headerUserName" class="text-xs font-black text-slate-900 dark:text-white truncate max-w-[110px]">الملف الشخصي</span>
+                                <i class="fa-solid fa-circle-check text-[10px] text-sky-500"></i>
                             </div>
-                            <span id="headerCarMeta" class="text-[10px] sm:text-xs text-slate-500 truncate block" data-i18n="clickManageGarage">إدارة الكراج</span>
+                            <span class="text-[10px] text-slate-400 font-semibold block truncate">إدارة الحساب</span>
                         </div>
-                    </div>
-                    <button onclick="openEditCarModal()" class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer shrink-0 transition-colors" title="تعديل بيانات السيارة" data-i18n-title="editCarTitle">
-                        <i class="fa-solid fa-pen-to-square text-xs"></i>
                     </button>
+
+                    <!-- جرس الإشعارات المباشر في الهيدر -->
+                    <button type="button" onclick="openNotificationsHubModal()" id="headerNotificationBtn" class="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-sky-500 rounded-xl text-xs sm:text-sm cursor-pointer border border-slate-200/80 dark:border-slate-700/80 transition-all shadow-2xs active:scale-95 shrink-0" title="مركز الإشعارات والتنبيهات">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="headerNotificationBadge" class="hidden absolute -top-1 -right-1 min-w-[16px] h-[16px] px-0.5 bg-rose-500 text-white text-[9px] font-black rounded-full ring-2 ring-white dark:ring-slate-900 flex items-center justify-center shadow-sm animate-pulse">0</span>
+                    </button>
+
+                    <!-- شارة وهوية التطبيق الفاخرة (MotorCare) -->
+                    <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-black">
+                        <i class="fa-solid fa-shield-halved text-xs"></i>
+                        <span>موتور كير</span>
+                    </div>
+
+                    <!-- عناصر مخفية للحفاظ على التوافق الكامل مع دوال الجافاسكريبت -->
+                    <div class="hidden">
+                        <span id="headerCarTitle"></span>
+                        <span id="headerCarMeta"></span>
+                        <div id="headerCarBadgeContainer"></div>
+                    </div>
                 </div>
 
                 <!-- 2. أزرار الإجراءات العلوية المباشرة (المظهر + اللغة + طوارئ الطريق + الخدمات والمزيد ☰) -->
@@ -2245,24 +2264,42 @@ ${verifyUrl}
 
                     <!-- المحتوى النشط للوحة القيادة عند وجود سيارة -->
                     <div id="dashboardActiveContent" class="space-y-6">
-                    <div class="rounded-3xl bg-slate-900 p-6 md:p-8 text-white border border-slate-800 shadow-xl">
+                    <div class="rounded-3xl bg-slate-900 p-5 sm:p-7 text-white border border-slate-800 shadow-xl">
+                        <!-- شريط بيانات السيارة الحالي وإدارتها في لوحة التحكم -->
+                        <div class="flex items-center justify-between gap-3 pb-4 mb-5 border-b border-slate-800/80">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div id="dashHeroCarLogoContainer" class="w-12 h-12 rounded-2xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center p-2 shadow-md shrink-0"></div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2">
+                                        <h3 id="dashHeroCarName" class="text-base sm:text-xl font-black text-white truncate">سيارتي</h3>
+                                        <button type="button" onclick="openEditCarModal()" class="w-6 h-6 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs cursor-pointer transition-colors shrink-0" title="تعديل بيانات السيارة">
+                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                        </button>
+                                    </div>
+                                    <p id="currentCarEngineInfo" class="text-xs text-slate-400 mt-0.5 truncate"></p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="openGarageModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 rounded-xl text-xs font-bold shrink-0 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs" title="إدارة الكراج وتبديل السيارة">
+                                <i class="fa-solid fa-warehouse text-xs"></i>
+                                <span class="hidden sm:inline" data-i18n="garageBtn">الكراج</span>
+                                <i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i>
+                            </button>
+                        </div>
+
+                        <!-- عداد الكيلومترات وزر التحديث السريع -->
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            <div class="flex items-start gap-3.5">
-                                <div id="dashHeroCarLogoContainer" class="mt-1 shrink-0"></div>
-                                <div>
-                                    <span class="text-xs text-sky-400 font-bold block mb-1">
-                                        <i class="fa-solid fa-gauge-high ml-1"></i>
-                                        <span data-i18n="currentOdo">قراءة العداد الحالية</span>
-                                    </span>
+                            <div>
+                                <span class="text-xs text-sky-400 font-bold block mb-1">
+                                    <i class="fa-solid fa-gauge-high ml-1"></i>
+                                    <span data-i18n="currentOdo">قراءة العداد الحالية</span>
+                                </span>
                                 <div class="flex items-baseline gap-2">
-                                    <span id="currentOdometerDisplay" class="text-5xl md:text-6xl font-black">210,000</span>
-                                    <span class="text-xl font-bold text-sky-300" id="odoUnitSpan">كم</span>
-      </div>
-                                <p id="currentCarEngineInfo" class="text-xs text-slate-400 mt-2"></p>
+                                    <span id="currentOdometerDisplay" class="text-4xl sm:text-5xl md:text-6xl font-black">210,000</span>
+                                    <span class="text-lg sm:text-xl font-bold text-sky-300" id="odoUnitSpan">كم</span>
+                                </div>
                             </div>
-                            </div>
-                            <button onclick="openOdometerModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-2xl text-xs font-bold text-sky-400 cursor-pointer">
-                                <i class="fa-solid fa-pen-to-square ml-1"></i>
+                            <button onclick="openOdometerModal()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-2xl text-xs font-bold text-sky-400 cursor-pointer flex items-center justify-center gap-1.5 transition-all shadow-xs active:scale-95">
+                                <i class="fa-solid fa-pen-to-square"></i>
                                 <span data-i18n="quickUpdateOdo">تحديث العداد</span>
                             </button>
                         </div>
@@ -15259,6 +15296,17 @@ ${verifyUrl}
                     avatarImg.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
                 }
             }
+
+            const nameEl = document.getElementById('headerUserName');
+            if (nameEl) {
+                if (profile && profile.name) {
+                    nameEl.innerText = profile.name;
+                } else if (profile && profile.email) {
+                    nameEl.innerText = profile.email.split('@')[0];
+                } else {
+                    nameEl.innerText = (typeof appState !== 'undefined' && appState.lang === 'en') ? 'My Profile' : 'الملف الشخصي';
+                }
+            }
         }
 
         function openForgotPasswordModal() {
@@ -16109,14 +16157,15 @@ ${verifyUrl}
             const carMeta = document.getElementById('headerCarMeta');
             if (carMeta) carMeta.innerText = isEn ? `${Number(car.odometer).toLocaleString()} km` : `${Number(car.odometer).toLocaleString()} كم`;
 
-            // تحديث شعار ماركة السيارة في الهيدر واللوحة الرئيسية
-            const headerBadge = document.getElementById('headerCarBadgeContainer');
-            if (headerBadge) {
-                headerBadge.innerHTML = getCarBrandLogoHtml(car.brand, 'w-8 h-8 sm:w-9 sm:h-9');
+            const heroCarName = document.getElementById('dashHeroCarName');
+            if (heroCarName) {
+                heroCarName.innerText = `${car.brand} ${car.model} (${car.year || ''})`;
             }
+
+            // تحديث شعار ماركة السيارة في اللوحة الرئيسية
             const heroLogo = document.getElementById('dashHeroCarLogoContainer');
             if (heroLogo) {
-                heroLogo.innerHTML = getCarBrandLogoHtml(car.brand, 'w-12 h-12 md:w-14 md:h-14', 'bg-slate-800/90 border-slate-700/80 shadow-md');
+                heroLogo.innerHTML = getCarBrandLogoHtml(car.brand, 'w-9 h-9 sm:w-10 sm:h-10', 'bg-transparent');
             }
 
             renderCatalogItems();
