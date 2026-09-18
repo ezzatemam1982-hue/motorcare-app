@@ -1,0 +1,77 @@
+# ==============================================================================
+# MotorCare App - Git Ignore Configuration
+# ==============================================================================
+
+# 1. Environment Variables & Secrets (ملفات ومتغيرات بيئة العمل الحساسة)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.env.*
+!.env.example
+
+# 2. Dependencies & Package Managers (اعتماديات الحزم ومجلدات التثبيت)
+node_modules/
+jspm_packages/
+.pnp
+.pnp.js
+
+# 3. Build Outputs & Compilations (مخرجات البناء والتوزيع)
+dist/
+build/
+out/
+bin/
+obj/
+
+# 4. Cache & Temporary Directories (مجلدات التخزين المؤقت والملفات المؤقتة)
+.cache/
+.parcel-cache/
+.temp/
+tmp/
+temp/
+*.tmp
+
+# 5. Android & Mobile Build Artifacts (ملفات تطوير وبناء الأندرويد الحساسة)
+local.properties
+.gradle/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.keystore
+*.jks
+google-services.json
+
+# 6. IDEs & Code Editors (بيئات التطوير وملفات التكوين الخاصة بالمحررات)
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.project
+.classpath
+.settings/
+
+# 7. Logs & Debugging (سجلات الأخطاء والتشغيل)
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 8. Operating System Artifacts (ملفات النظام التلقائية)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
