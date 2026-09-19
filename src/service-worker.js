@@ -1,9 +1,9 @@
-// MotorCare Service Worker v2.0.9
+// MotorCare Service Worker v2.0.12
 // توفير الدعم الكامل للعمل دون اتصال بالإنترنت (Offline Mode) وتجربة PWA متكاملة
 // نظام إشعارات الموبايل لمواعيد الصيانة الدورية والطارئة (Mobile Push & Local Notifications)
 // استراتيجية التخزين: Cache First, then Network لملفات الواجهة الثابتة لضمان الفتح الفوري بدون إنترنت
 
-const CACHE_NAME = 'motorcare-cache-v2.0.9';
+const CACHE_NAME = 'motorcare-cache-v2.0.13';
 
 // 1. قائمة الأصول الثابتة الأساسية للتطبيق (Core Static Assets)
 const PRECACHE_ASSETS = [

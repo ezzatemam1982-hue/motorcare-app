@@ -1,0 +1,3443 @@
+{
+  "status": true,
+  "data": {
+    "result": [
+      {
+        "id": 57,
+        "name": "تويوتا مصر - العلمين",
+        "order": 1,
+        "slug": "toyota-egypt-el-alamein",
+        "address": "مدينة العلمين - الساحل الشمالي\r\nمحطة شيل أوت العالمين",
+        "hotline": "01203004904",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 30.883579,
+          "lng": 28.86919
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "15:00-23:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 1,
+            "name": "اكسسوارات",
+            "icon": "https://toyota.com.eg/storage/10194/conversions/baby-car-seat-optimized.png"
+          },
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/18088/conversions/WhatsApp-Image-2022-06-23-at-11.18.22-AM-optimized.jpeg"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 56,
+        "name": "تويوتا مصر - مدينتي",
+        "order": 2,
+        "slug": "toyota-egypt-madinaty",
+        "address": "محطة تشيل أوت - طريق السويس - مدخل\r\nمدينتي",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.101446,
+          "lng": 31.57423
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-18:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/11501/conversions/_EZZ6338-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع مدينتي"
+      },
+      {
+        "id": 12,
+        "name": "تويوتا مصر -العباسية",
+        "order": 3,
+        "slug": "toyota-egypt-el-abaseya",
+        "address": "10 شارع المستشفى اليوناني، السرايات، الوايلى، محافظة القاهرة‬",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.063367,
+          "lng": 31.281823
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7088/conversions/Abbaseyah-out-door16-(1).jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع العباسية"
+      },
+      {
+        "id": 17,
+        "name": "تويوتا مصر -كايرو فيستيفال",
+        "order": 4,
+        "slug": "toyota-egypt-cairo-festival-city",
+        "address": "كايرو فستيفال سيتى - الطريق الدائرى، بجوار اكاديمية الشرطه",
+        "hotline": "16550",
+        "test_drive": 1,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.029825,
+          "lng": 31.404866
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7092/conversions/Toyota-Egypt-24-(3).jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع كايروفيستيفال سيتي"
+      },
+      {
+        "id": 20,
+        "name": "تويوتا مصر - الشيخ زايد",
+        "order": 5,
+        "slug": "toyota-egypt-sheikh-zayed",
+        "address": "26th of july corridor,2 first 6th of october, giza governorate 12588, egypt",
+        "hotline": "16550",
+        "test_drive": 1,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.015615,
+          "lng": 31.00338
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 1,
+            "name": "اكسسوارات",
+            "icon": "https://toyota.com.eg/storage/10194/conversions/baby-car-seat-optimized.png"
+          },
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 4,
+            "name": "السيارات المستعملة",
+            "icon": "https://toyota.com.eg/storage/9935/conversions/car-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7090/conversions/1-(1)-(1).jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع الشيخ زايد"
+      },
+      {
+        "id": 13,
+        "name": "تويوتا مصر -أبو رواش",
+        "order": 6,
+        "slug": "toyota-egypt-abu-rawash",
+        "address": "28 الكوم الأخضر -الطريق الدائرى -المنطقة الصناعيه",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.078549,
+          "lng": 31.049675
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 1,
+            "name": "اكسسوارات",
+            "icon": "https://toyota.com.eg/storage/10194/conversions/baby-car-seat-optimized.png"
+          },
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 4,
+            "name": "السيارات المستعملة",
+            "icon": "https://toyota.com.eg/storage/9935/conversions/car-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7087/conversions/Abu-Rawash-(2).png-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع أبو رواش"
+      },
+      {
+        "id": 19,
+        "name": "تويوتا مصر - جسر السويس",
+        "order": 8,
+        "slug": "toyota-egypt-gesr-al-suez",
+        "address": "18 شارع التوكيلات - المنطقة الصناعية - جسر السويس",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.142906,
+          "lng": 31.387696
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7093/conversions/Qebaa-by-Saif-Bassiouni-9-(1).jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع جسر السويس"
+      },
+      {
+        "id": 48,
+        "name": "تويوتا مصر - سموحة",
+        "order": 11,
+        "slug": "toyota-egypt-smouha",
+        "address": "٩٥ أ / ١٨ مكرر - شارع محمد فوزي معاذ – ميدان عيمانويل - سموحه",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.176447,
+          "lng": 29.904735
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7085/conversions/20210905_Toyota_WB-135-(1).jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع سموحة"
+      },
+      {
+        "id": 21,
+        "name": "تويوتا مصر - محرم بك",
+        "order": 12,
+        "slug": "toyota-egypt-moharam-beik",
+        "address": "لمنطقة الصناعية - المنشية الجديدة - طريق القباري-محرم بيك",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.17501,
+          "lng": 29.904271
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 1,
+            "name": "اكسسوارات",
+            "icon": "https://toyota.com.eg/storage/10194/conversions/baby-car-seat-optimized.png"
+          },
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 4,
+            "name": "السيارات المستعملة",
+            "icon": "https://toyota.com.eg/storage/9935/conversions/car-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7091/conversions/DSC_0006-(1).jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع محرم بيك"
+      },
+      {
+        "id": 22,
+        "name": "تويوتا مصر - شرم الشيخ",
+        "order": 14,
+        "slug": "toyota-egypt-sharm-el-sheikh",
+        "address": "طريق السلام، حى النور جنوب سيناء",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "جنوب  سيناء",
+        "location": {
+          "lat": 27.892928,
+          "lng": 34.301293
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-18:30"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/2937/conversions/sharm-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع شرم الشيخ"
+      },
+      {
+        "id": 11,
+        "name": "تويوتا مصر - الإسماعيلية",
+        "order": 15,
+        "slug": "toyota-egypt-ismailia",
+        "address": "امتداد شارع محمد على -نفيشه البحريه",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "الاسماعيلية",
+        "location": {
+          "lat": 30.572596,
+          "lng": 32.240485
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 1,
+            "name": "اكسسوارات",
+            "icon": "https://toyota.com.eg/storage/10194/conversions/baby-car-seat-optimized.png"
+          },
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7089/conversions/Ismailia-(1).jpeg-optimized.jpeg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع الإسماعيلية"
+      },
+      {
+        "id": 23,
+        "name": "تويوتا مصر - السادات",
+        "order": 16,
+        "slug": "toyota-egypt-sadat",
+        "address": "محور الطريق الاقليمي - المنطقة الصناعية السابعة",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "المنوفية",
+        "location": {
+          "lat": 30.450349,
+          "lng": 30.629594
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7094/conversions/Toyota-Egypt-Sadat39-(1).jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع السادات"
+      },
+      {
+        "id": 55,
+        "name": "تويوتا مصر - المنصورة",
+        "order": 17,
+        "slug": "toyota-egypt-mansoura",
+        "address": "بنزينة وطنية - ش محمد شاهين - المنصورة",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "الغربية",
+        "location": {
+          "lat": 31.035014,
+          "lng": 31.381004
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 1,
+            "name": "اكسسوارات",
+            "icon": "https://toyota.com.eg/storage/10194/conversions/baby-car-seat-optimized.png"
+          },
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 4,
+            "name": "السيارات المستعملة",
+            "icon": "https://toyota.com.eg/storage/9935/conversions/car-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/7221/conversions/WhatsApp-Image-2021-10-23-at-14.24.52-optimized.jpeg"
+        ],
+        "images_title": null,
+        "images_alt": "مركز خدمة تويوتا فرع المنصورة"
+      },
+      {
+        "id": 30,
+        "name": "البرجسى للتجارة و التسويق",
+        "order": 18,
+        "slug": "el-bargasy-for-trading-mar",
+        "address": "3ش بن الازد متفرع من ش مراد, الجيزة",
+        "hotline": "0122217332",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.018449,
+          "lng": 31.215326
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49566/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - البرجسى للتجارة و التسويق"
+      },
+      {
+        "id": 29,
+        "name": "الشركة المتحدة لتجارة السيارات",
+        "order": 19,
+        "slug": "united-co-for-cars",
+        "address": "42ش احمد عرابي، المهندسين",
+        "hotline": "01022230540",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.067297,
+          "lng": 31.196548
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - الشركة المتحدة لتجارة السيارات"
+      },
+      {
+        "id": 28,
+        "name": "شركة رمسيس للتجارة والاستيراد /شركة رمسيس جروب",
+        "order": 20,
+        "slug": "ramsis-group-company",
+        "address": "3ش الفريدليان رشدي سيدي جابر الاسكندريه",
+        "hotline": "01066623639",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.207667,
+          "lng": 29.926637
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - شركة رمسيس للتجارةوالاستيراد /شركة رمسيس جروب"
+      },
+      {
+        "id": 27,
+        "name": "شكرانو للتجارة والأستيراد",
+        "order": 21,
+        "slug": "shukrano-for-trading-import",
+        "address": "355طريق الحرية, سيدى جابر  الاسكندرية",
+        "hotline": "1229266224",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.220079,
+          "lng": 29.940745
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "11:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "11:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49574/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - شكرانو للتجارة والأستيراد"
+      },
+      {
+        "id": 25,
+        "name": "أبو سمرة للسيارات",
+        "order": 23,
+        "slug": "abo-samra-for-cars",
+        "address": "أول شارع العشرين - ال ذكري - العريش - شمال سيناء",
+        "hotline": "01099470016",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "شمال سيناء",
+        "location": {
+          "lat": 31.131199,
+          "lng": 33.755042
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "11:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "11:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - أبو سمرة للسيارات"
+      },
+      {
+        "id": 24,
+        "name": "المجموعة العربية للتجارة والتوزيع",
+        "order": 24,
+        "slug": "arabian-group-for-traiding-and-distribution",
+        "address": "دمشق , المهندسين , الجيزة",
+        "hotline": "0122116748",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.054521,
+          "lng": 31.192875
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:30-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:30-21:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - المجموعة العربية للتجارة والتوزيع"
+      },
+      {
+        "id": 31,
+        "name": "انترناشيونال موتورز امكو",
+        "order": 28,
+        "slug": "international-motors",
+        "address": "10 شارع طنطا ، ميدان أبو المواهب ، العجوزة",
+        "hotline": "01001877062",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.056297,
+          "lng": 31.209993
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - انترناشيونال موتورز امكو"
+      },
+      {
+        "id": 32,
+        "name": "والي اوتو",
+        "order": 29,
+        "slug": "wally-auto",
+        "address": "شارع الخليفة المأمون مصر الجديدة",
+        "hotline": "01007451000",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.087393,
+          "lng": 31.300588
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-20:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-20:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - والي اوتو"
+      },
+      {
+        "id": 34,
+        "name": "نيوهاي موتورز",
+        "order": 33,
+        "slug": "newhigh-motors",
+        "address": "95ش الميرغنى , هليوبولس , القاهرة",
+        "hotline": "1006852330",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.087812,
+          "lng": 31.336464
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - نيوهاي موتورز"
+      },
+      {
+        "id": 35,
+        "name": "شركة اخوان بركات - محمد بركات عبد الحميد وشركاه",
+        "order": 34,
+        "slug": "barakat-brothers-co",
+        "address": "امتداد شارع طلعت حرب -البر الشرقي من ميدان الزهور -المنوفية",
+        "hotline": "01002319864",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "المنوفية",
+        "location": {
+          "lat": 30.550952,
+          "lng": 31.020753
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49581/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - شركة اخوان بركات - محمد بركات عبد الحميد وشركاه"
+      },
+      {
+        "id": 37,
+        "name": "الشركة المتحدة لتجارة السيارات و الاستيراد و التصدير",
+        "order": 36,
+        "slug": "united-automotive-cofor-car",
+        "address": "ك 122 طريق الإسكندرية القاهرة الزراعي – مدخل طريق كفر الشيخ الدولي – طنطا",
+        "hotline": "16745",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الغربية",
+        "location": {
+          "lat": 30.810628,
+          "lng": 31.011256
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - الشركة المتحدة لتجارة السيارات و الاستيراد و التصدير"
+      },
+      {
+        "id": 39,
+        "name": "مودرن كار اشرف الاسمر",
+        "order": 38,
+        "slug": "modern-cars-show-room",
+        "address": "فراسكور-طريق 5 حديث بجوار المستشفى المركزي- دمياط",
+        "hotline": "1225120117",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "دمياط",
+        "location": {
+          "lat": 31.330554,
+          "lng": 31.711896
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - مودرن كار أشرف الاسمر"
+      },
+      {
+        "id": 40,
+        "name": "بروفيشنال اوتو",
+        "order": 39,
+        "slug": "professional-autoSuez",
+        "address": "1315المنطقة الصناعية القديمة, طريق السويس الاسماعيلية الصحراوى -السويس-",
+        "hotline": "01001616340",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "سويس",
+        "location": {
+          "lat": 29.990764,
+          "lng": 32.539362
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49579/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 41,
+        "name": "ديلز اوتوموتيف للسيارات",
+        "order": 40,
+        "slug": "deals-automotive",
+        "address": "1/7ش اللاسلكى, المعادى الجديدة  القاهرة",
+        "hotline": "01282045300",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 29.973854,
+          "lng": 31.280506
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - ديلز اوتوموتيف للسيارات"
+      },
+      {
+        "id": 42,
+        "name": "أ.أم.جي موتورز",
+        "order": 41,
+        "slug": "amg-motors",
+        "address": "ميدان المروحة(محمد زكي) القطامية",
+        "hotline": "19167",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 29.984699,
+          "lng": 31.357418
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - أ.أم.جي موتورز"
+      },
+      {
+        "id": 43,
+        "name": "مؤسسة الصالح",
+        "order": 42,
+        "slug": "al-saleh-company",
+        "address": "قرية وردان - امبابه",
+        "hotline": "01092196004",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 29.664204,
+          "lng": 31.196574
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - مؤسسة الصالح"
+      },
+      {
+        "id": 44,
+        "name": "اكسبريس أوتو سيرفيس",
+        "order": 43,
+        "slug": "express-auto-service",
+        "address": "3أ  شارع سهل حمزة الهرم",
+        "hotline": "01010365661",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 29.994205,
+          "lng": 31.156574
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-18:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-18:00"
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49572/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - اكسبريس أوتو سيرفيس"
+      },
+      {
+        "id": 46,
+        "name": "مركز تويوتا الحرفيين",
+        "order": 45,
+        "slug": "toyota-el-herafeyeen-center",
+        "address": "بلوك 1 محل 22-مدينة الحرفيين -  مدينة السلام",
+        "hotline": "01022292272",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.15085,
+          "lng": 31.40295
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - مركز تويوتا الحرفيين"
+      },
+      {
+        "id": 47,
+        "name": "تويوتا الرحاب - برفكت كار",
+        "order": 46,
+        "slug": "perfect-car-toyota-al-rehab",
+        "address": "السوق الشرقي - بجوار بوابة 22 - مدينة الرحاب",
+        "hotline": "01150012289",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.069739,
+          "lng": 31.519445
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "11:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "11:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": "موزع معتمد تويوتا - تويوتا الرحاب - برفكت كار"
+      },
+      {
+        "id": 49,
+        "name": "شركة الرزق التجارية",
+        "order": 47,
+        "slug": "al-rezk-trading-Smouha",
+        "address": "17 فيكتور إيمانويل ، أمام نادي سموحة",
+        "hotline": "01000584657",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.21658,
+          "lng": 29.943749
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 50,
+        "name": "شركة الرزق التجارية",
+        "order": 48,
+        "slug": "al-rezk-trading",
+        "address": "الكيلو 24 - طريق الأسكندرية/القاهرة الصحراوي",
+        "hotline": "01000004807",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.067501,
+          "lng": 29.821978
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49573/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 51,
+        "name": "بروفيشنال اوتو",
+        "order": 49,
+        "slug": "professional-auto",
+        "address": "223 شارع ناصر , كومبوند صن سيتي , السويس",
+        "hotline": "1090579545",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "سويس",
+        "location": {
+          "lat": 29.970122,
+          "lng": 32.524882
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49580/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 52,
+        "name": "شركة أبوحتة لتجارة السيارات والاستيرادو التصدير",
+        "order": 50,
+        "slug": "abou-heta-for-ie-t-cars-redsea",
+        "address": "ميدان جهينه, الطريق الدائري, الغردقة",
+        "hotline": "01122228177",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "البحر الأحمر",
+        "location": {
+          "lat": 27.228597,
+          "lng": 33.779905
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:30-18:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:30-18:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49584/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 53,
+        "name": "شركة أبوحتة لتجارة السيارات والاستيرادو التصدير",
+        "order": 51,
+        "slug": "abou-heta-for-ie-t-cars",
+        "address": "طريق مصر أسوان الزراعي - مركز ببا",
+        "hotline": "01062201414",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "بني سويف",
+        "location": {
+          "lat": 28.955113,
+          "lng": 30.993245
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-18:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-18:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49583/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 54,
+        "name": "شركة أبوحتة لتجارة السيارات والاستيرادو التصدير",
+        "order": 52,
+        "slug": "abou-heta-for-ie-t",
+        "address": "عمارات الجامعة-كورنيش النيل بجوار المحافظة-المنيا",
+        "hotline": "01000019467",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "إلمنيا",
+        "location": {
+          "lat": 28.104469,
+          "lng": 30.754755
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-22:00"
+        },
+        "service_types": [
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 59,
+        "name": "شركة النحاس",
+        "order": 54,
+        "slug": "el-nahas-company",
+        "address": "طوخ - بجوار مول العابد - الطريق الزراعي - القليوبية",
+        "hotline": "01003990888",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الدقهلية",
+        "location": {
+          "lat": 30.39613,
+          "lng": 31.191166
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 62,
+        "name": "أم القرى",
+        "order": 57,
+        "slug": "om-elkora",
+        "address": "مركز ببا  - قرية هلية",
+        "hotline": "01064892928",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "بني سويف",
+        "location": {
+          "lat": 28.930508,
+          "lng": 30.927145
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 65,
+        "name": "الشركة العالمية لصيانة السيارات (GAM)",
+        "order": 60,
+        "slug": "gam",
+        "address": "القطامية - طريق العين السخنة-امام شركة بتروجت",
+        "hotline": "01222115066",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 29.974924,
+          "lng": 31.378838
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 66,
+        "name": "تويوتا مصر - الدقي",
+        "order": 61,
+        "slug": "toyota-egypt-el-dokki",
+        "address": "محطة شيل اوت – شارع الدقي – الدقي  - الجيزة",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.043406,
+          "lng": 31.211321
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 1,
+            "name": "اكسسوارات",
+            "icon": "https://toyota.com.eg/storage/10194/conversions/baby-car-seat-optimized.png"
+          },
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 4,
+            "name": "السيارات المستعملة",
+            "icon": "https://toyota.com.eg/storage/9935/conversions/car-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/34535/conversions/DSC03828-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 71,
+        "name": "تويوتا مصر - المعادي",
+        "order": 62,
+        "slug": "toyota-egypt-maadi",
+        "address": "محطة شيل اوت – طريق النصر – أوتوستراد المعادي  - القاهرة",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 29.992668,
+          "lng": 31.284664
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-18:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/34536/conversions/maadi-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 72,
+        "name": "تويوتا مصر - جوزيف تيتو",
+        "order": 63,
+        "slug": "toyota-egypt-joseph-tito",
+        "address": "محطة وقود شيل اوت، شارع جوزيف تيتو، مصر الجديدة، القاهرة.",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.135823,
+          "lng": 31.373294
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "08:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35466/conversions/WhatsApp-Image-2024-01-15-at-11.09.07-AM-optimized.jpeg"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 74,
+        "name": "كلاسيك سيرفيس",
+        "order": 65,
+        "slug": "classic-service",
+        "address": "محطة وطنية ( الفردوس ) - ش أبو داوود الظاهري خلف النادي الأهلي",
+        "hotline": "01049667166",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.061492,
+          "lng": 31.362611
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35886/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 75,
+        "name": "أوتو درايف",
+        "order": 66,
+        "slug": "auto-drive",
+        "address": "9 خلف عمارات العبور صلاح سالم - بجوار الحرس الجمهوري",
+        "hotline": "01282882979",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.078821,
+          "lng": 31.312137
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35887/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 76,
+        "name": "وي فيكس",
+        "order": 67,
+        "slug": "we-fix-car-lounge",
+        "address": "ش عبد الحميد بدوي - Chillout Autopark",
+        "hotline": "01008846444",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.115627,
+          "lng": 31.366389
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35888/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 77,
+        "name": "شركة الوفيق للتجارة",
+        "order": 68,
+        "slug": "al-wafeek-co",
+        "address": "محل 24 - عمارات لاند مارك - بجوار كبرى 14 مايو - سموحه",
+        "hotline": "01223487028",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.210546,
+          "lng": 29.961628
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35891/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 79,
+        "name": "شركة الزناتي",
+        "order": 70,
+        "slug": "el-zanaty",
+        "address": "سيتي - أسيوط",
+        "hotline": "01222953483",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "أسيوط",
+        "location": {
+          "lat": 27.18347,
+          "lng": 31.179949
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-20:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-20:00"
+        },
+        "service_types": [],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35894/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 81,
+        "name": "مؤسسة اليوسف",
+        "order": 72,
+        "slug": "el-yousef-co",
+        "address": "مساكن الدلتا - المقطم - القاهرة",
+        "hotline": "01006408088",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 27.720494,
+          "lng": 30.748161
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-21:00"
+        },
+        "service_types": [],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35896/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 83,
+        "name": "عيسى",
+        "order": 74,
+        "slug": "eissa-ahmed",
+        "address": "شارع الإنتاج - فاقوس - الشرقية",
+        "hotline": "01003949001",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الشرقية",
+        "location": {
+          "lat": 30.733332,
+          "lng": 31.808126
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35898/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 84,
+        "name": "المؤسسة المصرية",
+        "order": 75,
+        "slug": "al-masriya-co",
+        "address": "شارع سيالة بدران بجوار سيدي منصور- شرق السكة الحديد",
+        "hotline": "01026886113",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الأقصر",
+        "location": {
+          "lat": 25.692274,
+          "lng": 32.652027
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-20:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-20:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/35899/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 85,
+        "name": "شركة تويوتك",
+        "order": 76,
+        "slug": "toyotech",
+        "address": "17 شارع جلال الدين الحمامصى - المهندسين",
+        "hotline": "01001042126",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 29.954523,
+          "lng": 31.218332
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36516/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 86,
+        "name": "شركة تويوتا بهتيم",
+        "order": 77,
+        "slug": "toyota-bahtim",
+        "address": "دائرى بهتيم - بجوار مسجد الهدى - برج زهرة الناردين",
+        "hotline": "01119120420",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "﻿القليوبية",
+        "location": {
+          "lat": 30.146783,
+          "lng": 31.283545
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36517/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 87,
+        "name": "بن جميل",
+        "order": 78,
+        "slug": "ben-gamil",
+        "address": "شارع حسين بك - برج حسين بك امام عمارة تنظيم الاسرة",
+        "hotline": "01223215555",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الدقهلية",
+        "location": {
+          "lat": 31.042256,
+          "lng": 31.384062
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36518/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 88,
+        "name": "الاسراء",
+        "order": 79,
+        "slug": "al-esraa",
+        "address": "طوخ - طريق مصر الإسكندرية الزراعى",
+        "hotline": "1069692020",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "﻿القليوبية",
+        "location": {
+          "lat": 30.352557,
+          "lng": 31.202904
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36519/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 89,
+        "name": "المسلوخ",
+        "order": 80,
+        "slug": "el-maslokh",
+        "address": "شارع 20 - شبرا - البحيرة",
+        "hotline": "01094185860",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "﻿البحيرة",
+        "location": {
+          "lat": 31.030925,
+          "lng": 30.461158
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36520/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 90,
+        "name": "المصرية",
+        "order": 81,
+        "slug": "al-masriya",
+        "address": "شارع المحطة طريق مركز شرطة اوسيم - منطقة المصانع -  اوسيم - الجيزة",
+        "hotline": "01153961008",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.12359,
+          "lng": 31.145165
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36521/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 91,
+        "name": "الوطنية",
+        "order": 82,
+        "slug": "al-watanya",
+        "address": "251ش ترعة الزمر - ارض اللواء - العجوزة",
+        "hotline": "01000098510",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 29.325684,
+          "lng": 30.855028
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36522/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 92,
+        "name": "منصور",
+        "order": 83,
+        "slug": "mansour",
+        "address": "برج الامير - ش سعد زغلول - دله - قسم اول فيوم - الفيوم",
+        "hotline": "1010365661",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الفيوم",
+        "location": {
+          "lat": 29.325684,
+          "lng": 30.855028
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": "10:00-19:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/36523/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 93,
+        "name": "لكزس ايجيبت - فرع القاهرة الجديدة",
+        "order": 84,
+        "slug": "toyota-egypt-lexus-branch",
+        "address": "كايرو فستيفال سيتى - الطريق الدائرى، بجوار اكاديمية الشرطه",
+        "hotline": "16550",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 1,
+          "name": "تويوتا مصر"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.029615,
+          "lng": 31.404366
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49563/conversions/Toyota-Egypt-24-(3).jpg.jpg-optimized.jpg"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 94,
+        "name": "ارجينزا",
+        "order": 85,
+        "slug": "argenza",
+        "address": "Al-Wataniya Station (Al-Firdous) - Abu Dawood Al-Zahiri Street, behind Al-Ahly Club - Nasr City.",
+        "hotline": "01049667166",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "القاهرة",
+        "location": {
+          "lat": 30.061492,
+          "lng": 31.362611
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49564/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 96,
+        "name": "البرجسى للتجارة و التسويق",
+        "order": 87,
+        "slug": "al-bargasi-for-trading-and-marketing",
+        "address": "14 ش محمد زغلول متفرع من ش زغلول - مشعل - الهرم",
+        "hotline": "01000233621",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 29.981756,
+          "lng": 31.149149
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49567/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 97,
+        "name": "Global",
+        "order": 88,
+        "slug": "Global",
+        "address": "104 شارع السودان - المهندسين",
+        "hotline": "1002146097",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.046547,
+          "lng": 31.192996
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49568/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 98,
+        "name": "المؤسسة المصرية",
+        "order": 89,
+        "slug": "elmasreya",
+        "address": "اوسيم - شارع المحطة بجوار مسجد تليمة",
+        "hotline": "1113199907",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.123593,
+          "lng": 31.144293
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49569/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 99,
+        "name": "سفارى",
+        "order": 90,
+        "slug": "safari",
+        "address": "60شارع أبو الهول السياحى -الهرم -الجيزة",
+        "hotline": "01006114567",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 29.974443,
+          "lng": 31.145143
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49570/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 101,
+        "name": "الاخوة",
+        "order": 92,
+        "slug": "brothers",
+        "address": "33 مدينة الحرفيين الثالثة - محرم بك - بجوار BMW",
+        "hotline": "1286466650",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.191886,
+          "lng": 29.908913
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49575/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 102,
+        "name": "الوفيق",
+        "order": 93,
+        "slug": "al-wafeeq",
+        "address": "محل 24 - عمارات لاند مارك - بجوار كبرى 14 مايو",
+        "hotline": "01223487028",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الاسكندرية",
+        "location": {
+          "lat": 31.210546,
+          "lng": 29.961628
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49576/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 103,
+        "name": "شركة التوني",
+        "order": 94,
+        "slug": "ElTony_Company",
+        "address": "جراج التون - كفر الدوار",
+        "hotline": "01204114997",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "البحيرة",
+        "location": {
+          "lat": 31.116245,
+          "lng": 30.185292
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49577/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 104,
+        "name": "الشركه المتحده لتجارة السيارات و الإستيراد  و التصدير (الخيال)",
+        "order": 95,
+        "slug": "united-atomotive-co-for-trading-car",
+        "address": "ك 122 - طريق القاهره الأسكندريه الزراعي أسفل كوبرى كفر الشيخ",
+        "hotline": "01273024777",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "طنطا",
+        "location": {
+          "lat": 30.812961,
+          "lng": 30.750276
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          },
+          {
+            "id": 3,
+            "name": "معرض",
+            "icon": "https://toyota.com.eg/storage/9936/conversions/showroom-optimized.png"
+          },
+          {
+            "id": 5,
+            "name": "الصيانة",
+            "icon": "https://toyota.com.eg/storage/9934/conversions/spanner-optimized.png"
+          },
+          {
+            "id": 8,
+            "name": "سمكرة ودهان",
+            "icon": "https://toyota.com.eg/storage/21970/conversions/spray-gun-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 105,
+        "name": "يونيفيرسال",
+        "order": 96,
+        "slug": "universal",
+        "address": "شارع فكرى زاهر متفرع من شارع الجلاء - قسم اول - دمياط",
+        "hotline": "1001565721",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "دمياط",
+        "location": {
+          "lat": 31.41845,
+          "lng": 31.816025
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49578/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 106,
+        "name": "المركز الهندسى",
+        "order": 97,
+        "slug": "engineering-center",
+        "address": "بنها - خلف مديرية الامن",
+        "hotline": "1001007922",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "﻿القليوبية",
+        "location": {
+          "lat": 30.467655,
+          "lng": 31.190453
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 2,
+            "name": "قطع غيار",
+            "icon": "https://toyota.com.eg/storage/9937/conversions/disc-brake-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49585/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 108,
+        "name": "فكرى",
+        "order": 99,
+        "slug": "fekry",
+        "address": "مجاور 12 - العاشر من رمضان  - الشرقية",
+        "hotline": "01003949001",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الشرقية",
+        "location": {
+          "lat": 30.17266,
+          "lng": 31.43137
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-17:00"
+        },
+        "service_types": [
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/49587/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 109,
+        "name": "شركة المطاوع للنقل و التجارة و التوزيع",
+        "order": 100,
+        "slug": "al-motawea-co",
+        "address": "سوهاج - أمام قسم ثاني سوهاج",
+        "hotline": "01000320014",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "سوهاج",
+        "location": {
+          "lat": 26.561567,
+          "lng": 31.689354
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-23:00"
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/51286/conversions/apple-touch-icon-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 110,
+        "name": "شركه أولاد سعد",
+        "order": 101,
+        "slug": "awlad-saad-copany",
+        "address": "شارع الإنتاج - فاقوس - الشرقية",
+        "hotline": "01003949001",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الشرقية",
+        "location": {
+          "lat": 30.733332,
+          "lng": 31.808126
+        },
+        "working_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "showroom_hours": {
+          "is_open": true,
+          "range": "09:00-21:00"
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [],
+        "images_title": null,
+        "images_alt": null
+      },
+      {
+        "id": 111,
+        "name": "تويوتك",
+        "order": 102,
+        "slug": "toyotech-mohandsen",
+        "address": "17 شارع الرشيد – احمد عرابى -المهندسين",
+        "hotline": "01001042126",
+        "test_drive": 0,
+        "distance": null,
+        "location_type": {
+          "id": 2,
+          "name": "موزع معتمد"
+        },
+        "government": "الجيزة",
+        "location": {
+          "lat": 30.068134,
+          "lng": 31.204806
+        },
+        "working_hours": {
+          "is_open": false,
+          "range": "10:00-20:00"
+        },
+        "showroom_hours": {
+          "is_open": false,
+          "range": ""
+        },
+        "service_types": [
+          {
+            "id": 6,
+            "name": "تغير الزيت",
+            "icon": "https://toyota.com.eg/storage/9933/conversions/oil-bottle-optimized.png"
+          },
+          {
+            "id": 7,
+            "name": "مبيعات زيت",
+            "icon": "https://toyota.com.eg/storage/17845/conversions/460403-optimized.png"
+          }
+        ],
+        "offers": [],
+        "images": [
+          "https://toyota.com.eg/storage/53564/conversions/apple-touch-icon-(2).png-optimized.png"
+        ],
+        "images_title": null,
+        "images_alt": null
+      }
+    ]
+  },
+  "success_messages": [],
+  "meta": {}
+}
