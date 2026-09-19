@@ -5293,7 +5293,7 @@ ${verifyUrl}
     <!-- ==========================================================================
          [MODAL] التصحيح الجماعي لمواقع مراكز الخدمة والتوكيلات (Crowdsourced Location Correction)
          ========================================================================== -->
-    <div id="locationCorrectionModal" class="fixed inset-0 z-60 bg-black/80 hidden flex items-center justify-center p-2 sm:p-4 backdrop-blur-xs transition-all">
+    <div id="locationCorrectionModal" style="z-index: 9999;" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-2 sm:p-4 backdrop-blur-xs transition-all">
         <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92vh] flex flex-col safe-area-pb">
             <!-- Header -->
             <div class="px-5 py-3.5 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
@@ -5416,7 +5416,7 @@ ${verifyUrl}
     <!-- ==========================================================================
          [MODAL] سجل تعديلاتي على مواقع التوكيلات (Crowdsourced History & Export)
          ========================================================================== -->
-    <div id="userCorrectionsHistoryModal" class="fixed inset-0 z-60 bg-black/80 hidden flex items-center justify-center p-2 sm:p-4 backdrop-blur-xs transition-all">
+    <div id="userCorrectionsHistoryModal" style="z-index: 9999;" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-2 sm:p-4 backdrop-blur-xs transition-all">
         <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col safe-area-pb">
             <div class="px-5 py-3.5 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-2">
@@ -16684,7 +16684,7 @@ ${verifyUrl}
             const userEmail = (emailInput?.value || '').trim();
             const pastedMapsUrl = (mapsUrlInput?.value || '').trim();
 
-            // Validate
+            // Validate Coordinates
             if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
                 if (statusBox) {
                     statusBox.classList.remove('hidden');
@@ -16699,15 +16699,6 @@ ${verifyUrl}
             if (!center) {
                 alert('لم يتم العثور على بيانات المركز المحدد.');
                 return;
-            }
-
-            // Set Loading UI
-            if (submitBtn) submitBtn.classList.add('opacity-75', 'pointer-events-none');
-            if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin me-1.5"></i> جاري الحفظ والمزامنة السحابية...';
-            if (statusBox) {
-                statusBox.classList.remove('hidden');
-                statusBox.className = 'p-2 rounded-xl text-[11px] font-bold text-center bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800';
-                statusBox.textContent = 'جاري حفظ التعديل محلياً وإرسال التنبيه للمطور...';
             }
 
             const nowIso = new Date().toISOString();
@@ -16738,7 +16729,7 @@ ${verifyUrl}
                 status: 'pending_review'
             };
 
-            // 1. OFFLINE-FIRST: Save locally in SafeStorage / localStorage
+            // 1. OFFLINE-FIRST: Save locally in SafeStorage / localStorage immediately
             let userCorrections = {};
             try {
                 const raw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_scUserCorrections') : localStorage.getItem('motorCare_scUserCorrections'));
@@ -16772,162 +16763,9 @@ ${verifyUrl}
                 console.warn('[Location Correction] renderServiceCenters update error:', e);
             }
 
-            // 2. CLOUD SYNC: Save to Cloud Firestore (Collection: service_center_corrections)
-            let isFirestoreSynced = false;
-            if (typeof firestoreDb !== 'undefined' && firestoreDb) {
-                try {
-                    const docId = `${center.id}_${Date.now()}`;
-                    const firestorePayload = {
-                        ...correctionData,
-                        adminEmail: 'motorcare.auto@gmail.com',
-                        userAgent: navigator.userAgent || '',
-                        platform: 'MotorCare Web/PWA',
-                    };
-                    if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue) {
-                        firestorePayload.serverTimestamp = firebase.firestore.FieldValue.serverTimestamp();
-                    }
-                    await firestoreDb.collection('service_center_corrections').doc(docId).set(firestorePayload);
-                    isFirestoreSynced = true;
-                    console.log('[Location Correction] Persisted to Firestore:', docId);
-                } catch (err) {
-                    console.warn('[Location Correction] Firestore sync note:', err);
-                }
-            }
-
-            // 3. DEVELOPER EMAIL NOTIFICATION & WEBHOOK DISPATCH
-            const webhookUrl = typeof getAppWebhookUrl === 'function' ? getAppWebhookUrl() : null;
-            const adminEmail = 'motorcare.auto@gmail.com';
-            const subject = `[MotorCare GPS Correction] تصحيح موقع: ${center.name} (${(center.brands || []).join(', ')})`;
-            
-            const jsonSnippet = JSON.stringify({
-                id: center.id,
-                name: center.name,
-                gov: center.gov,
-                area: center.area,
-                lat: lat,
-                lng: lng,
-                mapsUrl: newMapsUrl
-            }, null, 2);
-
-            const emailHtml = `
-            <div dir="rtl" style="font-family: Arial, sans-serif; color: #1e293b; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px;">
-                <div style="text-align: center; padding-bottom: 15px; border-bottom: 2px solid #38bdf8;">
-                    <h2 style="color: #0284c7; margin: 0;">🛰️ طلب تصحيح إحداثيات مركز خدمة في تطبيق MotorCare</h2>
-                    <p style="color: #64748b; font-size: 13px; margin: 5px 0 0;">مساهمة جديدة من التصحيح الجماعي (Crowdsourced Location)</p>
-                </div>
-                <div style="margin: 20px 0;">
-                    <h3 style="color: #0f172a; margin-bottom: 8px;">🏢 بيانات المركز:</h3>
-                    <ul style="line-height: 1.8; font-size: 14px;">
-                        <li><strong>الاسم:</strong> ${center.name}</li>
-                        <li><strong>الماركة / الوكالة:</strong> ${(center.brands || []).join(', ')} - ${center.agency || ''}</li>
-                        <li><strong>المحافظة والمنطقة:</strong> ${center.gov} - ${center.area}</li>
-                        <li><strong>العنوان الحالي:</strong> ${center.address || 'غير محدد'}</li>
-                    </ul>
-
-                    <h3 style="color: #0f172a; margin-top: 20px; margin-bottom: 8px;">📍 مقارنة الإحداثيات:</h3>
-                    <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 15px;">
-                        <thead>
-                            <tr style="background-color: #f1f5f9; text-align: right;">
-                                <th style="padding: 8px; border: 1px solid #cbd5e1;">البيان</th>
-                                <th style="padding: 8px; border: 1px solid #cbd5e1;">القديم</th>
-                                <th style="padding: 8px; border: 1px solid #cbd5e1; background-color: #fef08a;">الجديد المقترح ✨</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">خط العرض (Lat)</td>
-                                <td style="padding: 8px; border: 1px solid #cbd5e1;">${center.lat || '-'}</td>
-                                <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold; color: #0369a1;">${lat}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">خط الطول (Lng)</td>
-                                <td style="padding: 8px; border: 1px solid #cbd5e1;">${center.lng || '-'}</td>
-                                <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold; color: #0369a1;">${lng}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <p style="font-size: 13px;"><strong>🗺️ رابط مقارنة الموقعين على خرائط جوجل:</strong><br>
-                    <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" style="color: #0284c7; word-break: break-all;">فتح الإحداثيات المقترحة في خرائط جوجل</a></p>
-
-                    ${note ? `<div style="background: #f8fafc; padding: 12px; border-radius: 8px; border-right: 4px solid #f59e0b; margin: 15px 0;">
-                        <strong>📝 ملاحظة وتوضيح المستخدم:</strong>
-                        <p style="margin: 5px 0 0; font-size: 13px; color: #334155;">${note}</p>
-                    </div>` : ''}
-
-                    <p style="font-size: 13px;"><strong>👤 بيانات المستخدم:</strong> ${userEmail}</p>
-                    <p style="font-size: 12px; color: #64748b;"><strong>⏰ التاريخ والوقت:</strong> ${nowFormatted} (${nowIso})</p>
-
-                    <h4 style="color: #0f172a; margin-top: 20px; margin-bottom: 5px;">💻 كود JSON الجاهز للاعتماد المباشر في قاعدة البيانات:</h4>
-                    <pre dir="ltr" style="background: #0f172a; color: #38bdf8; padding: 12px; border-radius: 8px; font-size: 12px; overflow-x: auto;">${jsonSnippet}</pre>
-                </div>
-                <div style="text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 10px;">
-                    تم إرسال هذا الإشعار تلقائياً عبر نظام التصحيح الجماعي الذكي في تطبيق MotorCare.
-                </div>
-            </div>`;
-
-            const notificationPayload = {
-                action: 'LOCATION_CORRECTION',
-                centerId: center.id,
-                centerName: center.name,
-                brand: (center.brands || []).join(', '),
-                agency: center.agency || '',
-                oldCoords: { lat: center.lat, lng: center.lng, mapsUrl: center.mapsUrl },
-                newCoords: { lat: lat, lng: lng, mapsUrl: newMapsUrl },
-                googleMapsLink: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
-                note: note,
-                userEmail: userEmail,
-                timestamp: nowIso,
-                adminEmail: adminEmail,
-                adminSubject: subject,
-                adminHtmlBody: emailHtml,
-                suggestedJsonSnippet: jsonSnippet
-            };
-
-            // Channel 1: Webhook delivery
-            if (webhookUrl && webhookUrl.startsWith('http')) {
-                try {
-                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 6000));
-                    const fetchPromise = fetch(webhookUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify(notificationPayload)
-                    });
-                    await Promise.race([fetchPromise, timeoutPromise]).catch(err => {
-                        console.warn('[Location Correction] Webhook note:', err);
-                    });
-                } catch (err) {
-                    console.warn('[Location Correction] Webhook error:', err);
-                }
-            }
-
-            // Channel 2: EmailJS delivery if configured
-            if (typeof emailjs !== 'undefined' && emailjs) {
-                try {
-                    const emailjsConfig = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_emailjs_config') : localStorage.getItem('motorCare_emailjs_config'));
-                    if (emailjsConfig) {
-                        const conf = JSON.parse(emailjsConfig);
-                        if (conf.serviceId && conf.templateId) {
-                            await emailjs.send(conf.serviceId, conf.templateId, {
-                                to_email: adminEmail,
-                                user_name: userEmail,
-                                subject: subject,
-                                message: `تم اقتراح تعديل موقع لمركز: ${center.name} (${lat}, ${lng}). ملاحظات: ${note}`,
-                                ticket_id: `GPS_${center.id}`,
-                                category: 'Location Correction',
-                                car_details: `${center.name} - ${center.gov}`
-                            }).catch(e => console.warn('[Location Correction EmailJS] Error:', e));
-                        }
-                    }
-                } catch (e) {
-                    console.warn('[Location Correction EmailJS] Note:', e);
-                }
-            }
-
-            // Restore Submit UI and show success feedback
+            // 2. IMMEDIATE USER FEEDBACK (Super Fast UI Response)
             if (submitBtn) submitBtn.classList.remove('opacity-75', 'pointer-events-none');
-            if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> حفظ واعتماد التعديل سحابياً ومحلياً 🚀';
+            if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-circle-check text-xs"></i> تم الحفظ بنجاح ✨';
 
             if (statusBox) {
                 statusBox.classList.remove('hidden');
@@ -16938,20 +16776,174 @@ ${verifyUrl}
                         <span>تم حفظ التعديل وتحديث بطاقة المركز فوراً!</span>
                     </div>
                     <p class="text-[11px] font-normal leading-relaxed text-slate-600 dark:text-slate-300">
-                        تم تفعيل الإحداثيات الجديدة على هاتفك بنجاح (Offline-First ⚡)، كما تم إرسال إشعار فوري للمطور لمراجعة التعديل واعتماده لجميع المستخدمين. شكراً لمساهمتك! 🌟
+                        تم تفعيل الإحداثيات الجديدة على هاتفك بنجاح (Offline-First ⚡)، وجاري المزامنة مع خادم المطور في الخلفية. شكراً لمساهمتك! 🌟
                     </p>
                 `;
             }
 
-            // Show Toast notification if showNotification function exists
             if (typeof showNotification === 'function') {
                 showNotification(`تم حفظ إحداثيات "${center.name}" وتحديث مسار GPS بنجاح ✨`, 'success');
             }
 
-            // Auto-close modal after 2.2 seconds
+            // Close modal after 1.5 seconds
             setTimeout(() => {
                 closeLocationCorrectionModal();
-            }, 2200);
+                if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> حفظ واعتماد التعديل سحابياً ومحلياً 🚀';
+            }, 1500);
+
+            // 3. BACKGROUND CLOUD SYNC & DEVELOPER NOTIFICATIONS (Non-blocking)
+            setTimeout(async () => {
+                // Channel A: Firestore Persistence
+                if (typeof firestoreDb !== 'undefined' && firestoreDb) {
+                    try {
+                        const docId = `${center.id}_${Date.now()}`;
+                        const firestorePayload = {
+                            ...correctionData,
+                            adminEmail: 'motorcare.auto@gmail.com',
+                            userAgent: navigator.userAgent || '',
+                            platform: 'MotorCare Web/PWA',
+                        };
+                        if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue) {
+                            firestorePayload.serverTimestamp = firebase.firestore.FieldValue.serverTimestamp();
+                        }
+                        const firestorePromise = firestoreDb.collection('service_center_corrections').doc(docId).set(firestorePayload);
+                        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('firestore timeout')), 4000));
+                        await Promise.race([firestorePromise, timeoutPromise]).catch(e => console.warn('[Location Correction] Firestore note:', e));
+                        console.log('[Location Correction] Background Firestore sync complete:', docId);
+                    } catch (err) {
+                        console.warn('[Location Correction] Firestore sync note:', err);
+                    }
+                }
+
+                // Channel B: Webhook & Email Notification
+                const webhookUrl = typeof getAppWebhookUrl === 'function' ? getAppWebhookUrl() : null;
+                const adminEmail = 'motorcare.auto@gmail.com';
+                const subject = `[MotorCare GPS Correction] تصحيح موقع: ${center.name} (${(center.brands || []).join(', ')})`;
+                
+                const jsonSnippet = JSON.stringify({
+                    id: center.id,
+                    name: center.name,
+                    gov: center.gov,
+                    area: center.area,
+                    lat: lat,
+                    lng: lng,
+                    mapsUrl: newMapsUrl
+                }, null, 2);
+
+                const emailHtml = `
+                <div dir="rtl" style="font-family: Arial, sans-serif; color: #1e293b; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px;">
+                    <div style="text-align: center; padding-bottom: 15px; border-bottom: 2px solid #38bdf8;">
+                        <h2 style="color: #0284c7; margin: 0;">🛰️ طلب تصحيح إحداثيات مركز خدمة في تطبيق MotorCare</h2>
+                        <p style="color: #64748b; font-size: 13px; margin: 5px 0 0;">مساهمة جديدة من التصحيح الجماعي (Crowdsourced Location)</p>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <h3 style="color: #0f172a; margin-bottom: 8px;">🏢 بيانات المركز:</h3>
+                        <ul style="line-height: 1.8; font-size: 14px;">
+                            <li><strong>الاسم:</strong> ${center.name}</li>
+                            <li><strong>الماركة / الوكالة:</strong> ${(center.brands || []).join(', ')} - ${center.agency || ''}</li>
+                            <li><strong>المحافظة والمنطقة:</strong> ${center.gov} - ${center.area}</li>
+                            <li><strong>العنوان الحالي:</strong> ${center.address || 'غير محدد'}</li>
+                        </ul>
+
+                        <h3 style="color: #0f172a; margin-top: 20px; margin-bottom: 8px;">📍 مقارنة الإحداثيات:</h3>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 15px;">
+                            <thead>
+                                <tr style="background-color: #f1f5f9; text-align: right;">
+                                    <th style="padding: 8px; border: 1px solid #cbd5e1;">البيان</th>
+                                    <th style="padding: 8px; border: 1px solid #cbd5e1;">القديم</th>
+                                    <th style="padding: 8px; border: 1px solid #cbd5e1; background-color: #fef08a;">الجديد المقترح ✨</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">خط العرض (Lat)</td>
+                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">${center.lat || '-'}</td>
+                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold; color: #0369a1;">${lat}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">خط الطول (Lng)</td>
+                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">${center.lng || '-'}</td>
+                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold; color: #0369a1;">${lng}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="font-size: 13px;"><strong>🗺️ رابط مقارنة الموقعين على خرائط جوجل:</strong><br>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" style="color: #0284c7; word-break: break-all;">فتح الإحداثيات المقترحة في خرائط جوجل</a></p>
+
+                        ${note ? `<div style="background: #f8fafc; padding: 12px; border-radius: 8px; border-right: 4px solid #f59e0b; margin: 15px 0;">
+                            <strong>📝 ملاحظة وتوضيح المستخدم:</strong>
+                            <p style="margin: 5px 0 0; font-size: 13px; color: #334155;">${note}</p>
+                        </div>` : ''}
+
+                        <p style="font-size: 13px;"><strong>👤 بيانات المستخدم:</strong> ${userEmail}</p>
+                        <p style="font-size: 12px; color: #64748b;"><strong>⏰ التاريخ والوقت:</strong> ${nowFormatted} (${nowIso})</p>
+
+                        <h4 style="color: #0f172a; margin-top: 20px; margin-bottom: 5px;">💻 كود JSON الجاهز للاعتماد المباشر في قاعدة البيانات:</h4>
+                        <pre dir="ltr" style="background: #0f172a; color: #38bdf8; padding: 12px; border-radius: 8px; font-size: 12px; overflow-x: auto;">${jsonSnippet}</pre>
+                    </div>
+                    <div style="text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                        تم إرسال هذا الإشعار تلقائياً عبر نظام التصحيح الجماعي الذكي في تطبيق MotorCare.
+                    </div>
+                </div>`;
+
+                const notificationPayload = {
+                    action: 'LOCATION_CORRECTION',
+                    centerId: center.id,
+                    centerName: center.name,
+                    brand: (center.brands || []).join(', '),
+                    agency: center.agency || '',
+                    oldCoords: { lat: center.lat, lng: center.lng, mapsUrl: center.mapsUrl },
+                    newCoords: { lat: lat, lng: lng, mapsUrl: newMapsUrl },
+                    googleMapsLink: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+                    note: note,
+                    userEmail: userEmail,
+                    timestamp: nowIso,
+                    adminEmail: adminEmail,
+                    adminSubject: subject,
+                    adminHtmlBody: emailHtml,
+                    suggestedJsonSnippet: jsonSnippet
+                };
+
+                if (webhookUrl && webhookUrl.startsWith('http')) {
+                    try {
+                        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 6000));
+                        const fetchPromise = fetch(webhookUrl, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify(notificationPayload)
+                        });
+                        await Promise.race([fetchPromise, timeoutPromise]).catch(err => {
+                            console.warn('[Location Correction] Webhook note:', err);
+                        });
+                    } catch (err) {
+                        console.warn('[Location Correction] Webhook error:', err);
+                    }
+                }
+
+                if (typeof emailjs !== 'undefined' && emailjs) {
+                    try {
+                        const emailjsConfig = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_emailjs_config') : localStorage.getItem('motorCare_emailjs_config'));
+                        if (emailjsConfig) {
+                            const conf = JSON.parse(emailjsConfig);
+                            if (conf.serviceId && conf.templateId) {
+                                await emailjs.send(conf.serviceId, conf.templateId, {
+                                    to_email: adminEmail,
+                                    user_name: userEmail,
+                                    subject: subject,
+                                    message: `تم اقتراح تعديل موقع لمركز: ${center.name} (${lat}, ${lng}). ملاحظات: ${note}`,
+                                    ticket_id: `GPS_${center.id}`,
+                                    category: 'Location Correction',
+                                    car_details: `${center.name} - ${center.gov}`
+                                }).catch(e => console.warn('[Location Correction EmailJS] Error:', e));
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('[Location Correction EmailJS] Note:', e);
+                    }
+                }
+            }, 50);
         }
 
         /* ==========================================================================
