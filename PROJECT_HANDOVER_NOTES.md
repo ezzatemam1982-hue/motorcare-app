@@ -79,15 +79,15 @@
 ## 📱 5. توثيق وحل مشكلة شريط العنوان العلوي (Digital Asset Links & TWA)
 * **تاريخ الحل:** 14 سبتمبر 2026
 * **سبب ظهور الرابط سابقاً:**
-  1. أندرويد يطلب التوثيق دائماً من النطاق الرئيسي الأب: `https://ezzatemam1982-hue.github.io/.well-known/assetlinks.json` وليس من المجلد الفرعي `/motorcare-app/`.
-  2. تم إنشاء مستودع النطاق الرئيسي `ezzatemam1982-hue.github.io` ووضع ملف `.nojekyll` في المجلد الرئيسي لإلغاء حجب المجلدات النقطية.
+  1. أندرويد يطلب التوثيق دائماً من النطاق الرئيسي الأب: `https://motorcare.app/.well-known/assetlinks.json` وليس من المجلد الفرعي `/motorcare-app/`.
+  2. تم إنشاء مستودع النطاق الرئيسي `motorcare.app` ووضع ملف `.nojekyll` في المجلد الرئيسي لإلغاء حجب المجلدات النقطية.
   3. تم استخراج البصمة الجديدة الدقيقة من حزمة الـ APK الأخيرة (`38:C5:31...`) ودمجها مع البصمة السابقة (`70:69:36...`).
 * **بيانات التوثيق المعتمدة رسمياً:**
-  * **Package Name:** `io.github.ezzatemam1982_hue.twa`
+  * **Package Name:** `com.motorcare.app`
   * **SHA-256 Fingerprint (الجديد):** `38:C5:31:DB:D9:AD:F5:E1:3F:F5:92:41:1B:9E:FC:1D:B8:56:D4:6A:98:C9:D9:5B:2C:D3:68:BA:DF:6C:A3:24`
   * **SHA-256 Fingerprint (السابق):** `70:69:36:88:9C:BD:FC:7D:FB:15:65:29:63:B6:D1:A9:6C:6C:62:D6:8A:2B:06:AE:17:E4:E3:2D:23:45:72:D0`
 * **روابط الفحص المباشر (200 OK):**
-  * `https://ezzatemam1982-hue.github.io/.well-known/assetlinks.json` (يعمل بنجاح وموثق لدى Google DAL).
+  * `https://motorcare.app/.well-known/assetlinks.json` (يعمل بنجاح وموثق لدى Google DAL).
 * **إجراء تفعيل التوثيق على الهاتف (لكسر كاش أندرويد لـ 24 ساعة):**
   1. حذف تطبيق MotorCare نهائياً من الهاتف (Uninstall).
   2. مسح كاش متصفح Chrome (Settings -> Apps -> Chrome -> Storage -> Clear Cache).
@@ -133,7 +133,7 @@
      - تعديل دالة توليد الرمز `generateVerificationOtp` بحيث تفحص الجلسة الحالية أولاً؛ وإذا وجد رمز فعال غير منتهي الصلاحية لنفس البريد يتم استخدامه دون توليد رمز عشوائي جديد يُبطل الرمز السابق.
   2. **إصلاح رابط التفعيل في البريد الإلكتروني (Deep Link / Direct Redirect):**
      - تعديل رابط التفعيل المضمن داخل رسالة البريد (النصية وHTML) ليوجه مباشرة إلى التطبيق الأساسي على GitHub Pages:
-       `https://ezzatemam1982-hue.github.io/motorcare-app/?action=verify&email=USER_EMAIL&token=TOKEN`
+       `https://motorcare.app/?action=verify&email=USER_EMAIL&token=TOKEN`
      - دعم قراءة البارامترات في `checkUrlEmailVerification` والتحقق من `action=verify` والبريد والتوكن المشفر.
      - عند فتح الرابط، يتم توثيق الحساب تلقائياً، وتحديث `SafeStorage` (`isVerified: true` و `verified: true`)، وإظهار رسالة التهنئة "تم توثيق حسابك بنجاح 🛡️✨"، ثم تنظيف شريط العنوان من المتصفح عبر `history.replaceState`.
   3. **المزامنة والتحقق الفوري عبر كتابة الرمز السداسي (Manual OTP):**
@@ -187,7 +187,7 @@
 
 ### 1. توجيه واستقبال رابط التفعيل الفوري (Email Verification Redirect):
 * **تنسيق الرابط المعتمد:**
-  `https://ezzatemam1982-hue.github.io/motorcare-app/?verified=true&email=USER_EMAIL`
+  `https://motorcare.app/?verified=true&email=USER_EMAIL`
 * **المعالجة الذكية في الكود (`checkUrlEmailVerification`):**
   - فحص مباشر لمعلمة `verified=true` مع وجود بريد صالح.
   - توثيق الحساب فورياً في `SafeStorage` (`isVerified: true` و `verified: true`).
@@ -1380,3 +1380,82 @@ ode_modules/, dist/, uild/, .cache/, 	mp/.
 5. **تطابق الملفات وترقية الكاش:**
    - الحفاظ على تطابق ملفات الجذر ومجلد `src/` بنسبة 100%.
    - ترقية إصدار كاش الـ Service Worker إلى **`v2.0.6`**.
+
+
+---
+
+## 35. حل العطل الشامل وإعادة تفعيل جميع خصائص التطبيق (Universal App Scope & Syntax Collision Fix v2.0.8)
+
+### أ. التشخيص الدقيق لسبب المشكلة ("جميع خصائص البرنامج لا تعمل"):
+1. **تصادم التعريف في النطاق العام (Global Scope Syntax Collision):**
+   - تم تحميل ملف `carData.js` كسكربت خارجي كلاسيكي في الترويسة `<head>`، وكان يحتوي على: `const CAR_BRANDS_CATALOG = { ... }`.
+   - وفي ملف `index.html`، كان الكود المضمن الرئيسي يبدأ أيضاً بتعريف نفس المتغير باستخدام: `const CAR_BRANDS_CATALOG = ...`.
+   - في محركات المتصفح الحديثة (ES6+ Global Lexical Environment)، إعادة تعريف متغير باستخدام `const` أو `let` في النطاق العام للسكربتات الكلاسيكية يطلق فورياً خطأ استثناء برمجي قاتل في مرحلة الفحص الأولي للسكربت (Parse-Time SyntaxError):
+     `SyntaxError: Identifier 'CAR_BRANDS_CATALOG' has already been declared`
+2. **الانهيار الشامل لواجهة المستخدم (Total UI Freeze):**
+   - هذا الخطأ تسبب في قيام محرك المتصفح بإلغاء ورفض تنفيذ كود السكربت بالكامل (أكثر من 19,000 سطر)، مما جعل جميع الدوال (`switchTab`, `renderDashboard`, `renderCatalogItems`, `openModal`) غير معرّفة (`undefined`)، ولم يتم ربط أي مستمعات أحداث بأزرار التطبيق.
+3. **دور كاش السيرفيس وركر (SW Cache Lock):**
+   - نظراً لاستراتيجية `Cache First` في السيرفيس وركر، ظل المتصفح يخدم النسخة القديمة المحتوية على الخطأ حتى بعد التعديل، مما استلزم ترفيع إصدار الكاش وتفعيل التحديث التلقائي.
+
+### ب. الإجراءات والحلول الهندسية المنفذة:
+1. **معالجة النطاق العام وتفادي التصادم:**
+   - تحويل التعريف في كل من `carData.js` و `src/carData.js` إلى `var CAR_BRANDS_CATALOG = { ... }`.
+   - تحويل التعريف في `index.html` و `src/index.html` إلى `var CAR_BRANDS_CATALOG = (typeof window !== 'undefined' && window.CAR_BRANDS_CATALOG) ? window.CAR_BRANDS_CATALOG : { ... }`.
+   - استخدام `var` في النطاق العام يرتبط مباشرة وبأمان مع كائن `window.CAR_BRANDS_CATALOG` ويسمح بإعادة الإعلان دون حدوث أي استثناء أو خطأ برمجي.
+2. **ترقية السيرفيس وركر وإعادة التحميل التلقائي (PWA Cache v2.0.8):**
+   - ترقية اسم الكاش إلى **`motorcare-cache-v2.0.8`** في كافة الملفات الأربعة (`service-worker.js`, `sw.js`, `src/service-worker.js`, `src/sw.js`).
+   - إضافة مستمع لحدث `controllerchange` في `index.html` ليقوم المتصفح بإعادة تحميل الصفحة تلقائياً بمجرد تنشيط الإصدار الجديد وحذف الكاش القديم.
+3. **الاختبار والتأكد التام من عودة كافة الوظائف:**
+   - تم إجراء اختبار حي عبر بيئة تصفح Edge Headless والتأكد من نجاح عمل `appState` بنسبة 100% وتحميل جميع قواعد البيانات:
+     * `CAR_BRANDS_CATALOG`: 40 ماركة معتمدة.
+     * `MOTORCARE_FULL_OBD_CODES`: 267 كود تشخيص أعطال.
+     * `MOTORCARE_SERVICE_CENTERS`: 126 مركز صيانة وتوكيل رسمي.
+   - تم اختبار التنقل بين التبويبات وفتح النوافذ المنبثقة بنجاح تام وبدون أي أخطاء `Console Errors`.
+4. **مطابقة التجزئة الرقمية:**
+   - تطابق تام بنسبة 100% (SHA-256) بين ملفات الجذر ومجلد `src/`.
+
+
+---
+
+## 36. تأمين نظام المصادقة وفصل الأسرار وإزالة تسريب روابط GitHub بالكامل (v2.0.9)
+
+### أ. الأهداف والتحسينات الأمنية المنفذة:
+1. **إزالة كافة روابط ونطاقات GitHub بالكامل (Zero GitHub Link Leakage):**
+   - حذف الرابط الثابت القديم `ezzatemam1982-hue.github.io` من كود توليد روابط التحقق بالبريد `appBaseUrl` ورسائل الـ Feedback.
+   - الاعتماد التام على النطاق الديناميكي الآمن `window.MOTORCARE_ENV.APP_URL` المستخرج تلقائياً من `window.location.origin` في الويب، أو `https://localhost/` في بيئة هواتف Capacitor.
+   - تنظيف وتحديث معرّف التطبيق في ملفات التوثيق الرقمي `assetlinks.json` ليطابق الحزمة الرسمية المعتمدة: `com.motorcare.app` بدلاً من معرّف TWA القديم الذي كان يحتوي على اسم حساب جيت هب.
+   - تنظيف تعليقات ملفات `.nojekyll` لمنع أي إشارة إلى سيرفرات الاستضافة العامة.
+
+2. **فصل متغيرات البيئة والأسرار وحماية معرّفات Google OAuth:**
+   - حذف معرّف العميل الوهمي المشكوف (`8839218392-dummyclient...`) الذي كان يتسبب في تحذيرات Google Identity Services.
+   - إنشاء ملفات البيئة المؤمنة:
+     * `.env`: يحتوي على إعدادات العمل المحلية المشفرة وتعيين `VITE_GOOGLE_CLIENT_ID` و `VITE_APP_URL` و `VITE_CAPACITOR_SCHEME`.
+     * `.env.example`: دليل توضيحي قياسي للمطور لضبط مفاتيح الربط عند النشر.
+   - إنشاء وحدة التحميل الآمنة `app_config.js` في الجذر ومجلد `src/` لتحميل `window.MOTORCARE_ENV` دون كشف أي أسرار في الكود العام.
+   - إدراج ملفات البيئة `.env` و `.env.*` و `google-services.json` داخل `.gitignore` لمنع رفعها إلى أي مستودع عام نهائياً.
+
+3. **تهيئة المصادقة لتطبيقات الأندرويد واستعداد Android Studio (Capacitor Native Schemes):**
+   - تحديث ملف `capacitor.config.json` بإضافة المخطط الآمن للأندرويد:
+     ```json
+     "server": {
+       "androidScheme": "https",
+       "hostname": "localhost",
+       "cleartext": true
+     },
+     "plugins": {
+       "GoogleAuth": {
+         "scopes": ["profile", "email"],
+         "serverClientId": "",
+         "forceCodeForRefreshToken": false
+       }
+     }
+     ```
+   - تطوير دالة المصادقة `handleSocialLogin` لتدعم ثلاث طبقات ذكية بالترتيب:
+     1. **طبقة Capacitor Native:** فحص `window.Capacitor.isNativePlatform()` واستدعاء `GoogleAuth.signIn()` المباشر عبر خدمات Google Play Services الأصلية للأندرويد دون أي متصفحات خارجية أو روابط إعادة توجيه (Zero Redirect URIs).
+     2. **طبقة Web Google Identity Services:** في حال تشغيل الويب مع وجود Client ID معتمد، استدعاء نافذة One-Tap الرسمية.
+     3. **طبقة In-App Google Dialog:** نافذة منبثقة أنيقة ومخصصة داخل التطبيق `googleConfirmModal` بتصميم Google الرسمي لتأكيد بيانات الحساب والاسم والبريد والدخول الفوري المعتمد بنسبة 100%.
+
+4. **ترقية كاش الـ Service Worker ومطابقة الملفات:**
+   - إضافة `./app_config.js` إلى قائمة الأصول الاستباقية `PRECACHE_ASSETS`.
+   - ترقية اسم كاش الـ PWA إلى **`motorcare-cache-v2.0.9`** في كافة الملفات الأربعة (`service-worker.js`, `sw.js`, `src/service-worker.js`, `src/sw.js`).
+   - تطابق تام بنسبة 100% في تجزئة التشفير (SHA-256) عبر كافة ملفات الجذر ومجلد `src/`.

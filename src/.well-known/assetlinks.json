@@ -5,7 +5,7 @@
     ],
     "target": {
       "namespace": "android_app",
-      "package_name": "io.github.ezzatemam1982_hue.twa",
+      "package_name": "com.motorcare.app",
       "sha256_cert_fingerprints": [
         "38:C5:31:DB:D9:AD:F5:E1:3F:F5:92:41:1B:9E:FC:1D:B8:56:D4:6A:98:C9:D9:5B:2C:D3:68:BA:DF:6C:A3:24",
         "70:69:36:88:9C:BD:FC:7D:FB:15:65:29:63:B6:D1:A9:6C:6C:62:D6:8A:2B:06:AE:17:E4:E3:2D:23:45:72:D0"

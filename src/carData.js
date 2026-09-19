@@ -5,7 +5,7 @@
  * Version: 2.0.4 (Strict Multi-Source Verified)
  */
 
-const CAR_BRANDS_CATALOG = {
+var CAR_BRANDS_CATALOG = {
     "Hyundai": {
         "models": {
             "Elantra": {

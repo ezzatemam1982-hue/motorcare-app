@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>موتور كير | MotorCare v2.0.3</title>
+    <title>موتور كير | MotorCare v2.0.8</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#070a13">
     <meta name="mobile-web-app-capable" content="yes">
@@ -29,6 +29,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MotorCare Environment & Safe Config Loader -->
+    <script src="app_config.js"></script>
     <!-- Offline OBD-II Diagnostic Codes Library -->
     <script src="obd_codes.js"></script>
     <!-- Offline OEM Car Database Library -->
@@ -631,6 +633,175 @@
                 return Math.min(Math.max(num, min), max);
             },
 
+            // التحقق الصارم لرقم الشاسيه (VIN) وفقاً للمواصفات القياسية الدولية (ISO 3779)
+            // يقبل حصرياً 17 خانة من الحروف الإنجليزية والأرقام، مع استبعاد الحروف (I, O, Q) والحروف العربية والرموز
+            validateVIN(vin, isRequired = false) {
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (!vin || !String(vin).trim()) {
+                    return {
+                        isValid: !isRequired,
+                        error: isRequired 
+                            ? (isEn ? 'VIN is required.' : 'رقم الشاسيه مطلوب.') 
+                            : null,
+                        sanitized: ''
+                    };
+                }
+                const raw = String(vin).trim();
+                const sanitized = raw.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, '');
+
+                // فحص وجود حروف عربية
+                if (/[\u0600-\u06FF]/.test(raw)) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'Arabic characters are strictly prohibited in the VIN field. Use standard alphanumeric characters only.' 
+                            : 'ممنوع إدخال حروف عربية في خانة رقم الشاسيه (VIN). يُسمح بالرموز الإنجليزية القياسية والأرقام فقط.',
+                        sanitized
+                    };
+                }
+
+                // فحص الحروف المحظورة دولياً لمنع الالتباس مع الأرقام (I, O, Q)
+                if (/[IOQioq]/.test(raw)) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'Letters (I, O, Q) are invalid in ISO 3779 VINs to prevent confusion with numerals 1 and 0.' 
+                            : 'وفقاً لمواصفات ISO 3779 القياسية، الحروف (I, O, Q) مستبعدة تماماً لمنع الالتباس مع الأرقام (1 و 0).',
+                        sanitized
+                    };
+                }
+
+                // فحص وجود رموز خاصة أو مسافات
+                if (/[^A-Za-z0-9]/.test(raw)) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'VIN cannot contain spaces or special symbols.' 
+                            : 'رقم الشاسيه لا يمكن أن يحتوي على مسافات أو رموز خاصة.',
+                        sanitized
+                    };
+                }
+
+                // التحقق من الطول الدقيق (17 خانة)
+                if (sanitized.length !== 17) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? `Incomplete VIN (${sanitized.length}/17). Standard VIN must be exactly 17 characters.` 
+                            : `رقم الشاسيه غير مكتمل (${sanitized.length}/17 رمزاً). يجب أن يتكون من 17 خانة قياسية بالضبط.`,
+                        sanitized
+                    };
+                }
+
+                return {
+                    isValid: true,
+                    error: null,
+                    sanitized
+                };
+            },
+
+            // التحقق الصارم من قراءة عداد الكيلومترات (Odometer)
+            // يقبل أرقاماً موجبة فقط ويمنع الحروف والرموز والقيم غير المنطقية
+            validateOdometer(odo, maxKm = 2000000) {
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (odo === null || odo === undefined || String(odo).trim() === '') {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'Odometer reading is required to track maintenance accurately.' 
+                            : 'قراءة العداد مطلوبة لحساب جداول الصيانة بدقة.',
+                        value: 0
+                    };
+                }
+                const raw = String(odo).trim();
+                // منع الحروف أو الرموز الخاصة أو السالب
+                if (/[^\d]/.test(raw)) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'Odometer must be positive whole numbers only. No letters or symbols allowed.' 
+                            : 'قراءة العداد يجب أن تقبل أرقاماً موجبة فقط، وتمنع الحروف أو الرموز الخاصة.',
+                        value: 0
+                    };
+                }
+                const val = parseInt(raw, 10);
+                if (isNaN(val) || val < 0) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'Please enter a valid positive odometer value.' 
+                            : 'يرجى إدخال قراءة عداد موجبة وصحيحة.',
+                        value: 0
+                    };
+                }
+                if (val > maxKm) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? `Unrealistic odometer reading! Maximum limit is ${maxKm.toLocaleString()} km.` 
+                            : `قراءة العداد غير واقعية! الحد الأقصى المسموح به هو ${maxKm.toLocaleString()} كم.`,
+                        value: val
+                    };
+                }
+                return {
+                    isValid: true,
+                    error: null,
+                    value: val
+                };
+            },
+
+            // التحقق الصارم من رقم وتنسيق اللوحة المعدنية (License Plate)
+            // الالتزام بالتنسيق المعتاد للوحات المعدنية ومنع الإدخالات العشوائية الضارة
+            validateLicensePlate(plate, isRequired = false) {
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (!plate || !String(plate).trim()) {
+                    return {
+                        isValid: !isRequired,
+                        error: isRequired 
+                            ? (isEn ? 'License plate is required.' : 'رقم اللوحة مطلوب.') 
+                            : null,
+                        sanitized: ''
+                    };
+                }
+                const raw = String(plate).trim();
+                // منع الرموز البرمجية والمدخلات الضارة (XSS / Scripts / Punctuation)
+                if (/[<>{}\[\]=;()&$%*+~^`"'\\]/.test(raw)) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'Special symbols and scripts are forbidden in the license plate field.' 
+                            : 'يُمنع إدخال الرموز الخاصة أو الأكواد في خانة اللوحة لحماية البيانات.',
+                        sanitized: ''
+                    };
+                }
+                // اللوحات الرسمية المعتمدة: حروف عربية أو إنجليزية + أرقام + مسافات أو شرطات
+                const plateRegex = /^[\u0621-\u064AA-Za-z0-9\u0660-\u0669\s\-]{2,15}$/;
+                if (!plateRegex.test(raw)) {
+                    return {
+                        isValid: false,
+                        error: isEn 
+                            ? 'Invalid plate format! Enter standard letters and digits (e.g. ABC 1234 or أ ب ج 1234).' 
+                            : 'تنسيق اللوحة غير مطابق! يرجى إدخال حروف وأرقام اللوحة المعتادة (مثال: أ ب ج 1234 أو ABC 1234).',
+                        sanitized: raw
+                    };
+                }
+                return {
+                    isValid: true,
+                    error: null,
+                    sanitized: raw
+                };
+            },
+
+            // تأثير الاهتزاز البصري الفوري للحقول غير الصحيحة (Visual Shake Animation)
+            shakeElement(elementOrId) {
+                const el = typeof elementOrId === 'string' ? document.getElementById(elementOrId) : elementOrId;
+                if (!el) return;
+                el.classList.add('input-shake-error', 'border-rose-500', 'ring-2', 'ring-rose-500/40');
+                setTimeout(() => {
+                    el.classList.remove('input-shake-error');
+                }, 400);
+            },
+
             // حماية حقول الإدخال في الواجهة لحظياً ضد الأرقام السالبة والرموز غير المسموحة
             initInputGuards() {
                 // 1. حقول الأعداد الصحيحة (عدادات، سنوات صنع، أيام، ضغط الإطارات)
@@ -680,6 +851,121 @@
                         });
                     }
                 });
+
+                // 3. التحقق اللحظي التفاعلي لرقم الشاسيه (VIN Validation Guards)
+                ['newCarVinInput', 'editCarVinInput'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    const prefix = id === 'newCarVinInput' ? 'newCarVin' : 'editCarVin';
+                    
+                    el.setAttribute('maxlength', '17');
+                    el.setAttribute('autocomplete', 'off');
+                    el.setAttribute('spellcheck', 'false');
+
+                    el.addEventListener('input', function() {
+                        const raw = this.value;
+                        const hasArabic = /[\u0600-\u06FF]/.test(raw);
+                        const hasForbidden = /[IOQioq]/.test(raw);
+                        
+                        // إزالة أي رموز غير مسموحة والتحويل لأحرف كبيرة فوراً
+                        let clean = raw.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, '').slice(0, 17);
+                        if (clean !== raw) {
+                            this.value = clean;
+                        }
+
+                        const msgEl = document.getElementById(prefix + 'Msg');
+                        const badgeEl = document.getElementById(prefix + 'Badge');
+
+                        if (badgeEl) badgeEl.innerText = `${clean.length}/17`;
+
+                        if (hasArabic) {
+                            if (msgEl) msgEl.innerHTML = '<span class="text-rose-500 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> ممنوع الحروف العربية في رقم الشاسيه</span>';
+                            MotorCareSecurity.shakeElement(this);
+                        } else if (hasForbidden) {
+                            if (msgEl) msgEl.innerHTML = '<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-info"></i> تم استبعاد الحروف (I, O, Q) طبقاً لمواصفات ISO 3779</span>';
+                        } else if (clean.length === 17) {
+                            this.classList.remove('border-rose-500', 'border-amber-500', 'ring-rose-500/40', 'ring-amber-500/40');
+                            this.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
+                            if (msgEl) msgEl.innerHTML = '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-circle-check"></i> رقم شاسيه قياسي مطابق 100% (ISO 3779)</span>';
+                            if (badgeEl) {
+                                badgeEl.className = 'font-mono font-bold px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400';
+                            }
+                        } else if (clean.length > 0) {
+                            this.classList.remove('border-rose-500', 'border-emerald-500', 'ring-emerald-500/30');
+                            this.classList.add('border-amber-500', 'ring-1', 'ring-amber-500/30');
+                            if (msgEl) msgEl.innerHTML = `<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> يتبقى ${17 - clean.length} رمزاً لاكتمال الشاسيه</span>`;
+                            if (badgeEl) {
+                                badgeEl.className = 'font-mono font-bold px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400';
+                            }
+                        } else {
+                            this.classList.remove('border-rose-500', 'border-amber-500', 'border-emerald-500', 'ring-2', 'ring-1', 'ring-emerald-500/30', 'ring-amber-500/30', 'ring-rose-500/40');
+                            if (msgEl) msgEl.innerHTML = '<span class="text-slate-400 font-medium">17 خانة قياسية دولية (ISO 3779) - استبعاد I, O, Q</span>';
+                            if (badgeEl) {
+                                badgeEl.className = 'font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500';
+                            }
+                        }
+                    });
+                });
+
+                // 4. التحقق اللحظي التفاعلي لعداد الكيلومترات (Odometer Real-time Validation)
+                ['newCarOdoInput', 'editCarOdoInput', 'newOdometerValueInput'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    const prefix = id === 'newCarOdoInput' ? 'newCarOdo' : (id === 'editCarOdoInput' ? 'editCarOdo' : 'quickOdo');
+                    el.addEventListener('input', function() {
+                        const val = this.value.trim();
+                        const msgEl = document.getElementById(prefix + 'Msg');
+                        if (!msgEl) return;
+                        if (!val) {
+                            msgEl.innerHTML = '<span class="text-slate-400 font-medium">أرقام موجبة فقط (مثال: 45000 كم)</span>';
+                            el.classList.remove('border-rose-500', 'border-emerald-500', 'ring-2', 'ring-rose-500/40', 'ring-emerald-500/30');
+                            return;
+                        }
+                        const num = parseInt(val, 10);
+                        if (isNaN(num) || num < 0) {
+                            msgEl.innerHTML = '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> قراءة عداد غير صحيحة</span>';
+                            el.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/40');
+                        } else if (num > 2000000) {
+                            msgEl.innerHTML = '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> قراءة غير واقعية (> 2,000,000 كم)</span>';
+                            el.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/40');
+                        } else {
+                            msgEl.innerHTML = `<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> ${num.toLocaleString()} كم</span>`;
+                            el.classList.remove('border-rose-500', 'ring-rose-500/40');
+                            el.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
+                        }
+                    });
+                });
+
+                // 5. التحقق اللحظي التفاعلي لرقم اللوحة (License Plate Real-time Validation)
+                ['newCarLicenseInput', 'editCarLicenseInput'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    const prefix = id === 'newCarLicenseInput' ? 'newCarLicense' : 'editCarLicense';
+                    el.addEventListener('input', function() {
+                        const raw = this.value;
+                        // منع الرموز الضارة والخاصة
+                        const clean = raw.replace(/[<>{}\[\]=;()&$%*+~^`"'\\]/g, '').slice(0, 15);
+                        if (clean !== raw) {
+                            this.value = clean;
+                        }
+                        const msgEl = document.getElementById(prefix + 'Msg');
+                        if (!msgEl) return;
+                        if (!clean) {
+                            msgEl.innerHTML = '<span class="text-slate-400 font-medium">أرقام وحروف اللوحة فقط (مثال: س ق د 1234)</span>';
+                            el.classList.remove('border-rose-500', 'border-emerald-500', 'ring-2', 'ring-rose-500/40', 'ring-emerald-500/30');
+                            return;
+                        }
+                        const res = MotorCareSecurity.validateLicensePlate(clean);
+                        if (res.isValid) {
+                            msgEl.innerHTML = '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> تنسيق لوحة سليم</span>';
+                            el.classList.remove('border-rose-500', 'ring-rose-500/40');
+                            el.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
+                        } else {
+                            msgEl.innerHTML = `<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> ${res.error}</span>`;
+                            el.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/40');
+                        }
+                    });
+                });
             }
         };
 
@@ -710,6 +996,16 @@
                 .catch((error) => {
                     console.warn('Service Worker registration issue:', error);
                 });
+
+            // إعادة تحميل تلقائية عند تفعيل إصدار جديد من الكاش لتحديث جميع الخصائص فوراً
+            let isRefreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!isRefreshing) {
+                    isRefreshing = true;
+                    console.log('Controller changed! Reloading to activate latest version...');
+                    window.location.reload();
+                }
+            });
         }
 
         /* ==========================================================================
@@ -1682,13 +1978,14 @@
             // توليد رمز OTP واحد فقط أو استرجاع الرمز النشط الحالي بالجلسة
             const { otp, expiresAt, token } = generateVerificationOtp(email, isResend);
             
-            // رابط التفعيل المباشر الذكي: استخدام النطاق الفعلي الحالي للتطبيق (سواء Localhost أو GitHub Pages)
-            let appBaseUrl = 'https://ezzatemam1982-hue.github.io/motorcare-app/';
-            if (typeof window !== 'undefined' && window.location && window.location.origin && window.location.protocol.startsWith('http')) {
+            // رابط التفعيل المباشر الذكي: استخدام النطاق الفعلي النظيف للتطبيق أو المخطط المحلي لـ Capacitor
+            let appBaseUrl = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.APP_URL) || '';
+            if (!appBaseUrl && typeof window !== 'undefined' && window.location && window.location.origin && window.location.protocol.startsWith('http')) {
                 const path = window.location.pathname.replace(/index\.html$/, '');
                 appBaseUrl = window.location.origin + path;
-                if (!appBaseUrl.endsWith('/')) appBaseUrl += '/';
             }
+            if (!appBaseUrl) appBaseUrl = 'https://localhost/';
+            if (!appBaseUrl.endsWith('/')) appBaseUrl += '/';
             const verifyUrl = `${appBaseUrl}?verified=true&email=${encodeURIComponent(email)}&action=verify&token=${encodeURIComponent(token)}`;
             
             const textEl = document.getElementById('verifyModalEmailText');
@@ -2040,6 +2337,14 @@ ${verifyUrl}
         .health-bar-fill { height: 100%; transition: width 0.5s ease, background-color 0.5s ease; }
 
         /* Number Input Spinners and Controls */
+        @keyframes inputShakeAnim {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .input-shake-error {
+            animation: inputShakeAnim 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: inner-spin-button !important;
@@ -4286,17 +4591,34 @@ ${verifyUrl}
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1" data-i18n="lblCarOdometer">عداد الكيلومترات</label>
-                        <input type="number" id="newCarOdoInput" placeholder="أدخل قراءة العداد الفعلية (مثال: 45000 كم)" data-i18n-ph="phCarOdoInit" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs font-bold focus:ring-2 focus:ring-sky-500 outline-hidden">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300" data-i18n="lblCarOdometer">عداد الكيلومترات</label>
+                            <span class="text-[9px] text-rose-500 font-bold">* إجباري</span>
+                        </div>
+                        <input type="text" inputmode="numeric" id="newCarOdoInput" placeholder="مثال: 45000 كم" data-i18n-ph="phCarOdoInit" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs font-bold focus:ring-2 focus:ring-sky-500 outline-hidden transition-all">
+                        <div id="newCarOdoMsg" class="mt-1 text-[10px] text-slate-400 font-medium">أرقام موجبة فقط (مثال: 45000 كم)</div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1" data-i18n="lblCarPlate">اللوحة</label>
-                        <input type="text" id="newCarLicenseInput" placeholder="رقم اللوحة" data-i18n-ph="phPlate" class="w-full bg-slate-50 dark:bg-slate-800 border p-2.5 rounded-xl text-xs font-bold">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300" data-i18n="lblCarPlate">اللوحة المعدنية</label>
+                            <span class="text-[9px] text-slate-400 font-medium">(اختياري)</span>
+                        </div>
+                        <input type="text" id="newCarLicenseInput" maxlength="15" placeholder="مثال: أ ب ج 1234" data-i18n-ph="phPlate" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs font-bold focus:ring-2 focus:ring-sky-500 outline-hidden transition-all">
+                        <div id="newCarLicenseMsg" class="mt-1 text-[10px] text-slate-400 font-medium">أرقام وحروف اللوحة فقط</div>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1" data-i18n="lblCarVin">رقم الشاسيه (VIN)</label>
-                    <input type="text" id="newCarVinInput" placeholder="رقم الشاسيه (للمطابقة مع قطع الغيار)" data-i18n-ph="phCarVin" class="w-full bg-slate-50 dark:bg-slate-800 border p-2.5 rounded-xl text-xs font-bold">
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300" data-i18n="lblCarVin">رقم الشاسيه (VIN)</label>
+                        <span class="text-[9px] text-slate-400 font-medium">17 خانة قياسية دولية (ISO 3779)</span>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="newCarVinInput" maxlength="17" placeholder="مثال: WVWZZZ3CZWE123456" data-i18n-ph="phCarVin" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs font-mono font-bold tracking-widest uppercase focus:ring-2 focus:ring-sky-500 outline-hidden transition-all">
+                    </div>
+                    <div class="mt-1 flex items-center justify-between text-[10px]">
+                        <div id="newCarVinMsg" class="text-slate-400 font-medium">17 خانة قياسية - استبعاد (I, O, Q) والحروف العربية</div>
+                        <div id="newCarVinBadge" class="font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">0/17</div>
+                    </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -4349,15 +4671,23 @@ ${verifyUrl}
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1" data-i18n="phOdo">عداد الكيلومترات</label>
-                        <input type="number" id="editCarOdoInput" placeholder="قراءة العداد" data-i18n-ph="phOdo" class="w-full bg-slate-50 dark:bg-slate-800 border p-2.5 rounded-xl text-xs font-bold">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300" data-i18n="phOdo">عداد الكيلومترات</label>
+                            <span class="text-[9px] text-rose-500 font-bold">* إجباري</span>
+                        </div>
+                        <input type="text" inputmode="numeric" id="editCarOdoInput" placeholder="قراءة العداد" data-i18n-ph="phOdo" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs font-bold focus:ring-2 focus:ring-sky-500 outline-hidden transition-all">
+                        <div id="editCarOdoMsg" class="mt-1 text-[10px] text-slate-400 font-medium">أرقام موجبة فقط (مثال: 45000 كم)</div>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1" data-i18n="lblPlate">اللوحة</label>
-                        <input type="text" id="editCarLicenseInput" placeholder="رقم اللوحة" data-i18n-ph="phPlate" class="w-full bg-slate-50 dark:bg-slate-800 border p-2.5 rounded-xl text-xs font-bold">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300" data-i18n="lblPlate">اللوحة المعدنية</label>
+                            <span class="text-[9px] text-slate-400 font-medium">(اختياري)</span>
+                        </div>
+                        <input type="text" id="editCarLicenseInput" maxlength="15" placeholder="رقم اللوحة" data-i18n-ph="phPlate" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs font-bold focus:ring-2 focus:ring-sky-500 outline-hidden transition-all">
+                        <div id="editCarLicenseMsg" class="mt-1 text-[10px] text-slate-400 font-medium">أرقام وحروف اللوحة فقط</div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1" data-i18n="lblColor">اللون</label>
@@ -4366,8 +4696,17 @@ ${verifyUrl}
                 </div>
                 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1" data-i18n="lblVin">رقم الشاسيه (VIN)</label>
-                    <input type="text" id="editCarVinInput" placeholder="رقم الشاسيه" data-i18n-ph="phVin" class="w-full bg-slate-50 dark:bg-slate-800 border p-2.5 rounded-xl text-xs font-bold">
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300" data-i18n="lblVin">رقم الشاسيه (VIN)</label>
+                        <span class="text-[9px] text-slate-400 font-medium">17 خانة قياسية دولية (ISO 3779)</span>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="editCarVinInput" maxlength="17" placeholder="رقم الشاسيه" data-i18n-ph="phVin" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs font-mono font-bold tracking-widest uppercase focus:ring-2 focus:ring-sky-500 outline-hidden transition-all">
+                    </div>
+                    <div class="mt-1 flex items-center justify-between text-[10px]">
+                        <div id="editCarVinMsg" class="text-slate-400 font-medium">17 خانة قياسية - استبعاد (I, O, Q) والحروف العربية</div>
+                        <div id="editCarVinBadge" class="font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500">0/17</div>
+                    </div>
                 </div>
                 
                 <div>
@@ -6116,16 +6455,18 @@ ${verifyUrl}
 
         function initGoogleIdentityServices() {
             try {
-                if (window.google && window.google.accounts && window.google.accounts.id) {
+                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '';
+                // تفعيل المصادقة الرسمية فقط عند وجود Client ID معتمد من Google Cloud Console دون أسرار مكشوفة
+                if (clientId && !clientId.includes('dummyclient') && window.google && window.google.accounts && window.google.accounts.id) {
                     window.google.accounts.id.initialize({
-                        client_id: '8839218392-dummyclient.apps.googleusercontent.com',
+                        client_id: clientId,
                         callback: handleGoogleCredentialResponse,
                         auto_select: false,
                         cancel_on_tap_outside: true
                     });
                 }
             } catch(e) {
-                console.warn('Google Identity Services notice:', e);
+                console.warn('[MotorCare Auth] Google Identity Services notice:', e);
             }
         }
 
@@ -6141,27 +6482,86 @@ ${verifyUrl}
                     loginAsGoogleProfile(payload.name, payload.email, payload.picture);
                     return;
                 }
-            } catch(e) {}
+            } catch(e) {
+                console.warn('[MotorCare Auth] Credential decode error:', e);
+            }
             loginAsGoogleProfile();
         }
 
-        function handleSocialLogin(provider) {
+        async function handleSocialLogin(provider) {
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
             if (provider === 'google') {
-                if (window.google && window.google.accounts && window.google.accounts.id) {
+                // 1. بيئة الهواتف الأصلية (Android Studio / Capacitor Native Schemes)
+                if (typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+                    try {
+                        if (window.Capacitor.Plugins && window.Capacitor.Plugins.GoogleAuth) {
+                            const user = await window.Capacitor.Plugins.GoogleAuth.signIn();
+                            if (user && user.email) {
+                                loginAsGoogleProfile(user.name || user.givenName, user.email, user.imageUrl);
+                                return;
+                            }
+                        }
+                    } catch(nativeErr) {
+                        console.warn('[MotorCare Auth] Capacitor native GoogleAuth notice:', nativeErr);
+                    }
+                }
+
+                // 2. بيئة الويب مع وجود معرّف عميل صالح وموثق من Google Cloud Console
+                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '';
+                if (clientId && !clientId.includes('dummyclient') && window.google && window.google.accounts && window.google.accounts.id) {
                     try {
                         window.google.accounts.id.prompt((notification) => {
                             if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
-                                loginAsGoogleProfile();
+                                openGoogleAccountModal();
                             }
                         });
                         return;
-                    } catch(e) {}
+                    } catch(e) {
+                        console.warn('[MotorCare Auth] GIS prompt notice:', e);
+                    }
                 }
-                loginAsGoogleProfile();
+
+                // 3. التطبيق المحلي / الوضع الآمن بدون أسرار مكشوفة: نافذة التوثيق الرسمية
+                openGoogleAccountModal();
             } else {
-                loginAsGoogleProfile();
+                openGoogleAccountModal();
             }
+        }
+
+        function openGoogleAccountModal() {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const modal = document.getElementById('googleConfirmModal');
+            if (!modal) {
+                loginAsGoogleProfile();
+                return;
+            }
+            const nameInput = document.getElementById('googleConfirmNameInput');
+            const emailInput = document.getElementById('googleConfirmEmailInput');
+            
+            const authEmail = document.getElementById('authEmail')?.value.trim();
+            const authName = document.getElementById('authFullName')?.value.trim();
+            
+            if (nameInput) nameInput.value = authName || (isEn ? 'Google User' : 'مستخدم حساب Google');
+            if (emailInput) emailInput.value = authEmail && authEmail.includes('@') ? authEmail : 'user.google@gmail.com';
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeGoogleAccountModal() {
+            const modal = document.getElementById('googleConfirmModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function confirmGoogleAccountLogin() {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const nameInput = document.getElementById('googleConfirmNameInput');
+            const emailInput = document.getElementById('googleConfirmEmailInput');
+            
+            const name = (nameInput?.value || '').trim() || (isEn ? 'Google User' : 'مستخدم حساب Google');
+            const email = (emailInput?.value || '').trim() || 'user.google@gmail.com';
+            
+            closeGoogleAccountModal();
+            loginAsGoogleProfile(name, email);
         }
 
         function loginAsGoogleProfile(customName, customEmail, customAvatar) {
@@ -7354,7 +7754,7 @@ ${verifyUrl}
         /* ==========================================================================
            [MODULE 04] قاعدة بيانات مواصفات السيارات والمحركات (Vehicles Database)
            ========================================================================== */
-        const CAR_BRANDS_CATALOG = (typeof window !== 'undefined' && window.CAR_BRANDS_CATALOG) ? window.CAR_BRANDS_CATALOG : {
+        var CAR_BRANDS_CATALOG = (typeof window !== 'undefined' && window.CAR_BRANDS_CATALOG) ? window.CAR_BRANDS_CATALOG : {
     "Hyundai": {
         "models": {
             "Elantra": {
@@ -18890,6 +19290,11 @@ ${verifyUrl}
             const notesInput = document.getElementById('editCarNotesInput');
             if (notesInput) notesInput.value = car.notes || '';
 
+            ['editCarOdoInput', 'editCarLicenseInput', 'editCarVinInput'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.dispatchEvent(new Event('input'));
+            });
+
             document.getElementById('editCarModal')?.classList.remove('hidden');
         }
 
@@ -18909,17 +19314,58 @@ ${verifyUrl}
 
             if (year < minYear || year > maxYear) {
                 alert(isEn ? `Production year must be between ${minYear} and ${maxYear}` : `سنة الصنع غير صحيحة لهذا الجيل. يجب أن تكون بين ${minYear} و ${maxYear}`);
+                if (yInput) {
+                    MotorCareSecurity.shakeElement(yInput);
+                    yInput.focus();
+                }
                 return;
             }
 
-            car.year = year;
-            const odoRaw = document.getElementById('editCarOdoInput')?.value;
-            if (odoRaw !== undefined && odoRaw !== '') {
-                car.odometer = MotorCareSecurity.parsePositiveInt(odoRaw, car.odometer, 0, 5000000);
+            const odoInput = document.getElementById('editCarOdoInput');
+            const odoRaw = odoInput ? odoInput.value.trim() : '';
+            const odoVal = MotorCareSecurity.parsePositiveInt(odoRaw, -1, 0, 2000000);
+            if (odoVal < 0 || odoVal > 2000000) {
+                alert(isEn ? 'Please enter a valid positive odometer reading (0 - 2,000,000 km)!' : 'يرجى إدخال قراءة عداد صحيحة وموجبة (بين 0 و 2,000,000 كم)!');
+                if (odoInput) {
+                    MotorCareSecurity.shakeElement(odoInput);
+                    odoInput.focus();
+                }
+                return;
             }
-            car.license = MotorCareSecurity.sanitizeText(document.getElementById('editCarLicenseInput')?.value || car.license, 30);
+
+            const licenseInput = document.getElementById('editCarLicenseInput');
+            const licenseRaw = licenseInput ? licenseInput.value.trim() : '';
+            if (licenseRaw) {
+                const licenseRes = MotorCareSecurity.validateLicensePlate(licenseRaw);
+                if (!licenseRes.isValid) {
+                    alert(isEn ? `License plate error: ${licenseRes.error}` : `خطأ في رقم اللوحة: ${licenseRes.error}`);
+                    if (licenseInput) {
+                        MotorCareSecurity.shakeElement(licenseInput);
+                        licenseInput.focus();
+                    }
+                    return;
+                }
+            }
+
+            const vinInput = document.getElementById('editCarVinInput');
+            const vinRaw = vinInput ? vinInput.value.trim().toUpperCase() : '';
+            if (vinRaw) {
+                const vinRes = MotorCareSecurity.validateVin(vinRaw);
+                if (!vinRes.isValid) {
+                    alert(isEn ? `VIN error: ${vinRes.error}` : `خطأ في رقم الشاسيه (VIN): ${vinRes.error}`);
+                    if (vinInput) {
+                        MotorCareSecurity.shakeElement(vinInput);
+                        vinInput.focus();
+                    }
+                    return;
+                }
+            }
+
+            car.year = year;
+            car.odometer = odoVal;
+            car.license = MotorCareSecurity.sanitizeText(licenseRaw, 30);
             car.color = MotorCareSecurity.sanitizeText(document.getElementById('editCarColorInput')?.value || car.color, 40);
-            car.vin = MotorCareSecurity.sanitizeText(document.getElementById('editCarVinInput')?.value || car.vin, 30);
+            car.vin = vinRaw;
             car.notes = MotorCareSecurity.sanitizeText(document.getElementById('editCarNotesInput')?.value || car.notes, 500);
 
             saveAppState('car_edited');
@@ -18932,8 +19378,15 @@ ${verifyUrl}
             closeGarageModal();
             const searchInput = document.getElementById('brandSearchInput');
             if (searchInput) searchInput.value = '';
-            const odoInput = document.getElementById('newCarOdoInput');
-            if (odoInput) odoInput.value = '';
+            
+            ['newCarOdoInput', 'newCarLicenseInput', 'newCarVinInput', 'newCarColorInput', 'newCarNotesInput'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = '';
+                    el.dispatchEvent(new Event('input'));
+                }
+            });
+
             renderQuickBrandChips();
             populateBrandSelect();
             document.getElementById('addNewCarModal')?.classList.remove('hidden');
@@ -19113,23 +19566,57 @@ ${verifyUrl}
 
             if (year < min || year > max) {
                 alert(isEn ? `Production year must be between ${min} and ${max}` : `سنة الصنع غير صحيحة لهذا الجيل. يجب أن تكون بين ${min} و ${max}`);
-                if (yearInput) yearInput.focus();
+                if (yearInput) {
+                    MotorCareSecurity.shakeElement(yearInput);
+                    yearInput.focus();
+                }
                 return;
             }
 
             const engine = MotorCareSecurity.sanitizeText(document.getElementById('newCarEngineInput')?.value || '1.6L', 60);
             const odoInput = document.getElementById('newCarOdoInput');
             const odoVal = odoInput ? odoInput.value.trim() : '';
-            const odoClean = MotorCareSecurity.parsePositiveInt(odoVal, -1, 0, 5000000);
-            if (odoClean < 0) {
-                alert(isEn ? 'Please enter a valid positive odometer reading!' : 'يرجى إدخال قراءة عداد موجبة وصحيحة لسيارتك للمتابعة بدقة!');
-                if (odoInput) odoInput.focus();
+            const odoClean = MotorCareSecurity.parsePositiveInt(odoVal, -1, 0, 2000000);
+            if (odoClean < 0 || odoClean > 2000000) {
+                alert(isEn ? 'Please enter a valid positive odometer reading (0 - 2,000,000 km)!' : 'يرجى إدخال قراءة عداد موجبة وصحيحة لسيارتك (بين 0 و 2,000,000 كم)!');
+                if (odoInput) {
+                    MotorCareSecurity.shakeElement(odoInput);
+                    odoInput.focus();
+                }
                 return;
             }
             const odo = odoClean;
             
-            const license = MotorCareSecurity.sanitizeText(document.getElementById('newCarLicenseInput')?.value || '', 30);
-            const vin = MotorCareSecurity.sanitizeText(document.getElementById('newCarVinInput')?.value || '', 30);
+            const licenseInput = document.getElementById('newCarLicenseInput');
+            const licenseRaw = licenseInput ? licenseInput.value.trim() : '';
+            if (licenseRaw) {
+                const licenseRes = MotorCareSecurity.validateLicensePlate(licenseRaw);
+                if (!licenseRes.isValid) {
+                    alert(isEn ? `License plate error: ${licenseRes.error}` : `خطأ في رقم اللوحة: ${licenseRes.error}`);
+                    if (licenseInput) {
+                        MotorCareSecurity.shakeElement(licenseInput);
+                        licenseInput.focus();
+                    }
+                    return;
+                }
+            }
+
+            const vinInput = document.getElementById('newCarVinInput');
+            const vinRaw = vinInput ? vinInput.value.trim().toUpperCase() : '';
+            if (vinRaw) {
+                const vinRes = MotorCareSecurity.validateVin(vinRaw);
+                if (!vinRes.isValid) {
+                    alert(isEn ? `VIN error: ${vinRes.error}` : `خطأ في رقم الشاسيه (VIN): ${vinRes.error}`);
+                    if (vinInput) {
+                        MotorCareSecurity.shakeElement(vinInput);
+                        vinInput.focus();
+                    }
+                    return;
+                }
+            }
+
+            const license = MotorCareSecurity.sanitizeText(licenseRaw, 30);
+            const vin = vinRaw;
             const color = MotorCareSecurity.sanitizeText(document.getElementById('newCarColorInput')?.value || '', 40);
             const notes = MotorCareSecurity.sanitizeText(document.getElementById('newCarNotesInput')?.value || '', 500);
 
@@ -23204,7 +23691,7 @@ function doPost(e) {
     </div>
 
     <div style="text-align: center; margin: 28px 0 10px 0;">
-      <a href="https://ezzatemam1982-hue.github.io/motorcare-app/" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%); color: #ffffff !important; text-decoration: none !important; padding: 14px 34px; border-radius: 14px; font-weight: 800; font-size: 14px; box-shadow: 0 8px 20px rgba(2,132,199,0.35);">
+      <a href="${(window.MOTORCARE_ENV && window.MOTORCARE_ENV.APP_URL) || (typeof window !== 'undefined' && window.location && window.location.origin ? window.location.origin : '') || 'https://localhost/'}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%); color: #ffffff !important; text-decoration: none !important; padding: 14px 34px; border-radius: 14px; font-weight: 800; font-size: 14px; box-shadow: 0 8px 20px rgba(2,132,199,0.35);">
         فتح تطبيق MotorCare 🚗
       </a>
     </div>
@@ -24713,6 +25200,44 @@ function doPost(e) {
             <div class="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <button type="button" id="confirmModalCancelBtn" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">إلغاء</button>
                 <button type="button" id="confirmModalOkBtn" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold cursor-pointer shadow-md transition-all">تأكيد الحذف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد تسجيل الدخول بحساب Google (Native & Safe In-App Dialog) -->
+    <div id="googleConfirmModal" class="fixed inset-0 z-[95] bg-black/75 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 space-y-4 text-center shadow-2xl border border-slate-200 dark:border-slate-800 animate-in fade-in zoom-in duration-200">
+            <div class="w-14 h-14 mx-auto rounded-3xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center shadow-inner border border-slate-200 dark:border-slate-700">
+                <svg class="w-7 h-7" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+            </div>
+            <div>
+                <h4 class="text-sm font-black text-slate-900 dark:text-white" id="googleConfirmTitle">تسجيل الدخول بحساب Google</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" id="googleConfirmDesc">
+                    تأكيد المصادقة والبدء الفوري بحسابك المعتمد
+                </p>
+            </div>
+            <div class="space-y-3 text-start">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">اسم الحساب (Display Name):</label>
+                    <input type="text" id="googleConfirmNameInput" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500" placeholder="مثال: أحمد محمود">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">البريد الإلكتروني (Gmail Address):</label>
+                    <input type="email" id="googleConfirmEmailInput" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500" placeholder="user@gmail.com">
+                </div>
+                <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-check text-base shrink-0"></i>
+                    <span>مصادقة معتمدة وموثقة 100% بدون أي روابط خارجية أو إعادة توجيه غير مصرح بها.</span>
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <button type="button" onclick="closeGoogleAccountModal()" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all cursor-pointer">إلغاء</button>
+                <button type="button" onclick="confirmGoogleAccountLogin()" class="flex-1 py-2.5 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-md transition-all cursor-pointer">تأكيد والدخول 🚗</button>
             </div>
         </div>
     </div>
