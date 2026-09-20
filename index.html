@@ -210,14 +210,35 @@
         }
 
         function handleSocialLogin(provider) {
-            loginAsGoogleProfile();
+            if (typeof window.triggerRealSocialLogin === 'function') {
+                return window.triggerRealSocialLogin(provider);
+            }
+            console.warn('[MotorCare Auth] Real social login initializing...');
         }
 
         function loginAsGoogleProfile(customName, customEmail, customAvatar) {
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            const name = customName || (isEn ? 'Google User' : 'مستخدم حساب Google');
-            const email = customEmail || 'user.google@gmail.com';
-            const avatar = customAvatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name);
+            
+            // التحقق الصارم: حظر أي بريد وهمي أو فارغ ومنع إنشاء حسابات وهمية تلقائياً
+            if (!customEmail || typeof customEmail !== 'string' || !customEmail.includes('@') || 
+                customEmail.toLowerCase() === 'user.google@gmail.com' || 
+                customEmail.toLowerCase().startsWith('dummy') ||
+                customEmail.toLowerCase() === 'user@motorcare.app') {
+                console.warn('[MotorCare Auth] Blocked dummy/fake Google login:', customEmail);
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn 
+                            ? 'Please select your actual Google account to sign in ⚠️' 
+                            : 'يرجى اختيار وتأكيد حساب Google الحقيقي الخاص بك لتسجيل الدخول ⚠️', 
+                        'warning'
+                    );
+                }
+                return false;
+            }
+
+            const name = (customName && customName.trim()) ? customName.trim() : customEmail.split('@')[0];
+            const email = customEmail.trim();
+            const avatar = customAvatar || ('https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name));
 
             let profile = {
                 name: name,
@@ -235,34 +256,10 @@
             if (typeof showNotification === 'function') {
                 showNotification(isEn ? `Welcome, ${name}! Signed in via Google ✨` : `أهلاً بك يا ${name}! تم الدخول بنجاح عبر حساب Google ✨`, 'success');
             }
+            return true;
         }
 
-        function handleAuthSubmit(e) {
-            if (e && e.preventDefault) e.preventDefault();
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            const email = (document.getElementById('authEmail')?.value || '').trim();
-            const password = document.getElementById('authPassword')?.value || '';
-            const fullName = (document.getElementById('authFullName')?.value || '').trim();
-
-            if (!email || !password) {
-                handleGuestEntry();
-                return;
-            }
-
-            let profile = {
-                name: fullName || email.split('@')[0],
-                email: email,
-                provider: 'email',
-                isRegistered: true,
-                isVerified: true
-            };
-
-            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
-            enterMainApp();
-            if (typeof showNotification === 'function') {
-                showNotification(isEn ? `Welcome, ${profile.name}!` : `أهلاً بك، ${profile.name}!`, 'success');
-            }
-        }
+        // handleAuthSubmit is fully implemented and handled in the main application script below
 
         function switchAuthTab(mode) {
             const isReg = mode === 'register';
@@ -309,11 +306,118 @@
         }
 
         function openForgotPasswordModal() {
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            if (typeof showNotification === 'function') {
-                showNotification(isEn ? 'Password reset link has been dispatched to your email' : 'تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني', 'info');
+            const modal = document.getElementById('forgotPasswordModal');
+            const step1 = document.getElementById('forgotStep1Container');
+            const step2 = document.getElementById('forgotStep2Container');
+            const emailInput = document.getElementById('forgotEmailInput');
+            if (modal) {
+                if (step1) step1.classList.remove('hidden');
+                if (step2) step2.classList.add('hidden');
+                if (emailInput) emailInput.value = '';
+                modal.classList.remove('hidden');
             }
         }
+
+        /* ==========================================================================
+           [LOGOUT & UPGRADE ACCOUNT] تسجيل الخروج وترقية الحساب
+           ========================================================================== */
+        function handleLogout() {
+            try {
+                if (typeof closeAccountCenter === 'function') closeAccountCenter();
+                if (typeof closeTopHeaderMenu === 'function') closeTopHeaderMenu();
+                if (typeof closeMobileMoreDrawer === 'function') closeMobileMoreDrawer();
+
+                SafeStorage.removeItem('motorCare_LoggedIn');
+                SafeStorage.setItem('motorCare_LoggedIn', 'false');
+
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+
+                if (landing) {
+                    landing.style.removeProperty('display');
+                    landing.style.setProperty('display', 'flex', 'important');
+                    landing.classList.remove('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'none', 'important');
+                    mainApp.classList.add('hidden');
+                }
+
+                if (typeof switchAuthTab === 'function') {
+                    switchAuthTab('login');
+                }
+
+                const pwdInput = document.getElementById('authPassword');
+                if (pwdInput) pwdInput.value = '';
+
+                if (typeof initGoogleIdentityServices === 'function') {
+                    try { initGoogleIdentityServices(); } catch(e) {}
+                }
+
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Signed out successfully 👋' : 'تم تسجيل الخروج بنجاح 👋', 'info');
+                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+                if (landing) landing.style.display = 'flex';
+                if (mainApp) mainApp.style.display = 'none';
+            }
+        }
+        window.handleLogout = handleLogout;
+
+        function handleUpgradeAccount() {
+            try {
+                if (typeof closeAccountCenter === 'function') closeAccountCenter();
+                if (typeof closeTopHeaderMenu === 'function') closeTopHeaderMenu();
+                if (typeof closeMobileMoreDrawer === 'function') closeMobileMoreDrawer();
+
+                SafeStorage.removeItem('motorCare_LoggedIn');
+                SafeStorage.setItem('motorCare_LoggedIn', 'false');
+
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+
+                if (landing) {
+                    landing.style.removeProperty('display');
+                    landing.style.setProperty('display', 'flex', 'important');
+                    landing.classList.remove('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'none', 'important');
+                    mainApp.classList.add('hidden');
+                }
+
+                if (typeof switchAuthTab === 'function') {
+                    switchAuthTab('register');
+                }
+
+                if (typeof initGoogleIdentityServices === 'function') {
+                    try { initGoogleIdentityServices(); } catch(e) {}
+                }
+
+                setTimeout(() => {
+                    const nameInput = document.getElementById('authFullName') || document.getElementById('authEmail');
+                    if (nameInput) nameInput.focus();
+                }, 150);
+
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn 
+                            ? 'Create your registered account or sign in with Google to backup and sync your cars! 🚀' 
+                            : 'أنشئ حسابك الجديد أو سجل عبر Google لحفظ بيانات سياراتك ومزامنتها سحابياً 🚀', 
+                        'info'
+                    );
+                }
+            } catch (err) {
+                console.error('Upgrade account error:', err);
+                handleLogout();
+            }
+        }
+        window.handleUpgradeAccount = handleUpgradeAccount;
 
         /* ==========================================================================
            [INDEXED-DB OFFLINE PERSISTENCE] محرك التخزين المستقل عالي السعة (IndexedDB)
@@ -1445,13 +1549,36 @@
         /* ==========================================================================
            [SYSTEM UTILITIES] نظام التنبيهات العصرية والتأكيد المدمج
            ========================================================================== */
+        const _recentNotificationsMap = new Map();
         function showNotification(message, type = 'info', duration = 3800) {
+            if (!message) return;
+            const msgKey = String(message).trim();
+            const now = Date.now();
+
+            // منع تكرار نفس الرسالة تماماً إذا عُرضت خلال آخر 3.5 ثوانٍ
+            if (_recentNotificationsMap.has(msgKey) && (now - _recentNotificationsMap.get(msgKey) < 3500)) {
+                return;
+            }
+            _recentNotificationsMap.set(msgKey, now);
+
+            // تنظيف الذاكرة دورياً
+            if (_recentNotificationsMap.size > 40) {
+                for (const [k, t] of _recentNotificationsMap.entries()) {
+                    if (now - t > 10000) _recentNotificationsMap.delete(k);
+                }
+            }
+
             let container = document.getElementById('appToastContainer');
             if (!container) {
                 container = document.createElement('div');
                 container.id = 'appToastContainer';
                 container.className = 'fixed top-4 inset-x-0 z-[100] flex flex-col items-center pointer-events-none px-4 space-y-2';
                 document.body.appendChild(container);
+            }
+
+            // حد أقصى 3 إشعارات فقط على الشاشة في أي وقت لمنع تهنيج وتجميد المتصفح
+            while (container.children.length >= 3) {
+                container.firstElementChild.remove();
             }
 
             const toast = document.createElement('div');
@@ -1723,12 +1850,23 @@
             } catch(e) {}
         }
 
+        let _lastVerificationNoticeTime = 0;
         function applyRemoteVerification(email) {
+            // إيقاف المراقبة الحية فوراً لمنع أي استدعاء متزامن إضافي
+            stopLiveVerificationWatcher();
+
             let profile = {};
             try {
                 const raw = SafeStorage.getItem('motorCare_UserProfile');
                 if (raw) profile = JSON.parse(raw);
             } catch(e) {}
+
+            const now = Date.now();
+            const alreadyVerified = (profile.isVerified || profile.verified || profile.emailVerified);
+            // إذا كان الحساب موثقاً بالفعل والإشعار قد تم إظهاره خلال آخر 30 ثانية، نخرج فوراً لمنع التكرار
+            if (alreadyVerified && (now - _lastVerificationNoticeTime < 30000)) {
+                return;
+            }
 
             profile.isVerified = true;
             profile.verified = true;
@@ -1746,12 +1884,10 @@
             markAccountAsVerifiedInDB(profile.email || email);
 
             // إغلاق نافذة إدخال رمز التحقق إن كانت معروضة
-            stopLiveVerificationWatcher();
             const verifyModal = document.getElementById('emailVerificationModal');
             if (verifyModal) verifyModal.classList.add('hidden');
 
-            // بث التحديث لباقي النوافذ
-            notifyCrossTabVerification(profile.email || email);
+            // ملاحظة هامة: لا نقوم باستدعاء notifyCrossTabVerification هنا إطلاقاً لتفادي حلقة البث المتبادل بين النوافذ
 
             // تحديث واجهة المستخدم والشارات
             if (typeof updateAccountCenterUI === 'function') updateAccountCenterUI();
@@ -1761,8 +1897,12 @@
             // مزامنة فورية للسحابة لتثبيت التوثيق في Firestore
             if (typeof syncUserDataToCloud === 'function') syncUserDataToCloud('remote_verified');
 
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            showNotification(isEn ? 'Account successfully verified! 🛡️' : 'تم تأكيد وتوثيق حسابك بنجاح! 🛡️✨', 'success', 6000);
+            // إظهار إشعار واحد فقط ومحدد تماماً
+            if (now - _lastVerificationNoticeTime >= 30000) {
+                _lastVerificationNoticeTime = now;
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                showNotification(isEn ? 'Account successfully verified! 🛡️' : 'تم تأكيد وتوثيق حسابك بنجاح! 🛡️✨', 'success', 5000);
+            }
         }
 
         let crossTabAuthSyncInitialized = false;
@@ -1822,6 +1962,7 @@
                             if (docSnapshot && docSnapshot.exists) {
                                 const d = docSnapshot.data();
                                 if (d && (d.isVerified || d.emailVerified || d.verified)) {
+                                    stopLiveVerificationWatcher();
                                     applyRemoteVerification(normEmail);
                                 }
                             }
@@ -1872,6 +2013,7 @@
             }
         }
 
+        window.openEmailVerificationModal = function(forceSend = false) { return openVerificationCodeModal(forceSend); };
         function openVerificationCodeModal(forceSend = false) {
             let profile = {};
             try {
@@ -1923,7 +2065,7 @@
         /* ==========================================================================
            [OFFICIAL CLOUD WEBHOOK] رابط الويب هوك السحابي الرسمي المعتمد للتطبيق
            ========================================================================== */
-        const MOTORCARE_OFFICIAL_WEBHOOK = 'https://script.google.com/macros/s/AKfycbwvSY5bjKSPoC59wi-fYg-pqFq8KrAjZMoRyujKx7NEmYsWMxCx1oZ6c_R3LaoHiDNc/exec';
+        const MOTORCARE_OFFICIAL_WEBHOOK = 'https://script.google.com/macros/s/AKfycbw9i9HjQRN3909_EPXzWz6ZzbDqXJDYoIudlwPVa6mvECeCx9PQoXNDnwpo9RrpxjKe2A/exec';
         function getAppWebhookUrl() {
             return MOTORCARE_OFFICIAL_WEBHOOK;
         }
@@ -2056,8 +2198,7 @@ ${verifyUrl}
   </div>
 </div>`;
 
-            // إرسال البريد الحقيقي عبر خادم Webhook الرسمي المعتمد للتطبيق
-            const webhookUrl = getAppWebhookUrl();
+            // إرسال البريد الحقيقي عبر خوادم Webhook المعتمدة للتطبيق
             const senderEmail = typeof getAppSenderEmail === 'function' ? getAppSenderEmail() : 'motorcare.auto@gmail.com';
 
             const finishSend = () => {
@@ -2065,33 +2206,41 @@ ${verifyUrl}
                 startOtpCooldown(60);
             };
 
-            if (webhookUrl && webhookUrl.startsWith('http')) {
-                fetch(webhookUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'SEND_OTP_EMAIL',
-                        name: name,
-                        email: email,
-                        otp: otp,
-                        verifyUrl: verifyUrl,
-                        sender: senderEmail,
-                        expiresMinutes: 15,
-                        timestamp: new Date().toISOString(),
-                        subject: `[MotorCare] رمز تفعيل وتوثيق حسابك: ${otp}`,
-                        body: plainBody,
-                        htmlBody: htmlBody
-                    })
-                }).catch(err => console.warn('OTP webhook send error:', err))
-                  .finally(() => {
-                      finishSend();
-                  });
+            const webhookUrl = getAppWebhookUrl();
+            console.log(`[MotorCare] Verification OTP for ${email}: ${otp}`);
 
-                showNotification(isEn 
-                    ? `Verification code (OTP) sent to ${email} 📩 Check inbox & spam.` 
-                    : `تم إرسال رمز التحقق ورابط التفعيل إلى بريدك ${email} 📩 يرجى التحقق من الوارد والـ Spam`, 'info');
-            } else {
+            const otpPayload = {
+                action: 'SEND_OTP_EMAIL',
+                name: name,
+                email: email,
+                otp: otp,
+                verifyUrl: verifyUrl,
+                sender: 'motorcare.auto@gmail.com',
+                expiresMinutes: 15,
+                timestamp: new Date().toISOString(),
+                subject: `[MotorCare] رمز تفعيل وتوثيق حسابك: ${otp}`,
+                body: plainBody,
+                htmlBody: htmlBody
+            };
+
+            if (webhookUrl && webhookUrl.startsWith('http')) {
+                try {
+                    fetch(webhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(otpPayload)
+                    }).catch(err => console.warn('OTP webhook send note:', err));
+                } catch(err) {}
+            }
+
+            finishSend();
+
+            showNotification(isEn 
+                ? `Verification code (OTP) sent to ${email} 📩 Check inbox & spam.` 
+                : `تم إرسال رمز التحقق ورابط التفعيل إلى بريدك ${email} 📩 يرجى التحقق من الوارد والـ Spam`, 'info', 6000);
+
+            if (false) {
                 finishSend();
                 console.log(`[MotorCare Dev Mode] Active Verification OTP for ${email}: ${otp}`);
                 showNotification(isEn
@@ -2108,12 +2257,54 @@ ${verifyUrl}
 
         function sendAccountActivatedSuccessEmail(name, email) {
             if (!email || !email.includes('@')) return;
+
+            // ====== حارس مانع التكرار: ترسل مرة واحدة فقط لكل بريد ======
+            const normEmail = email.trim().toLowerCase();
+            try {
+                let sentList = [];
+                const rawSent = SafeStorage.getItem('motorCare_WelcomeEmailsSent');
+                if (rawSent) sentList = JSON.parse(rawSent);
+                if (sentList.includes(normEmail)) {
+                    console.log('[MotorCare Auth] Welcome email already sent to', normEmail, '- skipping duplicate.');
+                    return;
+                }
+                // تسجيل الإرسال قبل الطلب الفعلي لمنع أي تكرار
+                sentList.push(normEmail);
+                SafeStorage.setItem('motorCare_WelcomeEmailsSent', JSON.stringify(sentList));
+
+                // تحديث علامة welcomeEmailSent في ملف الحساب
+                try {
+                    const rawProfile = SafeStorage.getItem('motorCare_UserProfile');
+                    if (rawProfile) {
+                        const prof = JSON.parse(rawProfile);
+                        if (prof && prof.email && prof.email.toLowerCase() === normEmail) {
+                            prof.welcomeEmailSent = true;
+                            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(prof));
+                        }
+                    }
+                } catch(ep) {}
+
+                // تحديث علامة welcomeEmailSent في قاعدة الحسابات
+                try {
+                    const rawAccs = SafeStorage.getItem('motorCare_AccountsDB');
+                    if (rawAccs) {
+                        const accs = JSON.parse(rawAccs);
+                        const idx = accs.findIndex(a => a.email && a.email.toLowerCase() === normEmail);
+                        if (idx !== -1) {
+                            accs[idx].welcomeEmailSent = true;
+                            SafeStorage.setItem('motorCare_AccountsDB', JSON.stringify(accs));
+                        }
+                    }
+                } catch(ea) {}
+            } catch(eg) {}
+            // ================================================================
+
             const webhookUrl = getAppWebhookUrl();
             const senderEmail = typeof getAppSenderEmail === 'function' ? getAppSenderEmail() : 'motorcare.auto@gmail.com';
             const clientName = name || 'عضو MotorCare';
 
             const plainBody = `==========================================
-[ MOTORCARE ] | مرحباً بك في عائلة موتور كير
+[ MOTORCARE ] | تهانينا! تم تفعيل وتوثيق حسابك بنجاح
 ==========================================
 
 أهلاً بك يا ${clientName}!
@@ -2194,22 +2385,24 @@ ${verifyUrl}
   </div>
 </div>`;
 
+            const welcomePayload = {
+                action: 'SEND_WELCOME_VERIFICATION_EMAIL',
+                name: clientName,
+                email: email,
+                sender: 'motorcare.auto@gmail.com',
+                timestamp: new Date().toISOString(),
+                subject: '[MotorCare] تهانينا! تم تفعيل وتوثيق حسابك بنجاح',
+                body: plainBody,
+                htmlBody: htmlBody
+            };
+
             if (webhookUrl && webhookUrl.startsWith('http')) {
                 try {
                     fetch(webhookUrl, {
                         method: 'POST',
                         mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'SEND_WELCOME_VERIFICATION_EMAIL',
-                            name: clientName,
-                            email: email,
-                            sender: senderEmail,
-                            timestamp: new Date().toISOString(),
-                            subject: '[MotorCare] تهانينا! تم تفعيل وتوثيق حسابك بنجاح',
-                            body: plainBody,
-                            htmlBody: htmlBody
-                        })
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(welcomePayload)
                     }).catch(() => {});
                 } catch(e) {}
             }
@@ -2248,7 +2441,9 @@ ${verifyUrl}
                 return;
             }
 
-            // التحقق نجح بنسبة 100%
+            // التحقق نجح بنسبة 100% - إيقاف أي مراقبة حية فوراً
+            stopLiveVerificationWatcher();
+            _lastVerificationNoticeTime = Date.now();
             let profile = {};
             try {
                 const raw = SafeStorage.getItem('motorCare_UserProfile');
@@ -2505,7 +2700,7 @@ ${verifyUrl}
                         </div>
 
                         <!-- زر التأكيد والإرسال -->
-                        <button type="submit" id="authSubmitBtn" onclick="if(typeof handleAuthSubmit==='function'){handleAuthSubmit(event);}else{enterMainApp();}" class="w-full py-2.5 px-4 bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black rounded-xl text-xs shadow-md shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98">
+                        <button type="submit" id="authSubmitBtn"  class="w-full py-2.5 px-4 bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black rounded-xl text-xs shadow-md shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98">
                             <span id="authSubmitBtnText" data-i18n="instantLoginBtn">دخول فوري</span>
                             <i class="fa-solid fa-arrow-left rtl:rotate-0 ltr:rotate-180 text-xs"></i>
                         </button>
@@ -2579,20 +2774,33 @@ ${verifyUrl}
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">رمز التحقق (OTP)</label>
                         <input type="text" id="forgotResetOtpInput" maxlength="6" required placeholder="000000" class="w-full text-center tracking-[0.25em] font-mono text-base font-black bg-slate-50 dark:bg-slate-800 border border-sky-500 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500" inputmode="numeric">
+                        <div class="flex items-center justify-between text-xs px-1 pt-1.5">
+                            <span class="text-[10px] text-slate-400 font-medium">صلاحية الرمز: 15 دقيقة</span>
+                            <button type="button" id="forgotResendOtpBtn" onclick="handleResendForgotOtp()" class="text-xs text-sky-600 dark:text-sky-400 hover:underline font-bold cursor-pointer transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right ml-1 text-[11px]" id="forgotResendIcon"></i>
+                                <span id="forgotResendText">إعادة إرسال الرمز</span>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">كلمة المرور الجديدة (4 خانات على الأقل)</label>
                         <div class="relative">
                             <input type="password" id="forgotNewPasswordInput" minlength="4" required placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 ps-8 pe-8 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500">
                             <i class="fa-solid fa-lock absolute inset-y-0 start-0 flex items-center ps-2.5 text-slate-400 text-xs"></i>
-                            <button type="button" onclick="togglePasswordVisibility('forgotNewPasswordInput', 'forgotNewPassEye')" class="absolute inset-y-0 end-0 flex items-center pe-2.5 text-slate-400 hover:text-sky-500 cursor-pointer">
+                            <button type="button" onclick="togglePasswordVisibility('forgotNewPasswordInput', 'forgotNewPassEye')" class="absolute inset-y-0 end-0 flex items-center pe-2.5 text-slate-400 hover:text-sky-500 cursor-pointer" title="إظهار / إخفاء كلمة المرور">
                                 <i class="fa-solid fa-eye" id="forgotNewPassEye"></i>
                             </button>
                         </div>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">تأكيد كلمة المرور الجديدة</label>
-                        <input type="password" id="forgotConfirmPasswordInput" minlength="4" required placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500">
+                        <div class="relative">
+                            <input type="password" id="forgotConfirmPasswordInput" minlength="4" required placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 ps-8 pe-8 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500">
+                            <i class="fa-solid fa-lock absolute inset-y-0 start-0 flex items-center ps-2.5 text-slate-400 text-xs"></i>
+                            <button type="button" onclick="togglePasswordVisibility('forgotConfirmPasswordInput', 'forgotConfirmPassEye')" class="absolute inset-y-0 end-0 flex items-center pe-2.5 text-slate-400 hover:text-sky-500 cursor-pointer" title="إظهار / إخفاء كلمة المرور">
+                                <i class="fa-solid fa-eye" id="forgotConfirmPassEye"></i>
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" id="forgotStep2SubmitBtn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer transition-colors flex items-center justify-center gap-2">
                         <i class="fa-solid fa-circle-check"></i>
@@ -2671,7 +2879,7 @@ ${verifyUrl}
                     <i class="fa-solid fa-headset text-indigo-500"></i> <span data-i18n="accountSupportBtn">الدعم الفني والشكاوى والمقترحات</span>
                 </button>
 <!-- Admin Hub Button Removed -->
-                <button id="btnUpgradeAccount" onclick="handleLogout()" class="w-full py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-md hidden" data-i18n="upgradeAccountBtn">ترقية لحساب كامل مسجل</button>
+                <button id="btnUpgradeAccount" onclick="handleUpgradeAccount()" class="w-full py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-md hidden" data-i18n="upgradeAccountBtn">ترقية لحساب كامل مسجل</button>
                 <button onclick="handleLogout()" class="w-full py-2.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs font-bold cursor-pointer transition-colors flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="btnLogout">تسجيل الخروج</span>
                 </button>
@@ -3108,6 +3316,18 @@ ${verifyUrl}
                                 <div class="min-w-0 flex-1">
                                     <div class="text-xs">الدعم الفني والشكاوى والمقترحات</div>
                                     <div class="text-[10px] text-slate-400 font-normal truncate">تواصل مع إدارة التطبيق مباشرة</div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- زر تسجيل الخروج السريع في القائمة العلوية -->
+                        <div class="pt-1.5 border-t border-slate-100 dark:border-slate-800">
+                            <button onclick="handleLogout(); closeTopHeaderMenu();" class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl text-xs font-bold text-start text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all cursor-pointer">
+                                <span class="w-8 h-8 rounded-xl bg-rose-100 dark:bg-rose-950/60 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0 text-sm">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-xs font-black" data-i18n="btnLogout">تسجيل الخروج</div>
+                                    <div class="text-[10px] text-slate-400 font-normal truncate">العودة لشاشة البداية وتسجيل الدخول</div>
                                 </div>
                             </button>
                         </div>
@@ -3746,6 +3966,11 @@ ${verifyUrl}
                 <button onclick="openContactModal(); closeMobileMoreDrawer();" class="w-full py-2.5 px-3.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer">
                     <span class="flex items-center gap-2"><i class="fa-solid fa-headset text-indigo-500"></i> <span data-i18n="navContactCommunity">اتصل بنا ومركز المساعدة</span></span>
                     <i class="fa-solid fa-chevron-left text-indigo-400 text-xs rtl:rotate-0 ltr:rotate-180"></i>
+                </button>
+
+                <button onclick="handleLogout(); closeMobileMoreDrawer();" class="w-full py-2.5 px-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all shadow-2xs">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-right-from-bracket text-rose-500"></i> <span data-i18n="btnLogout">تسجيل الخروج</span></span>
+                    <i class="fa-solid fa-chevron-left text-rose-400 text-xs rtl:rotate-0 ltr:rotate-180"></i>
                 </button>
             </div>
         </div>
@@ -6612,21 +6837,164 @@ ${verifyUrl}
             }
         }
 
+        const GOOGLE_OAUTH_CLIENT_ID = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '981442183315-g4m62h9v08l89d71e21b7cptn5k631qj.apps.googleusercontent.com';
+        let googleTokenClient = null;
+
         function initGoogleIdentityServices() {
             try {
-                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '';
-                // تفعيل المصادقة الرسمية فقط عند وجود Client ID معتمد من Google Cloud Console دون أسرار مكشوفة
-                if (clientId && !clientId.includes('dummyclient') && window.google && window.google.accounts && window.google.accounts.id) {
-                    window.google.accounts.id.initialize({
-                        client_id: clientId,
-                        callback: handleGoogleCredentialResponse,
-                        auto_select: false,
-                        cancel_on_tap_outside: true
-                    });
+                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
+                if (!clientId) return;
+
+                if (window.google && window.google.accounts) {
+                    if (window.google.accounts.id) {
+                        window.google.accounts.id.initialize({
+                            client_id: clientId,
+                            callback: handleGoogleCredentialResponse,
+                            auto_select: false,
+                            cancel_on_tap_outside: true
+                        });
+                    }
+
+                    if (window.google.accounts.oauth2) {
+                        initGoogleOAuthClient();
+                    }
                 }
             } catch(e) {
                 console.warn('[MotorCare Auth] Google Identity Services notice:', e);
             }
+        }
+
+        function initGoogleOAuthClient() {
+            try {
+                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
+                if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+                    googleTokenClient = window.google.accounts.oauth2.initTokenClient({
+                        client_id: clientId,
+                        scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+                        prompt: 'select_account',
+                        callback: async (tokenResponse) => {
+                            if (tokenResponse && tokenResponse.access_token) {
+                                await fetchGoogleUserProfile(tokenResponse.access_token);
+                            }
+                        },
+                        error_callback: (err) => {
+                            console.warn('[MotorCare Auth] GIS TokenClient error:', err);
+                            triggerGoogleOAuthWebFlow();
+                        }
+                    });
+                }
+            } catch(e) {
+                console.warn('[MotorCare Auth] initGoogleOAuthClient error:', e);
+            }
+        }
+
+        async function fetchGoogleUserProfile(accessToken) {
+            try {
+                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                });
+                if (!res.ok) throw new Error(`Google API status ${res.status}`);
+                const userInfo = await res.json();
+                if (userInfo && userInfo.email && userInfo.email.includes('@')) {
+                    const realName = userInfo.name || userInfo.given_name || userInfo.email.split('@')[0];
+                    const realEmail = userInfo.email.trim();
+                    const avatar = userInfo.picture || '';
+                    return loginAsGoogleProfile(realName, realEmail, avatar);
+                }
+            } catch(err) {
+                console.warn('[MotorCare Auth] Fetch Google userinfo notice:', err);
+            }
+            return false;
+        }
+
+        function triggerGoogleOAuthWebFlow() {
+            const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
+            let redirectUri = 'https://localhost/';
+            if (typeof window !== 'undefined' && window.location && window.location.origin && window.location.protocol.startsWith('http')) {
+                redirectUri = window.location.origin + window.location.pathname;
+            }
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token%20id_token&scope=openid%20profile%20email&prompt=select_account&nonce=${Date.now()}`;
+            
+            if (window.location.protocol.startsWith('http')) {
+                const popup = window.open(authUrl, 'google_oauth_popup', 'width=520,height=640,left=150,top=100');
+                if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+                    window.location.href = authUrl;
+                }
+            }
+        }
+
+        function checkOAuthRedirectResponse() {
+            const hash = (typeof window !== 'undefined' && window.location && window.location.hash) ? window.location.hash.substring(1) : '';
+            if (!hash) return;
+
+            // في حال كانت النافذة منبثقة منبثقة من نافذة رئيسية
+            if (window.opener && !window.opener.closed) {
+                try {
+                    window.opener.postMessage({ type: 'MOTORCARE_GOOGLE_AUTH', hash: hash }, '*');
+                    window.close();
+                    return;
+                } catch(e) {
+                    console.warn('[MotorCare Auth] Opener postMessage notice:', e);
+                }
+            }
+
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
+            const idToken = params.get('id_token');
+
+            if (idToken) {
+                try {
+                    const base64Url = idToken.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                    const userData = JSON.parse(jsonPayload);
+                    if (userData && (userData.email || userData.name)) {
+                        const name = userData.name || userData.given_name || (userData.email ? userData.email.split('@')[0] : 'Google User');
+                        loginAsGoogleProfile(name, userData.email, userData.picture || '');
+                        try { window.history.replaceState({}, document.title, window.location.pathname + window.location.search); } catch(e) {}
+                        return;
+                    }
+                } catch(e) {
+                    console.warn('[MotorCare Auth] ID Token decode notice:', e);
+                }
+            }
+
+            if (accessToken) {
+                fetchGoogleUserProfile(accessToken).then((success) => {
+                    if (success) {
+                        try { window.history.replaceState({}, document.title, window.location.pathname + window.location.search); } catch(e) {}
+                    }
+                });
+            }
+        }
+
+        // الاستماع لأي رد توكن قادم من نافذة منبثقة
+        if (typeof window !== 'undefined') {
+            window.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'MOTORCARE_GOOGLE_AUTH' && event.data.hash) {
+                    const params = new URLSearchParams(event.data.hash);
+                    const accessToken = params.get('access_token');
+                    const idToken = params.get('id_token');
+
+                    if (idToken) {
+                        try {
+                            const base64Url = idToken.split('.')[1];
+                            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                            const userData = JSON.parse(jsonPayload);
+                            if (userData && (userData.email || userData.name)) {
+                                const name = userData.name || userData.given_name || (userData.email ? userData.email.split('@')[0] : 'Google User');
+                                loginAsGoogleProfile(name, userData.email, userData.picture || '');
+                                return;
+                            }
+                        } catch(e) {}
+                    }
+
+                    if (accessToken) {
+                        fetchGoogleUserProfile(accessToken);
+                    }
+                }
+            });
         }
 
         function handleGoogleCredentialResponse(response) {
@@ -6638,13 +7006,14 @@ ${verifyUrl}
                         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                     }).join(''));
                     const payload = JSON.parse(jsonPayload);
-                    loginAsGoogleProfile(payload.name, payload.email, payload.picture);
-                    return;
+                    if (payload && payload.email && payload.email.includes('@')) {
+                        loginAsGoogleProfile(payload.name || payload.given_name || payload.email.split('@')[0], payload.email, payload.picture || '');
+                        return;
+                    }
                 }
             } catch(e) {
                 console.warn('[MotorCare Auth] Credential decode error:', e);
             }
-            loginAsGoogleProfile();
         }
 
         async function handleSocialLogin(provider) {
@@ -6655,8 +7024,8 @@ ${verifyUrl}
                     try {
                         if (window.Capacitor.Plugins && window.Capacitor.Plugins.GoogleAuth) {
                             const user = await window.Capacitor.Plugins.GoogleAuth.signIn();
-                            if (user && user.email) {
-                                loginAsGoogleProfile(user.name || user.givenName, user.email, user.imageUrl);
+                            if (user && (user.email || user.name)) {
+                                loginAsGoogleProfile(user.name || user.givenName || user.displayName, user.email, user.imageUrl);
                                 return;
                             }
                         }
@@ -6665,13 +7034,27 @@ ${verifyUrl}
                     }
                 }
 
-                // 2. بيئة الويب مع وجود معرّف عميل صالح وموثق من Google Cloud Console
-                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '';
-                if (clientId && !clientId.includes('dummyclient') && window.google && window.google.accounts && window.google.accounts.id) {
+                // 2. بيئة الويب الرسمية: تشغيل نافذة اختيار حساب Google المنبثقة مباشرة (Google Identity Services TokenClient)
+                if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+                    if (!googleTokenClient) {
+                        initGoogleOAuthClient();
+                    }
+                    if (googleTokenClient) {
+                        try {
+                            googleTokenClient.requestAccessToken({ prompt: 'select_account' });
+                            return;
+                        } catch(e) {
+                            console.warn('[MotorCare Auth] GIS requestAccessToken notice:', e);
+                        }
+                    }
+                }
+
+                // 3. مسار Google One Tap كإجراء فوري
+                if (window.google && window.google.accounts && window.google.accounts.id) {
                     try {
                         window.google.accounts.id.prompt((notification) => {
                             if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
-                                openGoogleAccountModal();
+                                triggerGoogleOAuthWebFlow();
                             }
                         });
                         return;
@@ -6680,54 +7063,41 @@ ${verifyUrl}
                     }
                 }
 
-                // 3. التطبيق المحلي / الوضع الآمن بدون أسرار مكشوفة: نافذة التوثيق الرسمية
-                openGoogleAccountModal();
-            } else {
-                openGoogleAccountModal();
+                // 4. التدفق المباشر عبر Google OAuth Web Flow (نافذة منبثقة أو توجيه مباشر إلى Google)
+                try {
+                    triggerGoogleOAuthWebFlow();
+                    return;
+                } catch(e) {
+                    console.warn('[MotorCare Auth] Direct OAuth flow notice:', e);
+                }
+
             }
         }
-
-        function openGoogleAccountModal() {
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            const modal = document.getElementById('googleConfirmModal');
-            if (!modal) {
-                loginAsGoogleProfile();
-                return;
-            }
-            const nameInput = document.getElementById('googleConfirmNameInput');
-            const emailInput = document.getElementById('googleConfirmEmailInput');
-            
-            const authEmail = document.getElementById('authEmail')?.value.trim();
-            const authName = document.getElementById('authFullName')?.value.trim();
-            
-            if (nameInput) nameInput.value = authName || (isEn ? 'Google User' : 'مستخدم حساب Google');
-            if (emailInput) emailInput.value = authEmail && authEmail.includes('@') ? authEmail : 'user.google@gmail.com';
-            
-            modal.classList.remove('hidden');
-        }
-
-        function closeGoogleAccountModal() {
-            const modal = document.getElementById('googleConfirmModal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function confirmGoogleAccountLogin() {
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            const nameInput = document.getElementById('googleConfirmNameInput');
-            const emailInput = document.getElementById('googleConfirmEmailInput');
-            
-            const name = (nameInput?.value || '').trim() || (isEn ? 'Google User' : 'مستخدم حساب Google');
-            const email = (emailInput?.value || '').trim() || 'user.google@gmail.com';
-            
-            closeGoogleAccountModal();
-            loginAsGoogleProfile(name, email);
-        }
+        window.triggerRealSocialLogin = handleSocialLogin;
 
         function loginAsGoogleProfile(customName, customEmail, customAvatar) {
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            const name = customName || (isEn ? 'Google User' : 'مستخدم حساب Google');
-            const email = customEmail || 'user.google@gmail.com';
-            const avatar = customAvatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name);
+
+            // حظر أي حساب وهمي منعاً باتاً
+            if (!customEmail || typeof customEmail !== 'string' || !customEmail.includes('@') || 
+                customEmail.toLowerCase() === 'user.google@gmail.com' || 
+                customEmail.toLowerCase().startsWith('dummy') ||
+                customEmail.toLowerCase() === 'user@motorcare.app') {
+                console.warn('[MotorCare Auth] Blocked fake Google login:', customEmail);
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn 
+                            ? 'Please select your actual Google account to sign in ⚠️' 
+                            : 'يرجى اختيار وتأكيد حساب Google الحقيقي الخاص بك لتسجيل الدخول ⚠️', 
+                        'warning'
+                    );
+                }
+                return false;
+            }
+
+            const name = (customName && customName.trim()) ? customName.trim() : customEmail.split('@')[0];
+            const email = customEmail.trim();
+            const avatar = customAvatar || ('https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name));
 
             let profile = {
                 name: name,
@@ -6745,8 +7115,14 @@ ${verifyUrl}
 
             const landing = document.getElementById('landingScreen');
             const mainApp = document.getElementById('mainAppContainer');
-            if (landing) landing.style.display = 'none';
-            if (mainApp) mainApp.style.display = 'flex';
+            if (landing) {
+                landing.style.setProperty('display', 'none', 'important');
+                landing.classList.add('hidden');
+            }
+            if (mainApp) {
+                mainApp.style.setProperty('display', 'flex', 'important');
+                mainApp.classList.remove('hidden');
+            }
 
             if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
             if (typeof renderDashboard === 'function') renderDashboard();
@@ -6754,6 +7130,7 @@ ${verifyUrl}
             if (typeof showNotification === 'function') {
                 showNotification(isEn ? `Welcome, ${name}! Signed in via Google ✨` : `أهلاً بك يا ${name}! تم الدخول بنجاح عبر حساب Google ✨`, 'success');
             }
+            return true;
         }
 
         function handleGuestEntry() {
@@ -6786,10 +7163,15 @@ ${verifyUrl}
             if (typeof updateCloudSyncStatusUI === 'function') updateCloudSyncStatusUI('guest');
         }
 
-        function handleAuthSubmit(e) {
+        let _isSubmittingAuth = false;
+        async function handleAuthSubmit(e) {
             if (e && e.preventDefault) e.preventDefault();
+            if (_isSubmittingAuth) return;
+            _isSubmittingAuth = true;
+            setTimeout(() => { _isSubmittingAuth = false; }, 1000);
+
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            const email = (document.getElementById('authEmail')?.value || '').trim();
+            const email = (document.getElementById('authEmail')?.value || '').trim().toLowerCase();
             const password = document.getElementById('authPassword')?.value || '';
             const fullName = (document.getElementById('authFullName')?.value || '').trim();
 
@@ -6802,36 +7184,738 @@ ${verifyUrl}
                 return;
             }
 
-            let profile = {
-                name: fullName || email.split('@')[0],
-                email: email,
-                provider: 'email',
-                isRegistered: true,
-                isVerified: true
-            };
+            if (!email.includes('@') || !email.includes('.')) {
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Please enter a valid email address.' : 'يرجى إدخال بريد إلكتروني صحيح.', 'error');
+                }
+                return;
+            }
 
-            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
-            SafeStorage.setItem('motorCare_LoggedIn', 'true');
+            if (password.length < 4) {
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Password must be at least 4 characters.' : 'يجب أن تكون كلمة المرور 4 أحرف على الأقل.', 'error');
+                }
+                return;
+            }
 
-            const landing = document.getElementById('landingScreen');
-            const mainApp = document.getElementById('mainAppContainer');
-            if (landing) landing.style.display = 'none';
-            if (mainApp) mainApp.style.display = 'flex';
+            // تحديد وضع العملية: تسجيل دخول أم إنشاء حساب جديد
+            const nameContainer = document.getElementById('nameFieldContainer');
+            const isRegisterMode = nameContainer && !nameContainer.classList.contains('hidden');
 
-            if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
-            if (typeof renderDashboard === 'function') renderDashboard();
-            if (typeof initUserCloudSync === 'function') initUserCloudSync();
-            if (typeof showNotification === 'function') {
-                showNotification(isEn ? `Welcome, ${profile.name}!` : `أهلاً بك، ${profile.name}!`, 'success');
+            // قراءة قاعدة الحسابات المسجلة
+            let accounts = [];
+            try {
+                const rawAccs = SafeStorage.getItem('motorCare_AccountsDB');
+                if (rawAccs) accounts = JSON.parse(rawAccs);
+            } catch(err) {}
+
+            const normEmail = email;
+            let existingAccount = accounts.find(a => a.email && a.email.toLowerCase() === normEmail);
+
+            // فحص إضافي في سجل المشتركين إن لم يكن في قاعدة الحسابات المحلية
+            if (!existingAccount) {
+                try {
+                    const rawSubs = SafeStorage.getItem('motorCare_RegisteredSubscribers');
+                    if (rawSubs) {
+                        const subs = JSON.parse(rawSubs);
+                        const s = subs.find(sub => sub.email && sub.email.toLowerCase() === normEmail);
+                        if (s) {
+                            existingAccount = {
+                                id: 'acc_' + Date.now(),
+                                name: s.name || normEmail.split('@')[0],
+                                email: normEmail,
+                                password: s.password || password,
+                                provider: s.provider || 'email',
+                                isVerified: !!(s.isVerified || s.emailVerified),
+                                isRegistered: true
+                            };
+                            accounts.push(existingAccount);
+                            SafeStorage.setItem('motorCare_AccountsDB', JSON.stringify(accounts));
+                        }
+                    }
+                } catch(err) {}
+            }
+
+            if (!isRegisterMode) {
+                // ===== وضع تسجيل الدخول =====
+                if (!existingAccount) {
+                    // فحص سحابي سريع في Firestore قبل رفض الدخول
+                    let firestoreFound = false;
+                    if (typeof firestoreDb !== 'undefined' && firestoreDb) {
+                        try {
+                            const userKey = normEmail.replace(/[^a-z0-9_]/g, '_');
+                            const snap = await firestoreDb.collection('motorcare_users').doc(userKey).get();
+                            if (snap && snap.exists) {
+                                const d = snap.data();
+                                existingAccount = {
+                                    id: 'acc_' + Date.now(),
+                                    name: d.name || normEmail.split('@')[0],
+                                    email: normEmail,
+                                    password: d.password || password,
+                                    provider: d.provider || 'email',
+                                    isVerified: !!(d.isVerified || d.emailVerified),
+                                    isRegistered: true
+                                };
+                                accounts.push(existingAccount);
+                                SafeStorage.setItem('motorCare_AccountsDB', JSON.stringify(accounts));
+                                firestoreFound = true;
+                            }
+                        } catch(err) {}
+                    }
+
+                    if (!existingAccount) {
+                        // الحساب غير مسجل إطلاقاً
+                        if (typeof showNotification === 'function') {
+                            showNotification(
+                                isEn
+                                    ? 'No account found with this email. Switched to "New Account" to create one! 📝'
+                                    : 'لا يوجد حساب مسجل بهذا البريد. تم تحويلك لتبويب "حساب جديد" لإنشائه فوراً! 📝',
+                                'warning', 5000
+                            );
+                        }
+                        if (typeof switchAuthTab === 'function') switchAuthTab('register');
+                        const nameInp = document.getElementById('authFullName');
+                        if (nameInp) nameInp.focus();
+                        return;
+                    }
+                }
+
+                // التحقق من كلمة المرور
+                if (existingAccount.password && existingAccount.password.length > 0 && existingAccount.password !== password) {
+                    if (typeof showNotification === 'function') {
+                        showNotification(
+                            isEn ? 'Incorrect password. Please try again or click "Forgot password?".' : 'كلمة المرور غير صحيحة. يرجى المحاولة مجدداً أو النقر على "نسيت كلمة المرور؟".',
+                            'error', 5000
+                        );
+                    }
+                    document.getElementById('authPassword')?.focus();
+                    return;
+                }
+
+                // تسجيل الدخول بالحساب الموجود
+                const profile = {
+                    ...existingAccount,
+                    lastLoginAt: new Date().toISOString()
+                };
+                SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+                SafeStorage.setItem('motorCare_LoggedIn', 'true');
+
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+                if (landing) {
+                    landing.style.setProperty('display', 'none', 'important');
+                    landing.classList.add('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'flex', 'important');
+                    mainApp.classList.remove('hidden');
+                }
+
+                if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
+                if (typeof renderDashboard === 'function') renderDashboard();
+                if (typeof initUserCloudSync === 'function') initUserCloudSync();
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? `Welcome back, ${profile.name}! 👋` : `أهلاً بعودتك يا ${profile.name}! 👋`, 'success');
+                }
+
+                // إذا كان الحساب غير موثق بعد، فتح نافذة إدخال رمز التحقق تلقائياً
+                if (!profile.isVerified && !profile.emailVerified) {
+                    setTimeout(() => {
+                        if (typeof openVerificationCodeModal === 'function') {
+                            openVerificationCodeModal(true);
+                        }
+                    }, 600);
+                }
+
+            } else {
+                // ===== وضع إنشاء حساب جديد =====
+                if (existingAccount) {
+                    // الحساب موجود مسبقاً - يُمنع التسجيل مرة أخرى ويتم التحويل لتبويب تسجيل الدخول
+                    if (typeof showNotification === 'function') {
+                        showNotification(
+                            isEn
+                                ? 'This email is already registered! Please switch to the "Sign In" tab to log in with your password.'
+                                : 'هذا البريد الإلكتروني مسجل مسبقاً! يرجى التحويل لتبويب "تسجيل الدخول" وإدخال كلمة المرور.',
+                            'warning', 5000
+                        );
+                    }
+                    if (typeof switchAuthTab === 'function') switchAuthTab('login');
+                    document.getElementById('authPassword')?.focus();
+                    return;
+                }
+
+                // إنشاء الحساب الجديد
+                const nowIso = new Date().toISOString();
+                const newAccount = {
+                    id: 'acc_' + Date.now(),
+                    name: fullName || email.split('@')[0],
+                    email: normEmail,
+                    password: password,
+                    provider: 'email',
+                    isRegistered: true,
+                    isVerified: false,
+                    emailVerified: false,
+                    welcomeEmailSent: false,
+                    registeredAt: nowIso
+                };
+
+                accounts.push(newAccount);
+                SafeStorage.setItem('motorCare_AccountsDB', JSON.stringify(accounts));
+
+                const profile = { ...newAccount };
+                SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+                SafeStorage.setItem('motorCare_LoggedIn', 'true');
+
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn
+                            ? `Account created! 🎉 Sending verification code to ${email}...`
+                            : `تم إنشاء حسابك بنجاح! 🎉 جاري إرسال رمز التحقق إلى ${email}...`,
+                        'success', 5000
+                    );
+                }
+
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+                if (landing) {
+                    landing.style.setProperty('display', 'none', 'important');
+                    landing.classList.add('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'flex', 'important');
+                    mainApp.classList.remove('hidden');
+                }
+
+                if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
+                if (typeof renderDashboard === 'function') renderDashboard();
+                if (typeof initUserCloudSync === 'function') initUserCloudSync();
+
+                // إرسال كود التفعيل وفتح نافذة إدخال الرمز مباشرة
+                setTimeout(() => {
+                    if (typeof sendRealVerificationOtpEmail === 'function') {
+                        sendRealVerificationOtpEmail(false);
+                    }
+                    if (typeof openVerificationCodeModal === 'function') {
+                        openVerificationCodeModal(false);
+                    }
+                }, 500);
             }
         }
 
         function openForgotPasswordModal() {
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-            if (typeof showNotification === 'function') {
-                showNotification(isEn ? 'Password reset link has been dispatched to your email' : 'تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني', 'info');
+            const modal = document.getElementById('forgotPasswordModal');
+            const step1 = document.getElementById('forgotStep1Container');
+            const step2 = document.getElementById('forgotStep2Container');
+            const emailInput = document.getElementById('forgotEmailInput');
+            if (modal) {
+                if (step1) step1.classList.remove('hidden');
+                if (step2) step2.classList.add('hidden');
+                if (emailInput) emailInput.value = '';
+                modal.classList.remove('hidden');
             }
         }
+
+        function closeForgotPasswordModal() {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (modal) modal.classList.add('hidden');
+            const emailInput = document.getElementById('forgotEmailInput');
+            const otpInput = document.getElementById('forgotResetOtpInput');
+            const newPass = document.getElementById('forgotNewPasswordInput');
+            const confirmPass = document.getElementById('forgotConfirmPasswordInput');
+            if (emailInput) emailInput.value = '';
+            if (otpInput) otpInput.value = '';
+            if (newPass) newPass.value = '';
+            if (confirmPass) confirmPass.value = '';
+        }
+
+        function backToForgotStep1() {
+            const step1 = document.getElementById('forgotStep1Container');
+            const step2 = document.getElementById('forgotStep2Container');
+            if (step1) step1.classList.remove('hidden');
+            if (step2) step2.classList.add('hidden');
+            SafeStorage.removeItem('motorCare_ForgotPasswordOtp');
+        }
+
+        let isSendingForgotOtp = false;
+        let forgotOtpCooldownSeconds = 0;
+        let forgotOtpCooldownTimer = null;
+
+        function startForgotOtpCooldown(seconds = 60) {
+            forgotOtpCooldownSeconds = seconds;
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const btn = document.getElementById('forgotResendOtpBtn');
+            const text = document.getElementById('forgotResendText');
+            const icon = document.getElementById('forgotResendIcon');
+
+            if (btn) btn.classList.add('opacity-50', 'pointer-events-none');
+            if (icon) icon.classList.add('fa-spin');
+
+            if (forgotOtpCooldownTimer) clearInterval(forgotOtpCooldownTimer);
+            forgotOtpCooldownTimer = setInterval(() => {
+                forgotOtpCooldownSeconds--;
+                if (text) {
+                    text.innerText = isEn 
+                        ? `Resend in ${forgotOtpCooldownSeconds}s` 
+                        : `إعادة الإرسال (${forgotOtpCooldownSeconds}ث)`;
+                }
+                if (forgotOtpCooldownSeconds <= 0) {
+                    clearInterval(forgotOtpCooldownTimer);
+                    forgotOtpCooldownTimer = null;
+                    if (btn) btn.classList.remove('opacity-50', 'pointer-events-none');
+                    if (icon) icon.classList.remove('fa-spin');
+                    if (text) text.innerText = isEn ? 'Resend Code' : 'إعادة إرسال الرمز';
+                }
+            }, 1000);
+        }
+
+        function sendForgotPasswordEmail(email, otp, name) {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const senderEmail = typeof getAppSenderEmail === 'function' ? getAppSenderEmail() : 'motorcare.auto@gmail.com';
+            const clientName = name || 'عضو MotorCare';
+
+            const plainBody = `==========================================\n[ MOTORCARE ] | استعادة كلمة المرور\n==========================================\n\nأهلاً بك يا ${clientName}!\n\nرمز التحقق لاستعادة وتعيين كلمة المرور:\n   [ ${otp} ]\n(صلاحية الرمز: 15 دقيقة فقط)\n\nإذا لم تطلب هذا الرمز، يمكنك تجاهل هذه الرسالة بأمان.\n\nفريق عمل MotorCare\n==========================================`;
+
+            const htmlBody = `<div dir="rtl" style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.05);color:#1e293b;text-align:right">
+  <div style="background:linear-gradient(135deg,#0f172a 0%,#0284c7 100%);padding:32px 24px;text-align:center;color:#ffffff">
+    <div style="display:inline-block;width:44px;height:44px;line-height:44px;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.25);border-radius:14px;font-size:20px;font-weight:900;color:#ffffff;margin-bottom:8px">MC</div>
+    <h1 style="margin:0;font-size:22px;font-weight:900">MotorCare</h1>
+    <p style="margin:6px 0 0 0;font-size:13px;opacity:0.9">استعادة وتعيين كلمة المرور</p>
+  </div>
+  <div style="padding:28px 24px">
+    <h2 style="font-size:17px;font-weight:800;color:#0f172a;margin-top:0">أهلاً بك يا ${clientName}!</h2>
+    <p style="font-size:13px;line-height:1.7;color:#475569">تلقينا طلباً لإعادة تعيين كلمة المرور لحسابك المسجل (${email}):</p>
+    <div style="background:#f8fafc;border:2px dashed #0284c7;border-radius:16px;padding:20px;text-align:center;margin:22px 0">
+      <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:8px">رمز التحقق لاستعادة كلمة المرور (OTP)</div>
+      <div style="font-size:34px;font-weight:900;letter-spacing:8px;color:#0284c7;font-family:monospace">${otp}</div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:6px">الصلاحية: 15 دقيقة فقط</div>
+    </div>
+    <p style="font-size:12px;color:#94a3b8;line-height:1.6">إذا لم تطلب هذا، يمكنك تجاهل هذا البريد بأمان — كلمة مرورك الحالية لن تتغير.</p>
+  </div>
+  <div style="background:#f1f5f9;padding:18px 24px;text-align:center;font-size:12px;color:#64748b;border-top:1px solid #e2e8f0">
+    <strong>فريق عمل MotorCare</strong> • <span style="direction:ltr;display:inline-block">motorcare.auto@gmail.com</span>
+  </div>
+</div>`;
+
+            const payload = {
+                action: 'SEND_OTP_EMAIL',
+                subAction: 'PASSWORD_RESET',
+                name: clientName,
+                email: email,
+                otp: otp,
+                sender: senderEmail,
+                expiresMinutes: 15,
+                timestamp: new Date().toISOString(),
+                subject: `[MotorCare] رمز استعادة كلمة المرور: ${otp}`,
+                body: plainBody,
+                htmlBody: htmlBody
+            };
+
+            const webhookUrl = getAppWebhookUrl();
+            console.log(`[MotorCare] Password Reset OTP for ${email}: ${otp}`);
+
+            if (webhookUrl && webhookUrl.startsWith('http')) {
+                try {
+                    fetch(webhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    }).catch(e => console.warn('[ForgotPass] webhook fetch note:', e));
+                } catch(err) {}
+            }
+
+            showNotification(isEn
+                ? `Password reset code sent to ${email} 📩 Check inbox & spam.`
+                : `تم إرسال رمز الاسترداد إلى ${email} 📩 يرجى مراجعة صندوق الوارد والـ Spam`, 'info', 6000);
+        }
+
+        function handleResendForgotOtp() {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            if (forgotOtpCooldownSeconds > 0) {
+                showNotification(isEn 
+                    ? `Please wait ${forgotOtpCooldownSeconds}s before requesting a new code.` 
+                    : `يرجى الانتظار ${forgotOtpCooldownSeconds} ثانية قبل إعادة إرسال الرمز.`, 'warning');
+                return;
+            }
+
+            let stored = null;
+            try {
+                const raw = SafeStorage.getItem('motorCare_ForgotPasswordOtp');
+                if (raw) stored = JSON.parse(raw);
+            } catch(e) {}
+
+            const emailInput = document.getElementById('forgotEmailInput');
+            const email = stored?.email || (emailInput ? emailInput.value : '').trim().toLowerCase();
+            if (!email) {
+                showNotification(isEn ? 'No email found. Please go back.' : 'لم يتم العثور على البريد. يرجى الرجوع للخطوة الأولى.', 'error');
+                backToForgotStep1();
+                return;
+            }
+
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            const expiresAt = Date.now() + 15 * 60 * 1000;
+            SafeStorage.setItem('motorCare_ForgotPasswordOtp', JSON.stringify({ email, otp, expiresAt, name: stored?.name || '' }));
+
+            startForgotOtpCooldown(60);
+            sendForgotPasswordEmail(email, otp, stored?.name || '');
+        }
+
+        async function handleForgotPasswordStep1(event) {
+            event.preventDefault();
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+
+            if (isSendingForgotOtp) return;
+
+            const emailInput = document.getElementById('forgotEmailInput');
+            const email = (emailInput ? emailInput.value : '').trim().toLowerCase();
+
+            if (!email || !email.includes('@')) {
+                showNotification(isEn ? 'Please enter a valid email address.' : 'يرجى إدخال بريد إلكتروني صحيح.', 'error');
+                return;
+            }
+
+            // التحقق الشامل من وجود الحساب
+            let accountFound = false;
+            let accountUserName = '';
+
+            try {
+                const rawAccs = SafeStorage.getItem('motorCare_AccountsDB');
+                if (rawAccs) {
+                    const accs = JSON.parse(rawAccs);
+                    const found = accs.find(a => a.email && a.email.toLowerCase() === email);
+                    if (found) {
+                        accountFound = true;
+                        accountUserName = found.name || '';
+                    }
+                }
+            } catch(e) {}
+
+            if (!accountFound) {
+                try {
+                    const rawProf = SafeStorage.getItem('motorCare_UserProfile');
+                    if (rawProf) {
+                        const prof = JSON.parse(rawProf);
+                        if (prof.email && prof.email.toLowerCase() === email) {
+                            accountFound = true;
+                            accountUserName = prof.name || '';
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            if (!accountFound) {
+                try {
+                    const rawSubs = SafeStorage.getItem('motorCare_RegisteredSubscribers');
+                    if (rawSubs) {
+                        const subs = JSON.parse(rawSubs);
+                        const found = subs.find(s => s.email && s.email.toLowerCase() === email);
+                        if (found) {
+                            accountFound = true;
+                            accountUserName = found.name || '';
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            if (!accountFound && typeof firestoreDb !== 'undefined' && firestoreDb) {
+                try {
+                    const userKey = email.replace(/[^a-z0-9_]/g, '_');
+                    const snap = await firestoreDb.collection('motorcare_users').doc(userKey).get();
+                    if (snap && snap.exists) {
+                        accountFound = true;
+                        accountUserName = snap.data().name || '';
+                    }
+                } catch(e) {}
+            }
+
+            const hasLocalRecords = SafeStorage.getItem('motorCare_AccountsDB') || SafeStorage.getItem('motorCare_RegisteredSubscribers');
+            if (hasLocalRecords && !accountFound) {
+                showNotification(isEn
+                    ? 'No account found with this email address.'
+                    : 'لا يوجد حساب مسجل بهذا البريد الإلكتروني.', 'error');
+                return;
+            }
+
+            // توليد OTP
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            const expiresAt = Date.now() + 15 * 60 * 1000;
+            SafeStorage.setItem('motorCare_ForgotPasswordOtp', JSON.stringify({ email, otp, expiresAt, name: accountUserName }));
+
+            // تغيير حالة الزر
+            const btn = document.getElementById('forgotStep1SubmitBtn');
+            const btnText = document.getElementById('forgotStep1BtnText');
+            const btnIcon = document.getElementById('forgotStep1BtnIcon');
+            if (btn) btn.disabled = true;
+            if (btnText) btnText.innerText = isEn ? 'Sending...' : 'جاري الإرسال...';
+            if (btnIcon) btnIcon.className = 'fa-solid fa-spinner fa-spin text-xs';
+
+            isSendingForgotOtp = true;
+
+            // إرسال البريد وبدء التهدئة
+            sendForgotPasswordEmail(email, otp, accountUserName);
+            startForgotOtpCooldown(60);
+
+            isSendingForgotOtp = false;
+            if (btn) btn.disabled = false;
+            if (btnText) btnText.innerText = isEn ? 'Send Recovery Code' : 'إرسال رمز التحقق';
+            if (btnIcon) btnIcon.className = 'fa-solid fa-arrow-left rtl:rotate-0 ltr:rotate-180 text-xs';
+
+            // الانتقال للخطوة الثانية
+            const step2Desc = document.getElementById('forgotStep2Desc');
+            if (step2Desc) {
+                step2Desc.innerHTML = isEn
+                    ? `A 6-digit OTP was sent to <strong class="text-sky-600">${email}</strong>. Enter it below to set a new password.`
+                    : `تم إرسال رمز OTP مكون من 6 أرقام إلى <strong class="text-sky-600">${email}</strong>. أدخله أدناه لتعيين كلمة مرور جديدة.`;
+            }
+            const step1 = document.getElementById('forgotStep1Container');
+            const step2 = document.getElementById('forgotStep2Container');
+            if (step1) step1.classList.add('hidden');
+            if (step2) step2.classList.remove('hidden');
+            const otpInput = document.getElementById('forgotResetOtpInput');
+            if (otpInput) otpInput.focus();
+        }
+
+        function handleForgotPasswordStep2(event) {
+            event.preventDefault();
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+
+            const otpInput = document.getElementById('forgotResetOtpInput');
+            const newPassInput = document.getElementById('forgotNewPasswordInput');
+            const confirmPassInput = document.getElementById('forgotConfirmPasswordInput');
+
+            const enteredOtp = (otpInput ? otpInput.value.trim() : '');
+            const newPass = (newPassInput ? newPassInput.value : '');
+            const confirmPass = (confirmPassInput ? confirmPassInput.value : '');
+
+            // التحقق من رمز OTP
+            if (!enteredOtp || enteredOtp.length !== 6 || !/^\d{6}$/.test(enteredOtp)) {
+                showNotification(isEn ? 'Enter the 6-digit OTP code.' : 'أدخل رمز التحقق المكون من 6 أرقام.', 'error');
+                otpInput?.focus();
+                return;
+            }
+
+            // التحقق من كلمة المرور
+            if (!newPass || newPass.length < 4) {
+                showNotification(isEn ? 'Password must be at least 4 characters.' : 'كلمة المرور يجب أن تكون 4 خانات على الأقل.', 'error');
+                newPassInput?.focus();
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                showNotification(isEn ? 'Passwords do not match.' : 'كلمتا المرور غير متطابقتين.', 'error');
+                confirmPassInput?.focus();
+                return;
+            }
+
+            // التحقق من OTP المخزن
+            let storedReset = null;
+            try {
+                const raw = SafeStorage.getItem('motorCare_ForgotPasswordOtp');
+                if (raw) storedReset = JSON.parse(raw);
+            } catch(e) {}
+
+            if (!storedReset || !storedReset.otp) {
+                showNotification(isEn ? 'No reset code found. Please start over.' : 'لم يتم إيجاد رمز الاسترداد. يرجى البدء من جديد.', 'error');
+                backToForgotStep1();
+                return;
+            }
+
+            if (Date.now() > storedReset.expiresAt) {
+                showNotification(isEn ? 'Reset code expired. Request a new one.' : 'انتهت صلاحية رمز الاسترداد. اطلب رمزاً جديداً.', 'error');
+                SafeStorage.removeItem('motorCare_ForgotPasswordOtp');
+                backToForgotStep1();
+                return;
+            }
+
+            if (enteredOtp !== storedReset.otp) {
+                showNotification(isEn ? 'Incorrect OTP code. Please try again.' : 'رمز التحقق غير صحيح. حاول مرة أخرى.', 'error');
+                otpInput?.focus();
+                return;
+            }
+
+            // تحديث كلمة المرور في قاعدة الحسابات المحلية والسحابية
+            const targetEmail = storedReset.email;
+
+            // 1. تحديث motorCare_AccountsDB
+            try {
+                const rawAccs = SafeStorage.getItem('motorCare_AccountsDB');
+                let accs = [];
+                if (rawAccs) accs = JSON.parse(rawAccs);
+                const idx = accs.findIndex(a => a.email && a.email.toLowerCase() === targetEmail);
+                if (idx !== -1) {
+                    accs[idx].password = newPass;
+                } else {
+                    accs.push({
+                        name: storedReset.name || 'عضو MotorCare',
+                        email: targetEmail,
+                        password: newPass,
+                        isVerified: true
+                    });
+                }
+                SafeStorage.setItem('motorCare_AccountsDB', JSON.stringify(accs));
+            } catch(e) {}
+
+            // 2. تحديث البروفايل motorCare_UserProfile إذا كان نفس الحساب
+            try {
+                const rawProf = SafeStorage.getItem('motorCare_UserProfile');
+                if (rawProf) {
+                    const prof = JSON.parse(rawProf);
+                    if (prof.email && prof.email.toLowerCase() === targetEmail) {
+                        prof.password = newPass;
+                        SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(prof));
+                    }
+                }
+            } catch(e) {}
+
+            // 3. تحديث في Firestore إن وجد
+            if (typeof firestoreDb !== 'undefined' && firestoreDb) {
+                try {
+                    const userKey = targetEmail.replace(/[^a-z0-9_]/g, '_');
+                    firestoreDb.collection('motorcare_users').doc(userKey).set({
+                        password: newPass,
+                        passwordUpdatedAt: new Date().toISOString()
+                    }, { merge: true }).catch(() => {});
+                } catch(e) {}
+            }
+
+            // حذف OTP بعد الاستخدام الناجح
+            SafeStorage.removeItem('motorCare_ForgotPasswordOtp');
+
+            // إغلاق النافذة وتعبئة بيانات الدخول والانتقال لتبويب تسجيل الدخول
+            closeForgotPasswordModal();
+            if (typeof switchAuthTab === 'function') {
+                switchAuthTab('login');
+            }
+            const authEmail = document.getElementById('authEmail');
+            const authPassword = document.getElementById('authPassword');
+            if (authEmail) authEmail.value = targetEmail;
+            if (authPassword) authPassword.value = newPass;
+
+            showNotification(isEn
+                ? 'Password updated successfully! You can now sign in. ✅'
+                : 'تم تحديث كلمة المرور بنجاح! تم تجهيز بياناتك للدخول الآن. ✅', 'success', 5000);
+        }
+
+        function resendWelcomeAndVerificationEmail() {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            let profile = {};
+            try {
+                const raw = SafeStorage.getItem('motorCare_UserProfile');
+                if (raw) profile = JSON.parse(raw);
+            } catch(e) {}
+
+            if (!profile.email || !profile.email.includes('@')) {
+                showNotification(isEn ? 'No email found for your account.' : 'لا يوجد بريد إلكتروني مرتبط بحسابك.', 'error');
+                return;
+            }
+            if (typeof sendRealVerificationOtpEmail === 'function') {
+                sendRealVerificationOtpEmail(true);
+            }
+            showNotification(isEn
+                ? `Verification email resent to ${profile.email} 📩`
+                : `تم إعادة إرسال رمز التحقق إلى ${profile.email} 📩`, 'info');
+        }
+
+        /* ==========================================================================
+           [LOGOUT & UPGRADE ACCOUNT] تسجيل الخروج وترقية الحساب
+           ========================================================================== */
+        function handleLogout() {
+            try {
+                if (typeof closeAccountCenter === 'function') closeAccountCenter();
+                if (typeof closeTopHeaderMenu === 'function') closeTopHeaderMenu();
+                if (typeof closeMobileMoreDrawer === 'function') closeMobileMoreDrawer();
+
+                SafeStorage.removeItem('motorCare_LoggedIn');
+                SafeStorage.setItem('motorCare_LoggedIn', 'false');
+
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+
+                if (landing) {
+                    landing.style.removeProperty('display');
+                    landing.style.setProperty('display', 'flex', 'important');
+                    landing.classList.remove('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'none', 'important');
+                    mainApp.classList.add('hidden');
+                }
+
+                if (typeof switchAuthTab === 'function') {
+                    switchAuthTab('login');
+                }
+
+                const pwdInput = document.getElementById('authPassword');
+                if (pwdInput) pwdInput.value = '';
+
+                if (typeof initGoogleIdentityServices === 'function') {
+                    try { initGoogleIdentityServices(); } catch(e) {}
+                }
+
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Signed out successfully 👋' : 'تم تسجيل الخروج بنجاح 👋', 'info');
+                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+                if (landing) landing.style.display = 'flex';
+                if (mainApp) mainApp.style.display = 'none';
+            }
+        }
+        window.handleLogout = handleLogout;
+
+        function handleUpgradeAccount() {
+            try {
+                if (typeof closeAccountCenter === 'function') closeAccountCenter();
+                if (typeof closeTopHeaderMenu === 'function') closeTopHeaderMenu();
+                if (typeof closeMobileMoreDrawer === 'function') closeMobileMoreDrawer();
+
+                SafeStorage.removeItem('motorCare_LoggedIn');
+                SafeStorage.setItem('motorCare_LoggedIn', 'false');
+
+                const landing = document.getElementById('landingScreen');
+                const mainApp = document.getElementById('mainAppContainer');
+
+                if (landing) {
+                    landing.style.removeProperty('display');
+                    landing.style.setProperty('display', 'flex', 'important');
+                    landing.classList.remove('hidden');
+                }
+                if (mainApp) {
+                    mainApp.style.setProperty('display', 'none', 'important');
+                    mainApp.classList.add('hidden');
+                }
+
+                if (typeof switchAuthTab === 'function') {
+                    switchAuthTab('register');
+                }
+
+                if (typeof initGoogleIdentityServices === 'function') {
+                    try { initGoogleIdentityServices(); } catch(e) {}
+                }
+
+                setTimeout(() => {
+                    const nameInput = document.getElementById('authFullName') || document.getElementById('authEmail');
+                    if (nameInput) nameInput.focus();
+                }, 150);
+
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn 
+                            ? 'Create your registered account or sign in with Google to backup and sync your cars! 🚀' 
+                            : 'أنشئ حسابك الجديد أو سجل عبر Google لحفظ بيانات سياراتك ومزامنتها سحابياً 🚀', 
+                        'info'
+                    );
+                }
+            } catch (err) {
+                console.error('Upgrade account error:', err);
+                handleLogout();
+            }
+        }
+        window.handleUpgradeAccount = handleUpgradeAccount;
 
         function debounce(fn, delay = 180) {
             let timer = null;
@@ -20523,7 +21607,8 @@ ${verifyUrl}
 
         const APP_DEFAULT_SENDER_EMAIL = 'motorcare.auto@gmail.com';
         function getAppSenderEmail() {
-            return SafeStorage.getItem('motorCare_AppSenderEmail') || APP_DEFAULT_SENDER_EMAIL;
+            // Strictly enforce official program email exclusively
+            return APP_DEFAULT_SENDER_EMAIL;
         }
 
         function saveAppSenderEmail() {
@@ -20657,7 +21742,7 @@ function doPost(e) {
     }
 
     // 1. إرسال رمز التحقق (OTP) الفعلي عبر البريد فوراً للعميل
-    if (data.action === 'SEND_OTP_EMAIL') {
+    if (data.action === 'SEND_OTP_EMAIL' || data.action === 'SEND_PASSWORD_RESET_EMAIL') {
       var otpSheet = ss.getSheetByName("رموز التحقق") || ss.insertSheet("رموز التحقق");
       if (otpSheet.getLastRow() === 0) {
         otpSheet.appendRow(["التاريخ والوقت", "اسم المشترك", "البريد الإلكتروني", "رمز OTP", "حالة الإرسال"]);
@@ -20928,6 +22013,14 @@ function doPost(e) {
                 modal.classList.add('hidden');
                 modal.style.display = 'none';
             }
+        }
+
+        /* [LOGOUT & UPGRADE IN MAIN SCOPE] */
+        if (typeof window.handleLogout !== 'function') {
+            window.handleLogout = handleLogout;
+        }
+        if (typeof window.handleUpgradeAccount !== 'function') {
+            window.handleUpgradeAccount = handleUpgradeAccount;
         }
 
         /* ==========================================================================
@@ -26007,6 +27100,19 @@ function doPost(e) {
             // فحص ردود المصادقة الحقيقية عبر OAuth (Google / Facebook) من الـ Hash Fragment
             if (typeof checkOAuthRedirectResponse === 'function') checkOAuthRedirectResponse();
 
+            // تنظيف أي بروفايل وهمي قديم تلقائياً (user.google@gmail.com / مستخدم حساب Google)
+            try {
+                const rawProf = SafeStorage.getItem('motorCare_UserProfile');
+                if (rawProf) {
+                    const p = JSON.parse(rawProf);
+                    if (p && (p.email === 'user.google@gmail.com' || p.name === 'مستخدم حساب Google' || p.name === 'Google User' || (p.email && p.email.startsWith('dummy')))) {
+                        console.log('[MotorCare Auth] Purging legacy dummy Google profile');
+                        SafeStorage.removeItem('motorCare_UserProfile');
+                        SafeStorage.setItem('motorCare_LoggedIn', 'false');
+                    }
+                }
+            } catch(e) {}
+
             // فحص رابط تأكيد البريد الإلكتروني ورمز الـ OTP الفعلي
             if (typeof checkUrlEmailVerification === 'function') checkUrlEmailVerification();
 
@@ -26081,43 +27187,7 @@ function doPost(e) {
         </div>
     </div>
 
-    <!-- نافذة تأكيد تسجيل الدخول بحساب Google (Native & Safe In-App Dialog) -->
-    <div id="googleConfirmModal" class="fixed inset-0 z-[95] bg-black/75 backdrop-blur-xs hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 space-y-4 text-center shadow-2xl border border-slate-200 dark:border-slate-800 animate-in fade-in zoom-in duration-200">
-            <div class="w-14 h-14 mx-auto rounded-3xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center shadow-inner border border-slate-200 dark:border-slate-700">
-                <svg class="w-7 h-7" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                </svg>
-            </div>
-            <div>
-                <h4 class="text-sm font-black text-slate-900 dark:text-white" id="googleConfirmTitle">تسجيل الدخول بحساب Google</h4>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed" id="googleConfirmDesc">
-                    تأكيد المصادقة والبدء الفوري بحسابك المعتمد
-                </p>
-            </div>
-            <div class="space-y-3 text-start">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">اسم الحساب (Display Name):</label>
-                    <input type="text" id="googleConfirmNameInput" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500" placeholder="مثال: أحمد محمود">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">البريد الإلكتروني (Gmail Address):</label>
-                    <input type="email" id="googleConfirmEmailInput" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500" placeholder="user@gmail.com">
-                </div>
-                <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
-                    <i class="fa-solid fa-shield-check text-base shrink-0"></i>
-                    <span>مصادقة معتمدة وموثقة 100% بدون أي روابط خارجية أو إعادة توجيه غير مصرح بها.</span>
-                </div>
-            </div>
-            <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <button type="button" onclick="closeGoogleAccountModal()" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all cursor-pointer">إلغاء</button>
-                <button type="button" onclick="confirmGoogleAccountLogin()" class="flex-1 py-2.5 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-md transition-all cursor-pointer">تأكيد والدخول 🚗</button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- نافذة توثيق وتأكيد البريد الإلكتروني برمز التحقق (PIN Code) -->
     <div id="emailVerificationModal" class="fixed inset-0 z-[90] bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
