@@ -1450,8 +1450,8 @@
                                 const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
                                 if (cloudCarsCount > 0 && localCarsCount === 0) {
                                     showNotification(isEn 
-                                        ? `☁️ Garage restored from cloud (${cloudCarsCount} vehicle${cloudCarsCount > 1 ? 's' : ''})` 
-                                        : `☁️ تم استرجاع كراجك من السحابة بنجاح (${cloudCarsCount} سيارة)`, 'success', 4000);
+                                        ? `Your garage data has been restored successfully (${cloudCarsCount} vehicle${cloudCarsCount > 1 ? 's' : ''})` 
+                                        : `تم استرجاع بيانات سيارتك بنجاح (${cloudCarsCount} سيارة)`, 'success', 4000);
                                 }
                             }
                         }
@@ -25506,8 +25506,8 @@ function doPost(e) {
                 submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
             }
             if (submitIcon) submitIcon.className = 'fa-solid fa-spinner fa-spin';
-            if (submitText) submitText.innerText = isEn ? 'Saving & sending real email...' : 'جاري الحفظ وإرسال البريد الحقيقي...';
-            setLiveStatus(isEn ? 'Saving to Cloud Firestore database...' : 'جاري حفظ الاقتراح في قاعدة بيانات السحابة (Firestore)...', 'info');
+            if (submitText) submitText.innerText = isEn ? 'Sending your message...' : 'جاري إرسال رسالتك...';
+            setLiveStatus(isEn ? 'Sending your message...' : 'جاري إرسال رسالتك...', 'info');
 
             // 1. الحفظ الفعلي المباشر في قاعدة بيانات Firestore (مجموعة suggestions)
             let isFirestoreSaved = false;
@@ -25549,7 +25549,7 @@ function doPost(e) {
                 }
             }
 
-            setLiveStatus(isEn ? 'Dispatching customer confirmation & admin notification...' : 'جاري إرسال إيميل تأكيد الاستلام للعميل ونسخة الإدارة...', 'info');
+            setLiveStatus(isEn ? 'Sending confirmation to your inbox...' : 'جاري إرسال تأكيد الاستلام إلى بريدك...', 'info');
 
             // 2. إعداد محتوى إشعار الإدارة الفاخر (Admin Notification)
             const adminEmailAddress = 'motorcare.auto@gmail.com';
@@ -25590,7 +25590,7 @@ function doPost(e) {
       <a href="mailto:${userEmail}?subject=${encodeURIComponent('رد على تذكرتك في MotorCare: ' + subject)}" style="display: inline-block; background: #4338ca; color: #ffffff !important; text-decoration: none !important; padding: 13px 28px; border-radius: 12px; font-weight: 800; font-size: 13px; box-shadow: 0 4px 12px rgba(67,56,202,0.3);">
         الرد على العميل مباشرة عبر البريد &larr;
       </a>
-      <p style="font-size: 11px; color: #94a3b8; margin-top: 10px;">تم حفظ السجل تلقائياً في سحابة Firestore: <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">suggestions/${suggestionId}</code></p>
+      <p style="font-size: 11px; color: #94a3b8; margin-top: 10px;">رقم المرجع: <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">${suggestionId}</code></p>
     </div>
   </div>
   <div style="background: #f8fafc; padding: 16px 24px; text-align: center; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0;">
@@ -25689,19 +25689,48 @@ function doPost(e) {
                 timestamp: nowIso
             };
 
-            // القناة 1: الإرسال عبر خادم الويب هوك السحابي الرسمي بتشفير text/plain الآمن تماماً من حظر CORS
+            // القناة 1: إرسال بريد إدارة عبر خادم الويب هوك الرسمي
             if (webhookUrl && webhookUrl.startsWith('http')) {
                 try {
-                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 7000));
-                    const fetchPromise = fetch(webhookUrl, {
+                    // إرسال إشعار الإدارة
+                    const adminPayload = {
+                        action: 'SEND_OTP_EMAIL',
+                        name: name,
+                        email: adminEmailAddress,
+                        subject: adminSubject,
+                        body: adminEmailBody,
+                        htmlBody: adminHtml,
+                        sender: 'motorcare.auto@gmail.com',
+                        timestamp: nowIso
+                    };
+                    fetch(webhookUrl, {
                         method: 'POST',
                         mode: 'no-cors',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify(emailPayload)
-                    });
-                    await Promise.race([fetchPromise, timeoutPromise]).catch(err => {
-                        console.warn('[MotorCare Email] Webhook race note:', err);
-                    });
+                        body: JSON.stringify(adminPayload)
+                    }).catch(err => console.warn('[MotorCare Email] Admin notify note:', err));
+
+                    // إرسال تأكيد الاستلام للمستخدم (بعد 500ms لتجنب الإرسال المتزامن)
+                    if (userEmail && userEmail.includes('@')) {
+                        setTimeout(() => {
+                            const userPayload = {
+                                action: 'SEND_OTP_EMAIL',
+                                name: name,
+                                email: userEmail,
+                                subject: userSubject,
+                                body: userPlainText,
+                                htmlBody: userHtml,
+                                sender: 'motorcare.auto@gmail.com',
+                                timestamp: nowIso
+                            };
+                            fetch(webhookUrl, {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                                body: JSON.stringify(userPayload)
+                            }).catch(err => console.warn('[MotorCare Email] User confirm note:', err));
+                        }, 500);
+                    }
                 } catch(err) {
                     console.warn('[MotorCare Email] Webhook fetch error:', err);
                 }
