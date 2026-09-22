@@ -8330,7 +8330,7 @@ ${verifyUrl}
             }
         }
 
-        const GOOGLE_OAUTH_CLIENT_ID = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '681024358152-hg4p231ebqr7572ckq3apf73prv3e2s5.apps.googleusercontent.com';
+        const GOOGLE_OAUTH_CLIENT_ID = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '981442183315-g4m62h9v08l89d71e21b7cptn5k631qj.apps.googleusercontent.com';
         let googleTokenClient = null;
 
         function openGoogleAuthModal(defaultEmail = '', defaultName = '') {
@@ -8367,13 +8367,33 @@ ${verifyUrl}
 
         function handleGoogleAuthModalSubmit(e) {
             if (e && e.preventDefault) e.preventDefault();
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+
+            // ===== حماية: هذا النموذج محظور تماماً على بيئة HTTPS =====
+            // على الإنترنت يجب أن يتم تسجيل الدخول عبر Google OAuth الحقيقي فقط
+            const isHttps = typeof window !== 'undefined' && window.location && window.location.protocol === 'https:';
+            const isHttp  = typeof window !== 'undefined' && window.location && window.location.protocol === 'http:';
+            if (isHttps || isHttp) {
+                closeGoogleAuthModal();
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn
+                            ? '🔒 Sign-in via Google is required. Please use the Google button to sign in with your real account.'
+                            : '🔒 تسجيل الدخول يتطلب حساب Google حقيقي. يُرجى استخدام زر Google فقط ولا يُقبل أي بريد مكتوب يدوياً.',
+                        'error'
+                    );
+                }
+                return;
+            }
+
+            // بيئة محلية (file:///) فقط: يُسمح بالإدخال اليدوي للاختبار
             const emailInput = document.getElementById('googleModalEmailInput');
             const nameInput = document.getElementById('googleModalNameInput');
             const email = emailInput ? emailInput.value.trim() : '';
             let name = nameInput ? nameInput.value.trim() : '';
-            if (!email || !email.includes('@')) {
+            if (!email || !email.includes('@') || !email.includes('.')) {
                 if (typeof showNotification === 'function') {
-                    showNotification('يرجى إدخال بريد Google إلكتروني صحيح ⚠️', 'warning');
+                    showNotification(isEn ? 'Please enter a valid email address ⚠️' : 'يرجى إدخال بريد إلكتروني صحيح ⚠️', 'warning');
                 }
                 return;
             }
@@ -8382,7 +8402,7 @@ ${verifyUrl}
             }
             closeGoogleAuthModal();
             const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`;
-            loginAsGoogleProfile(name, email, avatar);
+            loginAsGoogleProfile(name, email, avatar, true /* localDevMode */);
         }
 
         function initGoogleIdentityServices() {
@@ -8579,15 +8599,14 @@ ${verifyUrl}
                     }
                 }
 
-                // 2. التحقق مما إذا كان التطبيق يعمل محلياً من ملف (file:///)
-                // Google تمنع origin=null قطعياً في بروتوكول file:/// وتعطي Authorization Error
+                // 2. بيئة file:/// المحلية: Google تمنع origin=null - نفتح نموذج الإدخال اليدوي للاختبار المحلي فقط
                 const isLocalFile = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
                 if (isLocalFile) {
                     openGoogleAuthModal();
                     return;
                 }
 
-                // 3. بيئة الويب الرسمية (HTTP / HTTPS): تشغيل Google Identity Services
+                // 3. بيئة الويب الرسمية (HTTPS): Google Identity Services - OAuth Token Client
                 if (window.google && window.google.accounts && window.google.accounts.oauth2) {
                     if (!googleTokenClient) {
                         initGoogleOAuthClient();
@@ -8602,12 +8621,13 @@ ${verifyUrl}
                     }
                 }
 
-                // 4. مسار Google One Tap كإجراء فوري
+                // 4. Google One Tap (GIS id)
                 if (window.google && window.google.accounts && window.google.accounts.id) {
                     try {
                         window.google.accounts.id.prompt((notification) => {
                             if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
-                                openGoogleAuthModal();
+                                // على HTTPS: لا نسمح بالفورم اليدوي - نُظهر رسالة خطأ بدلاً منه
+                                _showGoogleOAuthFailedMessage(isEn);
                             }
                         });
                         return;
@@ -8616,26 +8636,67 @@ ${verifyUrl}
                     }
                 }
 
-                // 5. إجراء أمان فوري لضمان عدم تعطل المستخدم نهائياً
-                openGoogleAuthModal();
+                // 5. آخر محاولة: OAuth Web Flow (Popup/Redirect)
+                try {
+                    triggerGoogleOAuthWebFlow();
+                    return;
+                } catch(e) {
+                    console.warn('[MotorCare Auth] Web flow fallback notice:', e);
+                }
+
+                // 6. على HTTPS: لا يُسمح بالإدخال اليدوي - نُعلم المستخدم
+                _showGoogleOAuthFailedMessage(isEn);
             }
         }
         window.triggerRealSocialLogin = handleSocialLogin;
 
-        function loginAsGoogleProfile(customName, customEmail, customAvatar) {
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+        // رسالة خطأ موحدة عند فشل Google OAuth على HTTPS
+        function _showGoogleOAuthFailedMessage(isEn) {
+            if (typeof showNotification === 'function') {
+                showNotification(
+                    isEn
+                        ? '⚠️ Google Sign-In is temporarily unavailable. Please check your internet connection or try again later.'
+                        : '⚠️ تعذّر تسجيل الدخول عبر Google. تحقق من اتصالك بالإنترنت أو حاول مجدداً لاحقاً.',
+                    'error'
+                );
+            }
+        }
 
-            // حظر أي حساب وهمي منعاً باتاً
-            if (!customEmail || typeof customEmail !== 'string' || !customEmail.includes('@') ||
-                customEmail.toLowerCase() === 'user.google@gmail.com' ||
-                customEmail.toLowerCase().startsWith('dummy') ||
-                customEmail.toLowerCase() === 'user@motorcare.app') {
-                console.warn('[MotorCare Auth] Blocked fake Google login:', customEmail);
+        function loginAsGoogleProfile(customName, customEmail, customAvatar, localDevMode = false) {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const isOnline = typeof window !== 'undefined' && window.location &&
+                             (window.location.protocol === 'https:' || window.location.protocol === 'http:');
+
+            // ===== حماية صارمة: على HTTPS لا يُسمح بإيميل يدوي غير موثق من Google =====
+            // localDevMode = true فقط عند استدعاء النموذج اليدوي من بيئة file:/// المحلية
+            if (isOnline && localDevMode) {
+                console.warn('[MotorCare Auth] Blocked manual email login on HTTPS environment:', customEmail);
                 if (typeof showNotification === 'function') {
                     showNotification(
                         isEn
-                            ? 'Please select your actual Google account to sign in ⚠️'
-                            : 'يرجى اختيار وتأكيد حساب Google الحقيقي الخاص بك لتسجيل الدخول ⚠️',
+                            ? '🔒 Manual email login is not allowed on the live app. Please sign in with your real Google account.'
+                            : '🔒 لا يُسمح بتسجيل الدخول بالإيميل اليدوي على التطبيق الحقيقي. يجب المصادقة عبر Google فعلياً.',
+                        'error'
+                    );
+                }
+                return false;
+            }
+
+            // حظر الإيميلات الوهمية والمعروفة بالاحتيال
+            const blockedEmails = [
+                'user.google@gmail.com', 'user@motorcare.app',
+                'test@test.com', 'admin@admin.com', 'fake@fake.com'
+            ];
+            if (!customEmail || typeof customEmail !== 'string' || !customEmail.includes('@') || !customEmail.includes('.') ||
+                customEmail.toLowerCase().startsWith('dummy') ||
+                customEmail.trim().length < 6 ||
+                blockedEmails.includes(customEmail.toLowerCase())) {
+                console.warn('[MotorCare Auth] Blocked fake/invalid Google login:', customEmail);
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn
+                            ? 'Please sign in with your actual Google account ⚠️'
+                            : 'يرجى تسجيل الدخول بحساب Google الحقيقي الخاص بك ⚠️',
                         'warning'
                     );
                 }
