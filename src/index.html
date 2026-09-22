@@ -6871,7 +6871,7 @@ ${verifyUrl}
             }
         }
 
-        const GOOGLE_OAUTH_CLIENT_ID = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '681024358152-hg4p231ebqr7572ckq3apf73prv3e2s5.apps.googleusercontent.com';
+        const GOOGLE_OAUTH_CLIENT_ID = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '681024358152-hg4p231cbqr7572ckq3apf73prv3c2s5.apps.googleusercontent.com';
         let googleTokenClient = null;
 
         function openGoogleAuthModal(defaultEmail = '', defaultName = '') {
@@ -6995,9 +6995,10 @@ ${verifyUrl}
 
         function triggerGoogleOAuthWebFlow() {
             const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
+            // دائماً نستخدم origin فقط بدون pathname لمطابقة ما هو مسجّل في Google Cloud Console
             let redirectUri = 'https://localhost/';
             if (typeof window !== 'undefined' && window.location && window.location.origin && window.location.protocol.startsWith('http')) {
-                redirectUri = window.location.origin + window.location.pathname;
+                redirectUri = window.location.origin + '/';
             }
             const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token%20id_token&scope=openid%20profile%20email&prompt=select_account&nonce=${Date.now()}`;
             
