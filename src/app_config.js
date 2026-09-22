@@ -22,8 +22,8 @@
 
     window.MOTORCARE_ENV = Object.freeze({
         // معرّف عميل Google OAuth للويب والهواتف للمصادقة المباشرة الرسمية
-        GOOGLE_CLIENT_ID: (typeof process !== 'undefined' && process.env && process.env.VITE_GOOGLE_CLIENT_ID) || '681024358152-hg4p231ebqr7572ckq3apf73prv3e2s5.apps.googleusercontent.com',
-        GOOGLE_ANDROID_CLIENT_ID: (typeof process !== 'undefined' && process.env && process.env.VITE_GOOGLE_ANDROID_CLIENT_ID) || '681024358152-hg4p231ebqr7572ckq3apf73prv3e2s5.apps.googleusercontent.com',
+        GOOGLE_CLIENT_ID: (typeof process !== 'undefined' && process.env && process.env.VITE_GOOGLE_CLIENT_ID) || '681024358152-hg4p231cbqr7572ckq3apf73prv3c2s5.apps.googleusercontent.com',
+        GOOGLE_ANDROID_CLIENT_ID: (typeof process !== 'undefined' && process.env && process.env.VITE_GOOGLE_ANDROID_CLIENT_ID) || '681024358152-hg4p231cbqr7572ckq3apf73prv3c2s5.apps.googleusercontent.com',
         
         // النطاق الأساسي للتطبيق (محلي ديناميكي 100% بدون أي روابط GitHub)
         APP_URL: dynamicBaseUrl,
