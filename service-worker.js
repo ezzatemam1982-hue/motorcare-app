@@ -3,7 +3,7 @@
 // نظام إشعارات الموبايل لمواعيد الصيانة الدورية والطارئة (Mobile Push & Local Notifications)
 // استراتيجية التخزين: Cache First, then Network لملفات الواجهة الثابتة لضمان الفتح الفوري بدون إنترنت
 
-const CACHE_NAME = 'motorcare-cache-v2.0.23';
+const CACHE_NAME = 'motorcare-cache-v2.0.17';
 
 // 1. قائمة الأصول الثابتة الأساسية للتطبيق (Core Static Assets)
 const PRECACHE_ASSETS = [
@@ -17,6 +17,10 @@ const PRECACHE_ASSETS = [
   './service_centers.json',
   './service_centers.js',
   './manifest.json',
+  './logo.png',
+  './logo-wide.png',
+  './Reports_And_App_Headers.png',
+  './logo-tight.jpg',
   './icon.png',
   './icon.svg',
   './icon-192.png',
