@@ -20720,6 +20720,53 @@ ${verifyUrl}
             showNotification(appState.lang === 'en' ? `Applied OEM Battery: ${spec.capacity} (${spec.tech})` : `تم تطبيق مواصفة المصنع: ${spec.capacity} (${spec.tech}) بنجاح!`, 'success');
         }
 
+
+        /* بيانات سوق البطاريات المصري - ماركات وسعات وتقنيات (BATTERY_MARKET_DATA) */
+        const BATTERY_MARKET_DATA = {
+            brands: [
+                { name: 'بوش (Bosch S4 / S5 / S6 AGM) - ألماني رائد', nameEn: 'Bosch (S4/S5/S6 AGM) - German Leader' },
+                { name: 'فارتا (VARTA Silver/Blue) - ألماني', nameEn: 'VARTA (Silver/Blue) - German' },
+                { name: 'ACDelco (AC Delco) - أمريكي موثوق', nameEn: 'ACDelco - American Reliable' },
+                { name: 'أكزايد (Exide) - دولي متعدد الجنسيات', nameEn: 'Exide - International' },
+                { name: 'أوبتيما (Optima Red/Yellow) - AGM رائد', nameEn: 'Optima (Red/Yellow) - AGM Leader' },
+                { name: 'كلورايد (Chloride Gold / Platinum) - رائد محلي', nameEn: 'Chloride (Gold/Platinum) - Local Leader' },
+                { name: 'آيتك (ITEC) - مصري معتمد', nameEn: 'ITEC - Egyptian Certified' },
+                { name: 'أطلس (Atlas BX) - كوري معتمد', nameEn: 'Atlas BX - Korean Certified' },
+                { name: 'أمارون (Amaron) - هندي فائق الأداء', nameEn: 'Amaron - High Performance Indian' },
+                { name: 'يوكوهاما (Yokohama) - ياباني', nameEn: 'Yokohama - Japanese' },
+                { name: 'GS Yuasa - ياباني OEM', nameEn: 'GS Yuasa - Japanese OEM' },
+                { name: 'موبيل (Mobil) - دولي', nameEn: 'Mobil - International' },
+                { name: 'باناسونيك (Panasonic) - ياباني', nameEn: 'Panasonic - Japanese' },
+                { name: 'دلكو (Delco) - كلاسيكي موثوق', nameEn: 'Delco - Classic Reliable' },
+                { name: 'تيلس (Teles) - مصري اقتصادي', nameEn: 'Teles - Egyptian Economy' },
+                { name: 'أخرى / Other', nameEn: 'Other / Custom Brand' }
+            ],
+            capacities: [
+                { value: '35 Ah', label: '35 أمير (Ah) - سيارات مدمجة شديدة الصغر (سوزوكي ماروتي / ألتو 800cc)', labelEn: '35 Ah - Micro Cars (Suzuki Maruti / Alto 800cc)' },
+                { value: '40 Ah', label: '40 أمير (Ah) - صغيرة جداً (سيارات 660cc - 1000cc)', labelEn: '40 Ah - Very Small (660cc - 1000cc)' },
+                { value: '45 Ah', label: '45 أمير (Ah) - صغيرة (كيا بيكانتو / داتسون GO)', labelEn: '45 Ah - Small (Kia Picanto / Datsun GO)' },
+                { value: '50 Ah', label: '50 أمير (Ah) - اقتصادية (هيونداي i10 / تويوتا باسو)', labelEn: '50 Ah - Economy (Hyundai i10 / Toyota Passo)' },
+                { value: '55 Ah', label: '55 أمير (Ah) - متوسطة صغيرة (شيفروليه سبارك / فيات ستيلو)', labelEn: '55 Ah - Small-Medium (Chevrolet Spark / Fiat Stilo)' },
+                { value: '60 Ah', label: '60 أمير (Ah) - متوسطة قياسية (تويوتا كورولا / هيونداي إلنترا)', labelEn: '60 Ah - Standard Medium (Toyota Corolla / Hyundai Elantra)' },
+                { value: '65 Ah', label: '65 أمير (Ah) - متوسطة + (هوندا سيفيك / كيا سيراتو)', labelEn: '65 Ah - Medium+ (Honda Civic / Kia Cerato)' },
+                { value: '70 Ah', label: '70 أمير (Ah) - كبيرة نسبياً (نيسان سنترا / مازدا 3)', labelEn: '70 Ah - Relatively Large (Nissan Sentra / Mazda 3)' },
+                { value: '74 Ah', label: '74 أمير (Ah) - قياسية أوروبية (فولكس جولف / مرسيدس C)', labelEn: '74 Ah - European Standard (VW Golf / Mercedes C)' },
+                { value: '80 Ah', label: '80 أمير (Ah) - كبيرة (تويوتا كامري / هوندا أكورد)', labelEn: '80 Ah - Large (Toyota Camry / Honda Accord)' },
+                { value: '90 Ah', label: '90 أمير (Ah) - كبيرة جداً (نيسان باترول قديم / BMW 5)', labelEn: '90 Ah - Very Large (Nissan Patrol Old / BMW 5)' },
+                { value: '95 Ah', label: '95 أمير (Ah) - فاخرة (مرسيدس E / أودي A6)', labelEn: '95 Ah - Luxury (Mercedes E / Audi A6)' },
+                { value: '100 Ah', label: '100 أمير (Ah) - SUV كبير / ديزل (تويوتا لاند كروزر / فورد إكسبلورر)', labelEn: '100 Ah - Large SUV/Diesel' },
+                { value: '110 Ah', label: '110 أمير (Ah) - SUV فاخر كبير (لكزس LX / لاند روفر)', labelEn: '110 Ah - Premium Large SUV' },
+                { value: '120 Ah', label: '120 أمير (Ah) - شاحنات خفيفة / SUV ضخم', labelEn: '120 Ah - Light Trucks / Massive SUV' }
+            ],
+            types: [
+                { value: 'SMF', label: 'جافة خالية من الصيانة (SMF / Calcium) - للسيارات العادية القياسية', labelEn: 'SMF / Calcium - Standard Cars (Maintenance Free)' },
+                { value: 'EFB', label: 'EFB محسّنة (Enhanced Flooded) - لسيارات Start-Stop الأساسية', labelEn: 'EFB - Enhanced Flooded Battery (Basic Start-Stop)' },
+                { value: 'AGM', label: 'AGM (Absorbent Glass Mat) - لسيارات Start-Stop المتقدمة والكهربائية الهجينة', labelEn: 'AGM - Advanced Start-Stop / Hybrid Electric' },
+                { value: 'GEL', label: 'GEL (جل) - لسيارات كهربائية ودرّاجات نارية مخصصة', labelEn: 'GEL - Electric Vehicles / Special Applications' },
+                { value: 'WET', label: 'مائية تقليدية (Wet / Flooded) - قديمة وتحتاج صيانة مياه دورية', labelEn: 'WET / Flooded - Traditional (Requires Water Maintenance)' }
+            ]
+        };
+
         function openBatteryModal() {
             const car = getCurrentCar();
             const b = car ? (car.battery || {}) : {};
