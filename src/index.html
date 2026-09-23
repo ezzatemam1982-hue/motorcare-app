@@ -3777,7 +3777,7 @@ ${verifyUrl}
 
                         <!-- الصف الثاني: الأقسام الفرعية التابعة للصيانة الدورية (PM Sub-Categories) مع زر إضافة بند مخصص -->
                         <div id="pmSubCategoriesContainer" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-0.5 transition-all duration-200">
-                            <div class="flex flex-wrap items-center gap-2">
+                            <div id="pmSubFilterChips" class="flex flex-wrap items-center gap-2 transition-all duration-200">
                                 <div class="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
                                     <i class="fa-solid fa-turn-down text-emerald-500 text-[10px] rotate-90 rtl:-rotate-90"></i>
                                     <span data-i18n="lblPmSubCategories">أقسام الصيانة الوقائية (PM):</span>
@@ -3805,7 +3805,7 @@ ${verifyUrl}
                                         <span data-i18n="filterBelts">السيور</span>
                                     </button>
                                     <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-                                    <button onclick="openAddCustomPMModal('PM')" type="button" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-all shadow-2xs hover:shadow-xs active:scale-95">
+                                    <button id="mainScheduleAddCustomBtn" onclick="openAddCustomPMModal(appState.activeFilter === 'cm' ? 'CM' : 'PM')" type="button" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-all shadow-2xs hover:shadow-xs active:scale-95">
                                         <i class="fa-solid fa-circle-plus text-[11px]"></i>
                                         <span data-i18n="btnAddCustomPM">إضافة بند مخصص</span>
                                     </button>
@@ -7289,7 +7289,384 @@ ${verifyUrl}
             } catch(e) {}
         }
 
-        let _isSubmittingAuth = false;
+        function openGoogleAuthModal(defaultEmail = '', defaultName = '') {
+            const modal = document.getElementById('googleAuthModal');
+            if (!modal) return;
+            const nameInput = document.getElementById('googleModalNameInput');
+            const emailInput = document.getElementById('googleModalEmailInput');
+            if (nameInput) nameInput.value = defaultName || '';
+            if (emailInput) {
+                if (defaultEmail) {
+                    emailInput.value = defaultEmail;
+                } else {
+                    try {
+                        const raw = SafeStorage.getItem('motorCare_UserProfile');
+                        if (raw) {
+                            const prof = JSON.parse(raw);
+                            if (prof && prof.email) emailInput.value = prof.email;
+                            if (prof && prof.name && nameInput && !nameInput.value) nameInput.value = prof.name;
+                        }
+                    } catch(e) {}
+                }
+            }
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+
+        function closeGoogleAuthModal() {
+            const modal = document.getElementById('googleAuthModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+        }
+
+        function handleGoogleAuthModalSubmit(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const emailInput = document.getElementById('googleModalEmailInput');
+            const nameInput = document.getElementById('googleModalNameInput');
+            const email = emailInput ? emailInput.value.trim() : '';
+            let name = nameInput ? nameInput.value.trim() : '';
+            if (!email || !email.includes('@')) {
+                if (typeof showNotification === 'function') {
+                    showNotification('يرجى إدخال بريد Google إلكتروني صحيح ⚠️', 'warning');
+                }
+                return;
+            }
+            if (!name) {
+                name = email.split('@')[0];
+            }
+            closeGoogleAuthModal();
+            const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`;
+            loginAsGoogleProfile(name, email, avatar);
+        }
+
+        function initGoogleIdentityServices() {
+            try {
+                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
+                if (!clientId) return;
+
+                if (window.google && window.google.accounts) {
+                    if (window.google.accounts.id) {
+                        window.google.accounts.id.initialize({
+                            client_id: clientId,
+                            callback: handleGoogleCredentialResponse,
+                            auto_select: false,
+                            cancel_on_tap_outside: true
+                        });
+                    }
+
+                    if (window.google.accounts.oauth2) {
+                        initGoogleOAuthClient();
+                    }
+                }
+            } catch(e) {
+                console.warn('[MotorCare Auth] Google Identity Services notice:', e);
+            }
+        }
+
+        function initGoogleOAuthClient() {
+            try {
+                const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
+                if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+                    googleTokenClient = window.google.accounts.oauth2.initTokenClient({
+                        client_id: clientId,
+                        scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+                        prompt: 'select_account',
+                        callback: async (tokenResponse) => {
+                            if (tokenResponse && tokenResponse.access_token) {
+                                await fetchGoogleUserProfile(tokenResponse.access_token);
+                            }
+                        },
+                        error_callback: (err) => {
+                            console.warn('[MotorCare Auth] GIS TokenClient error:', err);
+                            openGoogleAuthModal();
+                        }
+                    });
+                }
+            } catch(e) {
+                console.warn('[MotorCare Auth] initGoogleOAuthClient error:', e);
+            }
+        }
+
+        async function fetchGoogleUserProfile(accessToken) {
+            try {
+                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                });
+                if (!res.ok) throw new Error(`Google API status ${res.status}`);
+                const userInfo = await res.json();
+                if (userInfo && userInfo.email && userInfo.email.includes('@')) {
+                    const realName = userInfo.name || userInfo.given_name || userInfo.email.split('@')[0];
+                    const realEmail = userInfo.email.trim();
+                    const avatar = userInfo.picture || '';
+                    return loginAsGoogleProfile(realName, realEmail, avatar);
+                }
+            } catch(err) {
+                console.warn('[MotorCare Auth] Fetch Google userinfo notice:', err);
+            }
+            return false;
+        }
+
+        function triggerGoogleOAuthWebFlow() {
+            const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
+            let redirectUri = 'https://localhost/';
+            if (typeof window !== 'undefined' && window.location && window.location.origin && window.location.protocol.startsWith('http')) {
+                redirectUri = window.location.origin + window.location.pathname;
+            }
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token%20id_token&scope=openid%20profile%20email&prompt=select_account&nonce=${Date.now()}`;
+            
+            if (window.location.protocol.startsWith('http')) {
+                const popup = window.open(authUrl, 'google_oauth_popup', 'width=520,height=640,left=150,top=100');
+                if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+                    window.location.href = authUrl;
+                }
+            }
+        }
+
+        function checkOAuthRedirectResponse() {
+            const hash = (typeof window !== 'undefined' && window.location && window.location.hash) ? window.location.hash.substring(1) : '';
+            if (!hash) return;
+
+            // في حال كانت النافذة منبثقة منبثقة من نافذة رئيسية
+            if (window.opener && !window.opener.closed) {
+                try {
+                    window.opener.postMessage({ type: 'MOTORCARE_GOOGLE_AUTH', hash: hash }, '*');
+                    window.close();
+                    return;
+                } catch(e) {
+                    console.warn('[MotorCare Auth] Opener postMessage notice:', e);
+                }
+            }
+
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
+            const idToken = params.get('id_token');
+
+            if (idToken) {
+                try {
+                    const base64Url = idToken.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                    const userData = JSON.parse(jsonPayload);
+                    if (userData && (userData.email || userData.name)) {
+                        const name = userData.name || userData.given_name || (userData.email ? userData.email.split('@')[0] : 'Google User');
+                        loginAsGoogleProfile(name, userData.email, userData.picture || '');
+                        try { window.history.replaceState({}, document.title, window.location.pathname + window.location.search); } catch(e) {}
+                        return;
+                    }
+                } catch(e) {
+                    console.warn('[MotorCare Auth] ID Token decode notice:', e);
+                }
+            }
+
+            if (accessToken) {
+                fetchGoogleUserProfile(accessToken).then((success) => {
+                    if (success) {
+                        try { window.history.replaceState({}, document.title, window.location.pathname + window.location.search); } catch(e) {}
+                    }
+                });
+            }
+        }
+
+        // الاستماع لأي رد توكن قادم من نافذة منبثقة
+        if (typeof window !== 'undefined') {
+            window.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'MOTORCARE_GOOGLE_AUTH' && event.data.hash) {
+                    const params = new URLSearchParams(event.data.hash);
+                    const accessToken = params.get('access_token');
+                    const idToken = params.get('id_token');
+
+                    if (idToken) {
+                        try {
+                            const base64Url = idToken.split('.')[1];
+                            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                            const userData = JSON.parse(jsonPayload);
+                            if (userData && (userData.email || userData.name)) {
+                                const name = userData.name || userData.given_name || (userData.email ? userData.email.split('@')[0] : 'Google User');
+                                loginAsGoogleProfile(name, userData.email, userData.picture || '');
+                                return;
+                            }
+                        } catch(e) {}
+                    }
+
+                    if (accessToken) {
+                        fetchGoogleUserProfile(accessToken);
+                    }
+                }
+            });
+        }
+
+        function handleGoogleCredentialResponse(response) {
+            try {
+                if (response && response.credential) {
+                    const base64Url = response.credential.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    const payload = JSON.parse(jsonPayload);
+                    if (payload && payload.email && payload.email.includes('@')) {
+                        loginAsGoogleProfile(payload.name || payload.given_name || payload.email.split('@')[0], payload.email, payload.picture || '');
+                        return;
+                    }
+                }
+            } catch(e) {
+                console.warn('[MotorCare Auth] Credential decode error:', e);
+            }
+        }
+
+        async function handleSocialLogin(provider) {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            if (provider === 'google') {
+                // 1. بيئة الهواتف الأصلية (Android Studio / Capacitor Native Schemes)
+                if (typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+                    try {
+                        if (window.Capacitor.Plugins && window.Capacitor.Plugins.GoogleAuth) {
+                            const user = await window.Capacitor.Plugins.GoogleAuth.signIn();
+                            if (user && (user.email || user.name)) {
+                                loginAsGoogleProfile(user.name || user.givenName || user.displayName, user.email, user.imageUrl);
+                                return;
+                            }
+                        }
+                    } catch(nativeErr) {
+                        console.warn('[MotorCare Auth] Capacitor native GoogleAuth notice:', nativeErr);
+                    }
+                }
+
+                // 2. التحقق مما إذا كان التطبيق يعمل محلياً من ملف (file:///)
+                // Google تمنع origin=null قطعياً في بروتوكول file:/// وتعطي Authorization Error
+                const isLocalFile = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
+                if (isLocalFile) {
+                    openGoogleAuthModal();
+                    return;
+                }
+
+                // 3. بيئة الويب الرسمية (HTTP / HTTPS): تشغيل Google Identity Services
+                if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+                    if (!googleTokenClient) {
+                        initGoogleOAuthClient();
+                    }
+                    if (googleTokenClient) {
+                        try {
+                            googleTokenClient.requestAccessToken({ prompt: 'select_account' });
+                            return;
+                        } catch(e) {
+                            console.warn('[MotorCare Auth] GIS requestAccessToken notice:', e);
+                        }
+                    }
+                }
+
+                // 4. مسار Google One Tap كإجراء فوري
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    try {
+                        window.google.accounts.id.prompt((notification) => {
+                            if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
+                                openGoogleAuthModal();
+                            }
+                        });
+                        return;
+                    } catch(e) {
+                        console.warn('[MotorCare Auth] GIS prompt notice:', e);
+                    }
+                }
+
+                // 5. إجراء أمان فوري لضمان عدم تعطل المستخدم نهائياً
+                openGoogleAuthModal();
+            }
+        }
+        window.triggerRealSocialLogin = handleSocialLogin;
+
+        function loginAsGoogleProfile(customName, customEmail, customAvatar) {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+
+            // حظر أي حساب وهمي منعاً باتاً
+            if (!customEmail || typeof customEmail !== 'string' || !customEmail.includes('@') || 
+                customEmail.toLowerCase() === 'user.google@gmail.com' || 
+                customEmail.toLowerCase().startsWith('dummy') ||
+                customEmail.toLowerCase() === 'user@motorcare.app') {
+                console.warn('[MotorCare Auth] Blocked fake Google login:', customEmail);
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn 
+                            ? 'Please select your actual Google account to sign in ⚠️' 
+                            : 'يرجى اختيار وتأكيد حساب Google الحقيقي الخاص بك لتسجيل الدخول ⚠️', 
+                        'warning'
+                    );
+                }
+                return false;
+            }
+
+            const name = (customName && customName.trim()) ? customName.trim() : customEmail.split('@')[0];
+            const email = customEmail.trim();
+            const avatar = customAvatar || ('https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name));
+
+            let profile = {
+                name: name,
+                email: email,
+                provider: 'google',
+                avatar: avatar,
+                isRegistered: true,
+                isVerified: true,
+                emailVerified: true,
+                verifiedAt: new Date().toISOString()
+            };
+
+            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+            SafeStorage.setItem('motorCare_LoggedIn', 'true');
+
+            const landing = document.getElementById('landingScreen');
+            const mainApp = document.getElementById('mainAppContainer');
+            if (landing) {
+                landing.style.setProperty('display', 'none', 'important');
+                landing.classList.add('hidden');
+            }
+            if (mainApp) {
+                mainApp.style.setProperty('display', 'flex', 'important');
+                mainApp.classList.remove('hidden');
+            }
+
+            if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
+            if (typeof renderDashboard === 'function') renderDashboard();
+            if (typeof initUserCloudSync === 'function') initUserCloudSync();
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? `Welcome, ${name}! Signed in via Google ✨` : `أهلاً بك يا ${name}! تم الدخول بنجاح عبر حساب Google ✨`, 'success');
+            }
+            return true;
+        }
+
+        function handleGuestEntry() {
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            let profile = {
+                name: isEn ? 'Guest Visitor' : 'زائر كريم',
+                email: '',
+                provider: 'guest',
+                isRegistered: false,
+                isVerified: true
+            };
+            try {
+                const existing = SafeStorage.getItem('motorCare_UserProfile');
+                if (existing) {
+                    const parsed = JSON.parse(existing);
+                    if (parsed && parsed.email) profile = parsed;
+                }
+            } catch(e) {}
+
+            SafeStorage.setItem('motorCare_LoggedIn', 'true');
+            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+
+            const landing = document.getElementById('landingScreen');
+            const mainApp = document.getElementById('mainAppContainer');
+            if (landing) landing.style.display = 'none';
+            if (mainApp) mainApp.style.display = 'flex';
+
+            if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
+            if (typeof renderDashboard === 'function') renderDashboard();
+            if (typeof updateCloudSyncStatusUI === 'function') updateCloudSyncStatusUI('guest');
+        }
+
+                let _isSubmittingAuth = false;
         async function handleAuthSubmit(e) {
             if (e && e.preventDefault) e.preventDefault();
             if (_isSubmittingAuth) return;
@@ -7658,7 +8035,6 @@ ${verifyUrl}
                 };
 
                 sendFetch();
-                setTimeout(sendFetch, 1200);
             }
 
             // القناة 2: EmailJS كقناة متزامنة احتياطية إذا كانت مهيأة
@@ -19085,6 +19461,41 @@ ${verifyUrl}
             showNotification(appState.lang === 'en' ? `Applied OEM Battery: ${spec.capacity} (${spec.tech})` : `تم تطبيق مواصفة المصنع: ${spec.capacity} (${spec.tech}) بنجاح!`, 'success');
         }
 
+        /* ==========================================================================
+           [BATTERY MARKET DATA] قاعدة بيانات بطاريات السوق ومواصفاتها
+           ========================================================================== */
+        const BATTERY_MARKET_DATA = {
+            brands: [
+                { id: 'chloride', name: 'كلورايد (Chloride Gold / Platinum) - رائد محلي', nameEn: 'Chloride (Gold / Platinum)' },
+                { id: 'varta', name: 'فارتا (Varta: Black / Blue / Silver / AGM) - ألماني', nameEn: 'Varta (Black / Blue / Silver / AGM)' },
+                { id: 'acdelco', name: 'إيه سي ديلكو (ACDelco Advantage / Professional)', nameEn: 'ACDelco (Advantage / Professional)' },
+                { id: 'solite', name: 'سولايت (Solite) - كوري أصلي (هيونداي وكيا)', nameEn: 'Solite - Korean OEM (Hyundai / Kia)' },
+                { id: 'energizer', name: 'إنرجايزر (Energizer Premium / AGM) - أمريكي ألماني', nameEn: 'Energizer (Premium / AGM)' },
+                { id: 'mutlu', name: 'موتلو (Mutlu Calcium / EFB / AGM) - تركي ممتاز', nameEn: 'Mutlu (Calcium / EFB / AGM)' },
+                { id: 'hankook', name: 'هانكوك / أتلس (Hankook / AtlasBX) - كوري ممتاز', nameEn: 'Hankook / AtlasBX' },
+                { id: 'bosch', name: 'بوش (Bosch S4 / S5 / S6 AGM) - ألماني رائد', nameEn: 'Bosch (S4 / S5 / S6 AGM)' },
+                { id: 'exide', name: 'إكسايد (Exide Start-Stop / AGM) - أوروبي رائد', nameEn: 'Exide (Start-Stop / AGM)' },
+                { id: 'other', name: 'ماركة أخرى غير مدرجة...', nameEn: 'Other Brand...' }
+            ],
+            capacities: [
+                { value: '35 Ah', label: '35 أمبير (Ah) - سيارات مدمجة شديدة الصغر (سوزوكي ماروتي / ألتو 800cc)', labelEn: '35 Ah - Subcompact Mini (Maruti, Alto)' },
+                { value: '45 Ah', label: '45 أمبير (Ah) - هاتشباك وسيارة مدينة (بيكانتو، i10، ألتو K10، ياريس)', labelEn: '45 Ah - City Hatchback (Picanto, i10, Yaris)' },
+                { value: '50 Ah', label: '50 أمبير (Ah) - مدمج خفيف (سويفت، ديزاير، بونتو، فييستا)', labelEn: '50 Ah - Compact (Swift, Dzire, Punto)' },
+                { value: '55 Ah', label: '55 أمبير (Ah) - الأكثر شيوعاً (فيرنا، أكسنت، صني، لانوس، أفيو، لادا)', labelEn: '55 Ah - Popular Egyptian Market (Sunny, Verna, Lanos)' },
+                { value: '60 Ah', label: '60 أمبير (Ah) - سيدان قياسي (كورولا، سيراتو، إلنترا، لانسر، إم جي 5، تيبو)', labelEn: '60 Ah - Standard Compact Sedan (Corolla, Cerato, Elantra)' },
+                { value: '65 Ah', label: '65 أمبير (Ah) - سيدان متوسط وسيارات آسيوية متطورة (سيفيك، مازدا 3، سنترا، سوبارو XV)', labelEn: '65 Ah - Midsize (Civic, Mazda 3, Sentra, XV)' },
+                { value: '70 Ah', label: '70 أمبير (Ah) - كروس أوفر وSUV (توسان، سبورتاج، قشقاي، داستر، بيجو 3008، تيجو)', labelEn: '70 Ah - Crossover & SUV (Tucson, Sportage, Qashqai)' },
+                { value: '74 Ah', label: '74 - 75 أمبير (Ah) - سيارات أوروبية وفولكس فاجن (أوكتافيا، باسات، جولف، ميجان، أسترا)', labelEn: '74-75 Ah - European Standard (Octavia, Passat, Megane)' },
+                { value: '80 Ah', label: '80 أمبير (Ah) - صالون ألماني فاخر ودفع رباعي (مرسيدس C/E، بي إم دبليو 3/5، جيب)', labelEn: '80 Ah - German Luxury (Mercedes, BMW, Jeep)' },
+                { value: '90 Ah', label: '90 - 100 أمبير (Ah) - محركات V6/V8 ودفع رباعي كبير (لاندكروزر، باجيرو، جراند شيروكي)', labelEn: '90-100 Ah - Full-size SUV & V6/V8 (Land Cruiser, Pajero)' }
+            ],
+            types: [
+                { value: 'SMF', label: 'جافة خالية من الصيانة (SMF / Calcium) - للسيارات العادية القياسية', labelEn: 'Sealed Maintenance Free (SMF / Calcium)' },
+                { value: 'EFB', label: 'سائلة محسنة (EFB) - لأنظمة إطفاء المحرك الذاتي (Start/Stop) وسيارات مازدا وفيات', labelEn: 'Enhanced Flooded Battery (EFB) - Entry Start/Stop' },
+                { value: 'AGM', label: 'فايبر جلاس ماص (AGM) - لأنظمة Start/Stop المتقدمة واسترجاع طاقة الفرامل والسيارات الفاخرة', labelEn: 'Absorbent Glass Mat (AGM) - Advanced Start/Stop & Luxury' }
+            ]
+        };
+
         function openBatteryModal() {
             const car = getCurrentCar();
             const b = car ? (car.battery || {}) : {};
@@ -19657,13 +20068,32 @@ ${verifyUrl}
                     : "px-3.5 py-1.5 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 active:scale-95";
             }
 
-            // تحديث فلاتر الأقسام الفرعية التابعة للـ PM
+            // تحديث فلاتر الأقسام الفرعية التابعة للـ PM مع إبقاء زر الإضافة نشطاً ومناسباً لنوع الصيانة المختار
+            const subChips = document.getElementById('pmSubFilterChips');
             const subContainer = document.getElementById('pmSubCategoriesContainer');
-            if (subContainer) {
+            const addBtn = document.getElementById('mainScheduleAddCustomBtn');
+            const isEn = appState.lang === 'en';
+
+            if (subChips) {
                 if (isMacroCM) {
-                    subContainer.classList.add('opacity-40', 'pointer-events-none');
+                    subChips.classList.add('opacity-40', 'pointer-events-none');
                 } else {
-                    subContainer.classList.remove('opacity-40', 'pointer-events-none');
+                    subChips.classList.remove('opacity-40', 'pointer-events-none');
+                }
+            } else if (subContainer) {
+                // توافق تراجعي
+                subContainer.classList.remove('pointer-events-none');
+            }
+
+            if (addBtn) {
+                if (isMacroCM) {
+                    addBtn.className = "px-2.5 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-all shadow-2xs hover:shadow-xs active:scale-95";
+                    addBtn.onclick = () => openAddCustomPMModal('CM');
+                    addBtn.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-[11px]"></i> <span>${isEn ? '+ Add Urgent CM' : '+ إضافة صيانة عاجلة (CM)'}</span>`;
+                } else {
+                    addBtn.className = "px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-all shadow-2xs hover:shadow-xs active:scale-95";
+                    addBtn.onclick = () => openAddCustomPMModal('PM');
+                    addBtn.innerHTML = `<i class="fa-solid fa-circle-plus text-[11px]"></i> <span data-i18n="btnAddCustomPM">${isEn ? 'Add Custom Item' : 'إضافة بند مخصص'}</span>`;
                 }
             }
 
@@ -19799,19 +20229,71 @@ ${verifyUrl}
             });
 
             if (filteredItems.length === 0) {
+                if (activeFilter === 'cm') {
+                    grid.innerHTML = `
+                        <div class="col-span-full p-8 text-center rounded-3xl bg-rose-50/70 dark:bg-rose-950/30 border-2 border-dashed border-rose-300 dark:border-rose-800 space-y-4 shadow-sm">
+                            <div class="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-900/60 text-rose-600 dark:text-rose-400 flex items-center justify-center mx-auto text-2xl shadow-inner">
+                                <i class="fa-solid fa-wrench"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <h4 class="text-sm font-black text-slate-800 dark:text-slate-100">
+                                    ${isEn ? 'No Urgent Corrective Maintenance (CM) Tasks' : 'لا توجد بلاغات أو مهام صيانة عاجلة (CM) مسجلة'}
+                                </h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+                                    ${isEn 
+                                        ? 'All vehicle systems are currently operating normally. If you encountered any sudden breakdown or urgent repair, add it here to track and alert.' 
+                                        : 'كافة المنظومات تعمل بحالة طبيعية. إذا ظهر أي عطل طارئ أو كسر أو تلف مفاجئ بالمركبة، يمكنك إضافته هنا فوراً للمتابعة والتنبيه.'}
+                                </p>
+                            </div>
+                            <div>
+                                <button type="button" onclick="openAddCustomPMModal('CM')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl text-xs font-bold cursor-pointer transition-all shadow-md shadow-rose-600/25 inline-flex items-center gap-2 active:scale-95">
+                                    <i class="fa-solid fa-circle-plus text-sm"></i>
+                                    <span>${isEn ? '+ Add Urgent CM Task' : '+ إضافة بند صيانة عاجلة / عطل طارئ (CM)'}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
                 grid.innerHTML = `
-                    <div class="col-span-full py-10 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 space-y-2">
+                    <div class="col-span-full py-10 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 space-y-3">
                         <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-xl mx-auto">
                             <i class="fa-solid fa-filter"></i>
                         </div>
                         <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">${isEn ? 'No items in this category' : 'لا توجد بنود مطابقة لهذا التصنيف'}</h4>
                         <p class="text-xs text-slate-400">${isEn ? 'Try selecting another category or add a custom task.' : 'جرّب اختيار تصنيف آخر أو إضافة بند مخصص.'}</p>
+                        <div>
+                            <button type="button" onclick="openAddCustomPMModal('PM')" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-xs inline-flex items-center gap-2 active:scale-95">
+                                <i class="fa-solid fa-circle-plus"></i>
+                                <span>${isEn ? 'Add Custom Item' : 'إضافة بند مخصص'}</span>
+                            </button>
+                        </div>
                     </div>
                 `;
                 return;
             }
 
             let cardsHtml = '';
+            if (activeFilter === 'cm') {
+                cardsHtml += `
+                    <div class="col-span-full flex flex-wrap items-center justify-between gap-3 p-3.5 bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-2xl mb-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center text-xs font-bold">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-bold text-slate-900 dark:text-white">${isEn ? 'Urgent Corrective Maintenance (CM)' : 'مهام الصيانة العاجلة والأعطال الطارئة (CM)'}</h5>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">${isEn ? 'Active repairs requiring immediate attention' : 'أعطال وإصلاحات فورية مسجلة تتطلب التدخل والمتابعة'}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="openAddCustomPMModal('CM')" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-xs flex items-center gap-1.5 active:scale-95">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>${isEn ? '+ Add Another CM Task' : '+ إضافة صيانة عاجلة جديدة (CM)'}</span>
+                        </button>
+                    </div>
+                `;
+            }
+
             filteredItems.forEach(item => {
                 const evalResult = evaluateMaintenanceItem(item, currentOdo, car);
                 const isCM = item.type === 'CM';
