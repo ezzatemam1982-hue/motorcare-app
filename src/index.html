@@ -3678,6 +3678,31 @@ ${verifyUrl}
                                 </div>
                             </div>
                         </div>
+
+                        <!-- الصف الثاني (بديل): شريط الصيانة العاجلة (CM Actions Bar) - يظهر فقط عند اختيار CM -->
+                        <div id="cmActionsContainer"
+                            class="hidden flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-0.5 transition-all duration-200">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <div
+                                    class="flex items-center gap-1.5 text-[11px] font-bold text-rose-500 dark:text-rose-400 shrink-0">
+                                    <i
+                                        class="fa-solid fa-turn-down text-rose-500 text-[10px] rotate-90 rtl:-rotate-90"></i>
+                                    <span data-i18n="lblCmActions">إجراءات الصيانة العاجلة (CM):</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <button onclick="openAddCustomPMModal('CM')" type="button"
+                                        class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-all shadow-xs hover:shadow-md active:scale-95 animate-pulse hover:animate-none">
+                                        <i class="fa-solid fa-triangle-exclamation text-[11px]"></i>
+                                        <span data-i18n="btnAddCM">إضافة صيانة عاجلة / عطل</span>
+                                    </button>
+                                    <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+                                        <i class="fa-solid fa-circle-info text-[9px] ml-0.5"></i>
+                                        <span data-i18n="cmHelpTip">سجّل أي عطل أو إصلاح طارئ لمتابعته وتوثيقه</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- شريط تنبيه حالة التعديل الحر عند التفعيل -->
@@ -6871,7 +6896,7 @@ ${verifyUrl}
             }
         }
 
-        const GOOGLE_OAUTH_CLIENT_ID = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '681024358152-hg4p231cbqr7572ckq3apf73prv3c2s5.apps.googleusercontent.com';
+        const GOOGLE_OAUTH_CLIENT_ID = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || '681024358152-hg4p231ebqr7572ckq3apf73prv3e2s5.apps.googleusercontent.com';
         let googleTokenClient = null;
 
         function openGoogleAuthModal(defaultEmail = '', defaultName = '') {
@@ -19820,13 +19845,24 @@ ${verifyUrl}
                     : "px-3.5 py-1.5 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 active:scale-95";
             }
 
-            // تحديث فلاتر الأقسام الفرعية التابعة للـ PM
+            // تحديث فلاتر الأقسام الفرعية التابعة للـ PM / CM
             const subContainer = document.getElementById('pmSubCategoriesContainer');
+            const cmContainer = document.getElementById('cmActionsContainer');
             if (subContainer) {
                 if (isMacroCM) {
-                    subContainer.classList.add('opacity-40', 'pointer-events-none');
+                    subContainer.style.display = 'none';
                 } else {
+                    subContainer.style.display = '';
                     subContainer.classList.remove('opacity-40', 'pointer-events-none');
+                }
+            }
+            if (cmContainer) {
+                if (isMacroCM) {
+                    cmContainer.style.display = 'flex';
+                    cmContainer.classList.remove('hidden');
+                } else {
+                    cmContainer.style.display = 'none';
+                    cmContainer.classList.add('hidden');
                 }
             }
 
@@ -19962,13 +19998,27 @@ ${verifyUrl}
             });
 
             if (filteredItems.length === 0) {
+                const isCMFilter = activeFilter === 'cm';
                 grid.innerHTML = `
-                    <div class="col-span-full py-10 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 space-y-2">
-                        <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-xl mx-auto">
-                            <i class="fa-solid fa-filter"></i>
+                    <div class="col-span-full py-10 text-center bg-white dark:bg-slate-900 rounded-3xl border ${isCMFilter ? 'border-rose-200 dark:border-rose-900/50' : 'border-slate-200 dark:border-slate-800'} p-6 space-y-3">
+                        <div class="w-12 h-12 rounded-2xl ${isCMFilter ? 'bg-rose-50 dark:bg-rose-950 text-rose-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'} flex items-center justify-center text-xl mx-auto">
+                            <i class="fa-solid ${isCMFilter ? 'fa-triangle-exclamation' : 'fa-filter'}"></i>
                         </div>
-                        <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">${isEn ? 'No items in this category' : 'لا توجد بنود مطابقة لهذا التصنيف'}</h4>
-                        <p class="text-xs text-slate-400">${isEn ? 'Try selecting another category or add a custom task.' : 'جرّب اختيار تصنيف آخر أو إضافة بند مخصص.'}</p>
+                        <h4 class="text-sm font-bold ${isCMFilter ? 'text-rose-700 dark:text-rose-300' : 'text-slate-700 dark:text-slate-300'}">
+                            ${isCMFilter
+                                ? (isEn ? 'No urgent maintenance tasks recorded' : 'لا توجد أعطال أو صيانة عاجلة مسجلة حالياً')
+                                : (isEn ? 'No items in this category' : 'لا توجد بنود مطابقة لهذا التصنيف')}
+                        </h4>
+                        <p class="text-xs text-slate-400">
+                            ${isCMFilter
+                                ? (isEn ? 'Tap the button below to log an emergency repair or urgent fix.' : 'اضغط الزر أدناه لتسجيل عطل طارئ أو إصلاح عاجل.')
+                                : (isEn ? 'Try selecting another category or add a custom task.' : 'جرّب اختيار تصنيف آخر أو إضافة بند مخصص.')}
+                        </p>
+                        ${isCMFilter ? `
+                        <button onclick="openAddCustomPMModal('CM')" class="mt-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-md hover:shadow-lg inline-flex items-center gap-2 active:scale-95">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>${isEn ? 'Add Emergency Maintenance (CM)' : 'إضافة صيانة عاجلة / عطل طارئ'}</span>
+                        </button>` : ''}
                     </div>
                 `;
                 return;
