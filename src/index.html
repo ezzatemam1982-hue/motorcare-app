@@ -362,12 +362,6 @@
                                 <i class="fa-solid fa-rotate text-[8px]" id="accountModalSyncBtnIcon"></i> <span id="accountModalSyncBtnText">مزامنة الآن</span>
                             </button>
                         </div>
-                        <div class="flex items-center justify-between pt-0.5 text-[10px]">
-                            <button type="button" onclick="openFirebaseConfigModal()" class="text-sky-600 dark:text-sky-400 hover:underline font-bold flex items-center gap-1 cursor-pointer">
-                                <i class="fa-solid fa-sliders text-[10px]"></i> <span>ربط وإعدادات Firebase</span>
-                            </button>
-                            <span id="accountModalFirebaseProjectLabel" class="text-[9px] text-slate-400 font-mono">motorcare-1b6d2</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -381,85 +375,6 @@
                     <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="btnLogout">تسجيل الخروج</span>
                 </button>
             </div>
-        </div>
-    </div>
-
-    <!-- نافذة ربط وإعدادات Firebase السحابية (Firebase Cloud Settings & Linking Modal) -->
-    <div id="firebaseConfigModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto text-start">
-            <div class="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-fire"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-black text-slate-900 dark:text-white">ربط مشروع Firebase السحابي</h3>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400">توصيل قاعدة البيانات والمزامنة بمشروعك الخاص</p>
-                    </div>
-                </div>
-                <button type="button" onclick="closeFirebaseConfigModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer p-1">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Current Project Info & Test Connection -->
-            <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2 text-xs">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-slate-600 dark:text-slate-300">المشروع النشط حالياً:</span>
-                    <span id="currentActiveFirebaseProjectId" class="font-mono font-bold text-sky-600 dark:text-sky-400 text-[11px]">motorcare-1b6d2</span>
-                </div>
-                <div class="flex items-center justify-between pt-1">
-                    <button type="button" id="btnTestFirebaseConn" onclick="testCurrentFirebaseConnection()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[10px] flex items-center gap-1.5 cursor-pointer shadow-sm">
-                        <i class="fa-solid fa-satellite-dish" id="btnTestFirebaseConnIcon"></i> <span>فحص الاتصال بالسحابة</span>
-                    </button>
-                    <span id="firebaseConnStatusBadge" class="text-[10px] font-bold text-slate-500">جاهز للفحص</span>
-                </div>
-                <div id="firebaseConnDetails" class="hidden text-[10px] p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300">
-                </div>
-            </div>
-
-            <!-- Custom Config Form / JSON Paste -->
-            <form onsubmit="handleSaveCustomFirebaseConfig(event)" class="space-y-3 text-xs">
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-200">
-                            لصق كائن إعدادات Firebase (Config JSON / Object):
-                        </label>
-                        <button type="button" onclick="pasteFromClipboardToFirebaseInput()" class="text-[10px] text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 cursor-pointer">
-                            <i class="fa-solid fa-paste"></i> لصق من الحافظة
-                        </button>
-                    </div>
-                    <textarea id="customFirebaseConfigTextarea" rows="4" dir="ltr" placeholder='const firebaseConfig = {&#10;  apiKey: "AIzaSy...",&#10;  authDomain: "your-project.firebaseapp.com",&#10;  projectId: "your-project",&#10;  storageBucket: "your-project.firebasestorage.app",&#10;  messagingSenderId: "...",&#10;  appId: "..."&#10;};' class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-mono text-[10px] text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"></textarea>
-                    <p class="text-[9px] text-slate-400 mt-1">يمكنك لصق كود Firebase Config كاملاً مباشرة من إعدادات مشروعك في Firebase Console.</p>
-                </div>
-
-                <!-- Helper Firestore Rules Box -->
-                <div class="p-2.5 bg-amber-50/70 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/50 text-[10px] text-amber-800 dark:text-amber-300 space-y-1">
-                    <div class="font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-shield-halved"></i> <span>تنبيه هام لقواعد أمان Firestore (Rules):</span>
-                    </div>
-                    <p class="text-[9px] leading-relaxed">
-                        في Firebase Console، ادخل إلى <b>Firestore Database &gt; Rules</b> وتأكد من نشر القاعدة التالية ليعمل التطبيق بدون حظر:
-                    </p>
-                    <pre class="bg-black/80 text-emerald-400 p-1.5 rounded text-[8px] font-mono select-all overflow-x-auto" dir="ltr">rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
-    }
-  }
-}</pre>
-                </div>
-
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="handleResetDefaultFirebaseConfig()" class="py-2 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl cursor-pointer text-[11px]">
-                        استعادة الافتراضي 🔄
-                    </button>
-                    <button type="submit" class="flex-1 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl cursor-pointer text-[11px] shadow-md flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> <span>حفظ وتفعيل مشروعي 🚀</span>
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 

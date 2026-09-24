@@ -524,11 +524,6 @@ function doPost(e) {
                 syncToggle.checked = isSyncActive;
             }
 
-            const projLabel = document.getElementById('accountModalFirebaseProjectLabel');
-            if (projLabel && typeof getFirebaseConfig === 'function') {
-                projLabel.innerText = getFirebaseConfig().projectId || 'motorcare-1b6d2';
-            }
-
             if (typeof updateCloudSyncStatusUI === 'function') {
                 if (!isRegisteredUser) {
                     updateCloudSyncStatusUI('guest');

@@ -2001,8 +2001,8 @@ ${verifyUrl}
                             if (typeof showNotification === 'function') {
                                 showNotification(
                                     isEn
-                                        ? '⚠️ This email is already registered in Firebase! Switched to "Sign In" tab.'
-                                        : '⚠️ هذا البريد الإلكتروني مسجل مسبقاً في السحابة! تم تحويلك لتبويب "تسجيل الدخول".',
+                                        ? '⚠️ This email is already registered! Switched to "Sign In" tab.'
+                                        : '⚠️ هذا البريد الإلكتروني مسجل مسبقاً! تم تحويلك لتبويب "تسجيل الدخول".',
                                     'warning', 7000
                                 );
                             }
@@ -2317,53 +2317,25 @@ ${verifyUrl}
             if (btnText) btnText.innerText = isEn ? 'Checking...' : 'جاري التحقق...';
             if (btnIcon) btnIcon.className = 'fa-solid fa-spinner fa-spin text-xs';
 
-            // 1. محاولة إرسال رابط إعادة التعيين الرسمي مباشرة عبر Firebase Auth
-            let fbResetSent = false;
-            if (typeof firebase !== 'undefined' && firebase.auth) {
-                try {
-                    await firebase.auth().sendPasswordResetEmail(email);
-                    fbResetSent = true;
-                    console.log('[MotorCare Auth] Firebase sendPasswordResetEmail success for:', email);
-                } catch(fbErr) {
-                    console.warn('[MotorCare Auth] Firebase reset email note:', fbErr.code, fbErr.message);
-                }
-            }
+            // فحص اسم الحساب المسجل إن وجد لرسالة التفعيل الشخصية
+            let accountUserName = 'عضو MotorCare';
+            try {
+                let accounts = [];
+                const rawAccs = SafeStorage.getItem('motorCare_AccountsDB');
+                if (rawAccs) accounts = JSON.parse(rawAccs);
+                const matched = Array.isArray(accounts) && accounts.find(a => a && a.email && a.email.toLowerCase() === email);
+                if (matched && matched.name) accountUserName = matched.name;
+            } catch(e) {}
 
-            if (fbResetSent) {
-                if (btn) btn.disabled = false;
-                if (btnText) btnText.innerText = isEn ? 'Send Reset Link' : 'إرسال رابط الاستعادة';
-                if (btnIcon) btnIcon.className = 'fa-solid fa-arrow-left rtl:rotate-0 ltr:rotate-180 text-xs';
-                if (typeof showNotification === 'function') {
-                    showNotification(
-                        isEn 
-                            ? 'Password reset link sent to your email via Firebase ✉️. Please check your inbox or spam folder.' 
-                            : 'تم إرسال رابط إعادة ضبط كلمة المرور إلى بريدك الإلكتروني بنجاح عبر Firebase ✉️. يرجى مراجعة صندوق الوارد أو الرسائل غير المرغوب فيها (Spam).',
-                        'success', 8000
-                    );
-                }
-                closeForgotPasswordModal();
-                return;
-            }
+            try {
+                let subs = [];
+                const rawSubs = SafeStorage.getItem('motorCare_RegisteredSubscribers');
+                if (rawSubs) subs = JSON.parse(rawSubs);
+                const matched = Array.isArray(subs) && subs.find(s => s && s.email && s.email.toLowerCase() === email);
+                if (matched && matched.name) accountUserName = matched.name;
+            } catch(e) {}
 
-            // 2. إذا لم يكن الحساب في Firebase أو تعذر الاتصال: الرجوع للتحقق المحلي والـ OTP (Offline Fallback)
-            const account = await findAccountByEmail(email);
-            if (!account) {
-                if (btn) btn.disabled = false;
-                if (btnText) btnText.innerText = isEn ? 'Send Recovery Code' : 'إرسال رمز التحقق';
-                if (btnIcon) btnIcon.className = 'fa-solid fa-arrow-left rtl:rotate-0 ltr:rotate-180 text-xs';
-                if (typeof showNotification === 'function') {
-                    showNotification(
-                        isEn ? 'No account found with this email address.' : 'لا يوجد حساب مسجل بهذا البريد الإلكتروني.',
-                        'error', 5000
-                    );
-                }
-                emailInput?.focus();
-                return;
-            }
-
-            const accountUserName = account.name || 'عضو MotorCare';
-
-            // توليد OTP
+            // توليد رمز التحقق (OTP) المكون من 6 أرقام
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
             const expiresAt = Date.now() + 15 * 60 * 1000;
             SafeStorage.setItem('motorCare_ForgotPasswordOtp', JSON.stringify({ email, otp, expiresAt, name: accountUserName }));
@@ -2371,7 +2343,7 @@ ${verifyUrl}
             if (btnText) btnText.innerText = isEn ? 'Sending...' : 'جاري الإرسال...';
             isSendingForgotOtp = true;
 
-            // إرسال البريد وبدء التهدئة
+            // إرسال كود التفعيل إلى بريد العميل
             sendForgotPasswordEmail(email, otp, accountUserName);
             startForgotOtpCooldown(60);
 
