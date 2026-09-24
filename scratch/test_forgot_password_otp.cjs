@@ -9,6 +9,7 @@ const playwright = require('C:/Users/Ezzat Emam/AppData/Local/ms-playwright-go/1
     });
     const page = await browser.newPage();
     await page.goto('http://localhost:8089/index.html');
+    await page.waitForFunction(() => typeof SafeStorage !== 'undefined');
 
     // 1. Open Forgot Password Modal
     await page.evaluate(() => {

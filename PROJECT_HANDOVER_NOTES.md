@@ -2097,3 +2097,28 @@ avigator.geolocation.getCurrentPosition مع تفعيل enableHighAccuracy: true
 ### أ. نتائج الفحص والاختبار:
 - اجتياز اختبار المتصفح المؤتمت `scratch/test_calibration_banner.cjs` بنسبة 100% وبصفر أخطاء (`0 Errors`).
 - جاهزية حزمة الإنتاج Vite بنجاح تام.
+
+---
+
+## 55. توحيد الهوية وإلغاء أي إشارة لـ Firebase (White-labeling) وتفعيل كاش v2.0.30 لرموز الـ OTP
+* **التاريخ:** 24 سبتمبر 2026
+* **المشكلة:**
+  1. بقاء ظهور إشعارات وعناصر Firebase أمام العميل في المتصفح.
+  2. عدم وصول كود تفعيل استعادة كلمة المرور عند طلب الاستعادة.
+  3. استفسار العميل حول تفعيل "Email link (passwordless sign-in)" في Firebase وتأثيره.
+* **الأسباب الجذرية والحلول:**
+  1. **سبب عدم اختفاء العناصر في متصفح العميل (PWA Cache):**
+     - ملفات الـ Service Worker كانت مثبتة على الإصدار `motorcare-cache-v2.0.27`.
+     - تم ترقية `CACHE_NAME` إلى **`motorcare-cache-v2.0.30`** عبر كافة الملفات الستة (`sw.js`, `service-worker.js`, `src/sw.js`, `src/service-worker.js`, `dist/sw.js`, `dist/service-worker.js`).
+     - بمجرد الترقية، يقوم الـ Service Worker بحذف الكاش القديم فوراً واستبداله بالملفات النظيفة.
+  2. **إرسال رمز التفعيل (OTP) من motorcare.auto@gmail.com:**
+     - إعادة تفعيل مسار رمز التحقق السري (OTP) المكون من 6 أرقام وإرساله عبر Webhook سحابي معتمد (`AKfycbw9...`) إلى بريد العميل من الحساب الرسمي `motorcare.auto@gmail.com`.
+     - دعم خاصية `keepalive: true` وترقية معالجات الإرسال لضمان وصول الرسالة فوراً.
+  3. **توضيح إعداد Firebase Authentication:**
+     - خيار "Email link (passwordless sign-in)" في فايربيس مخصص للدخول برابط سحري بدون كلمة مرور (Magic Link)، ويرسل رسائل من خوادم Google/Firebase مما يتعارض مع الهوية البيضاء وتدفق كلمات المرور المشفرة ورموز الـ OTP.
+     - الإعداد الصحيح المعتمد: تفعيل خيار **Email/Password** الأساسي فقط، وإيقاف (Disable) خيار Email link.
+* **الاختبارات والتأكيد البرمجي:**
+  - اجتياز اختبار `scratch/test_forgot_password_otp.cjs` بنسبة 100% (توليد OTP، تعيين كلمة المرور، خلو واجهة الحساب من أي إشارة لـ Firebase، ونشاط المزامنة السحابية الذكية).
+  - اجتياز اختبار الويب هوك المباشر `scratch/test_live_webhook.cjs` بنجاح (HTTP 200 - action: otp_sent).
+  - تطابق كامل 100% بين ملفات `src/` و `dist/` والجذر.
+

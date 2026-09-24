@@ -624,7 +624,7 @@
             return MOTORCARE_OFFICIAL_WEBHOOK;
         }
 
-        function sendRealVerificationOtpEmail(isResend = false) {
+        function sendRealVerificationOtpEmail(isResend = false, customEmail = null, customName = null) {
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
 
             // 1. منع الإرسال المتكرر السريع (Debounce & Throttle Lock)
@@ -647,8 +647,8 @@
                 if (raw) profile = JSON.parse(raw);
             } catch(e) {}
 
-            const email = profile.email || '';
-            const name = profile.name || (isEn ? 'Member' : 'عضو MotorCare');
+            const email = (customEmail || profile.email || '').trim().toLowerCase();
+            const name = customName || profile.name || (isEn ? 'Member' : 'عضو MotorCare');
 
             if (!email || !email.includes('@')) {
                 showNotification(isEn ? 'No valid email found to send verification code to.' : 'لا يوجد بريد إلكتروني مسجل لإرسال رمز التفعيل إليه.', 'error');
@@ -782,6 +782,7 @@ ${verifyUrl}
                     fetch(webhookUrl, {
                         method: 'POST',
                         mode: 'no-cors',
+                        keepalive: true,
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify(otpPayload)
                     }).catch(err => console.warn('OTP webhook send note:', err));
@@ -2084,7 +2085,7 @@ ${verifyUrl}
                 // إرسال كود التفعيل وفتح نافذة إدخال الرمز
                 setTimeout(() => {
                     if (typeof sendRealVerificationOtpEmail === 'function') {
-                        sendRealVerificationOtpEmail(false);
+                        sendRealVerificationOtpEmail(false, email, newAccount.name);
                     }
                     if (typeof openVerificationCodeModal === 'function') {
                         openVerificationCodeModal(false);
