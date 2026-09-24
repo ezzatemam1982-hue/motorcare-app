@@ -1409,58 +1409,6 @@ ${verifyUrl}
             } catch(e) {}
         }
 
-        function openGoogleAuthModal(defaultEmail = '', defaultName = '') {
-            const modal = document.getElementById('googleAuthModal');
-            if (!modal) return;
-            const nameInput = document.getElementById('googleModalNameInput');
-            const emailInput = document.getElementById('googleModalEmailInput');
-            if (nameInput) nameInput.value = defaultName || '';
-            if (emailInput) {
-                if (defaultEmail) {
-                    emailInput.value = defaultEmail;
-                } else {
-                    try {
-                        const raw = SafeStorage.getItem('motorCare_UserProfile');
-                        if (raw) {
-                            const prof = JSON.parse(raw);
-                            if (prof && prof.email) emailInput.value = prof.email;
-                            if (prof && prof.name && nameInput && !nameInput.value) nameInput.value = prof.name;
-                        }
-                    } catch(e) {}
-                }
-            }
-            modal.classList.remove('hidden');
-            modal.style.display = 'flex';
-        }
-
-        function closeGoogleAuthModal() {
-            const modal = document.getElementById('googleAuthModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.style.display = 'none';
-            }
-        }
-
-        function handleGoogleAuthModalSubmit(e) {
-            if (e && e.preventDefault) e.preventDefault();
-            const emailInput = document.getElementById('googleModalEmailInput');
-            const nameInput = document.getElementById('googleModalNameInput');
-            const email = emailInput ? emailInput.value.trim() : '';
-            let name = nameInput ? nameInput.value.trim() : '';
-            if (!email || !email.includes('@')) {
-                if (typeof showNotification === 'function') {
-                    showNotification('يرجى إدخال بريد Google إلكتروني صحيح ⚠️', 'warning');
-                }
-                return;
-            }
-            if (!name) {
-                name = email.split('@')[0];
-            }
-            closeGoogleAuthModal();
-            const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`;
-            loginAsGoogleProfile(name, email, avatar);
-        }
-
         function initGoogleIdentityServices() {
             try {
                 const clientId = (window.MOTORCARE_ENV && window.MOTORCARE_ENV.GOOGLE_CLIENT_ID) || GOOGLE_OAUTH_CLIENT_ID;
@@ -1499,8 +1447,11 @@ ${verifyUrl}
                             }
                         },
                         error_callback: (err) => {
-                            console.warn('[MotorCare Auth] GIS TokenClient error:', err);
-                            openGoogleAuthModal();
+                            console.warn('[MotorCare Auth] GIS TokenClient error/cancel:', err);
+                            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                            if (typeof showNotification === 'function') {
+                                showNotification(isEn ? 'Google Sign-In was cancelled or dismissed.' : 'تم إلغاء نافذة تسجيل الدخول عبر Google.', 'info');
+                            }
                         }
                     });
                 }
@@ -1659,7 +1610,10 @@ ${verifyUrl}
                 // Google تمنع origin=null قطعياً في بروتوكول file:/// وتعطي Authorization Error
                 const isLocalFile = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
                 if (isLocalFile) {
-                    openGoogleAuthModal();
+                    const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                    if (typeof showNotification === 'function') {
+                        showNotification(isEn ? 'Google Sign-In requires running the app on a web server.' : 'تسجيل الدخول عبر Google يتطلب تشغيل التطبيق عبر خادم ويب.', 'warning');
+                    }
                     return;
                 }
 
@@ -1683,7 +1637,7 @@ ${verifyUrl}
                     try {
                         window.google.accounts.id.prompt((notification) => {
                             if (notification && (notification.isNotDisplayed() || notification.isSkippedMoment())) {
-                                openGoogleAuthModal();
+                                console.log('[MotorCare Auth] Google One Tap dismissed or not displayed.');
                             }
                         });
                         return;
@@ -1692,8 +1646,11 @@ ${verifyUrl}
                     }
                 }
 
-                // 5. إجراء أمان فوري لضمان عدم تعطل المستخدم نهائياً
-                openGoogleAuthModal();
+                // 5. في حال عدم توفر خدمات Google
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Google Sign-In is unavailable. Please use email & password.' : 'تسجيل الدخول عبر Google غير متوفر حالياً. يرجى الدخول بالبريد الإلكتروني وكلمة المرور.', 'warning');
+                }
             }
         }
         window.triggerRealSocialLogin = handleSocialLogin;
