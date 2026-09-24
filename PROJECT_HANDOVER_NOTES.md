@@ -2194,6 +2194,64 @@ avigator.geolocation.getCurrentPosition مع تفعيل enableHighAccuracy: true
 * **نتائج الاختبارات:**
   - اجتياز اختبار `scratch/test_mobile_ux_capacitor.cjs` بنسبة 100% (7 من أصل 7 اختبارات ناجحة تشمل فحص كاباسيتور، الاهتزازات، درجات أولوية زر الرجوع، فئات الـ Safe Area، والصمت التام لرسائل جوجل).
 
+---
+
+## 59. الامتثال الكامل لسياسات Google Play Developer وحماية Play Protect والأمان المضاد للبرمجيات الخبيثة (v2.0.34)
+* **التاريخ:** 24 سبتمبر 2026
+* **الإجراءات المنجزة:**
+  1. **إنشاء صفحة سياسة الخصوصية والشروط (`privacy.html`):**
+     - صفحة تفاعلية متجاوبة ثنائية اللغة (عربي وإنجليزي) متوافقة 100% مع متطلبات Google Play Developer Policy و GDPR.
+     - تشمل إفصاحات كاملة عن: استخدام Google OAuth، جمع بيانات المركبة وعداد الكيلومترات، التخزين المحلي الآمن، المزامنة السحابية المشفرة مع Firestore، وأذونات أندرويد.
+     - قسم مخصص لآلية طلب حذف الحساب والبيانات نهائياً (Account & Data Deletion Requirement) سواء من داخل التطبيق أو عبر مراسلة البريد الإلكتروني الرسمي: `motorcare.auto@gmail.com`.
+     - إضافة روابط مرئية ومباشرة لسياسة الخصوصية في 4 مواضع رئيسية:
+       1. تذييل شاشة تسجيل الدخول (`landingScreen footer`).
+       2. داخل نافذة إدارة الحساب (`accountCenterModal`).
+       3. داخل درج المزيد في الموبايل (`mobileMoreDrawerModal`).
+       4. في التذييل العام للوحة القيادة على سطح المكتب (`desktop footer`).
+  2. **تنظيف أذونات أندرويد ومكافحة الإنذارات الخاطئة (Anti-Malware & Manifest Hygiene):**
+     - ضبط `android/app/src/main/AndroidManifest.xml` لتقييد الأذونات حصراً على ما يحتاجه التطبيق:
+       * `android.permission.INTERNET`
+       * `android.permission.POST_NOTIFICATIONS`
+     - حظر واستبعاد أي أذونات حساسة غير مبررة (مثل `READ_EXTERNAL_STORAGE` أو `ACCESS_FINE_LOCATION`).
+     - تفعيل إجبار الاتصال المشفر الصارم `android:usesCleartextTraffic="false"` داخل وسم `<application>` لمنع أي حركة مرور غير مشفرة وتحصين التطبيق أمام فحص Play Protect.
+  3. **تكوين Capacitor وهوية الحزمة (Package Identity):**
+     - اعتماد معرف الحزمة الإنتاجي `com.motorcare.app` والاسم الرسمي `MotorCare` في `capacitor.config.json`.
+     - تغيير `server.cleartext` إلى `false` وحذف الإعداد المهمل `bundledWebRuntime`.
+     - مزامنة كافة أصول ومجلدات المشروع الأصلي عبر `npx cap sync android`.
+     - التأكد من استخدام بروتوكول HTTPS المشفر لجميع الروابط ومكتبات الـ CDN بدون أي روابط غير مشفرة.
+  4. **ترقية السيرفيس وركر:**
+     - ترقية `CACHE_NAME` إلى **`motorcare-cache-v2.0.34`** عبر كافة ملفات الخدمة الستة.
+* **نتائج الاختبارات:**
+  - اجتياز اختبار `scratch/test_compliance_and_security.cjs` بنسبة 100% (فحص الروابط، محتوى سياسة الخصوصية باللغتين، ملف المانيفست، أذونات أندرويد الصارمة، وإعدادات كاباسيتور).
+
+---
+
+## 60. توحيد وضبط تكامل خرائط جوجل لإظهار الاسم والفرع والملف الرسمي للمركز بدلاً من الإحداثيات الخام (v2.0.35)
+* **التاريخ:** 24 سبتمبر 2026
+* **الإصدار المعتمد:** MotorCare v2.0.35 (كاش السيرفيس وركر: `motorcare-cache-v2.0.35`).
+* **الجذر التشخيصي (Root Cause):**
+  - كانت روابط الخرائط تعتمد على إحداثيات GPS خام فقط بصيغة `query=lat,lng`، مما يجعل تطبيق خرائط جوجل يُسقط دبوساً عاماً (Dropped Pin) صامتاً بالأرقام فقط دون إبراز اسم التوكيل أو فرعه أو الربط بالملف التجاري الرسمي المعتمد (Google Business Profile) الذي يحتوي على التقييمات وساعات العمل وأرقام الهواتف.
+* **الإجراءات المنجزة:**
+  1. **توحيد توليد روابط خرائط جوجل القياسية (Standardized Maps URL Generator):**
+     - بناء وتوحيد دالة [`getServiceCenterMapsUrl(center, userCorr)`](file:///d:/car/motorcare-modular/js/features/serviceCenters.js) التي تدعم الصيغة الرسمية المعنونة لخرائط جوجل:
+       * عند توفر الإحداثيات: `https://www.google.com/maps?q=${lat},${lng}+(${encodeURIComponent(label)})` حيث يتضمن العنوان اسم التوكيل / المركز المعتمد والفرع والمحافظة باللغة العربية بدقة.
+       * عند عدم توفر إحداثيات دقيقة: استخدام رابط البحث والملف التجاري الرسمي `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryText)}` لربط المستخدم بالملف المعتمد مباشرة.
+  2. **تحديث قاعدة بيانات التوكيلات ومراكز الخدمة (288 مركزاً معتمداً):**
+     - تحديث كافة بيانات مراكز الخدمة في [`service_centers.js`](file:///d:/car/motorcare-modular/service_centers.js) و [`service_centers.json`](file:///d:/car/motorcare-modular/service_centers.json) ومجلدات `src/` و `dist/` لتتضمن الروابط المعنونة باسم التوكيل والفرع والمنطقة بدلاً من الإحداثيات المجردة.
+  3. **دعم فتح تطبيق خرائط جوجل الأصلي على الهاتف (Mobile Intent & Capacitor Fallback):**
+     - إضافة دالة [`openServiceCenterMap(centerId)`](file:///d:/car/motorcare-modular/js/features/serviceCenters.js) التي تتحقق من بيئة التشغيل عبر `Capacitor.isNativePlatform()`.
+     - على الهواتف والأجهزة الذكية: إطلاق نية النظام الرسمية `geo:lat,lng?q=EncodedLabel` أو `geo:0,0?q=Query` لفتح تطبيق خرائط جوجل الأصلي مباشرة مع شارة المركز الرسمي، مع آلية انتقال احتياطية آمنة (Fallback timeout) للمتصفح النظامي.
+     - على متصفح الويب وسطح المكتب: فتح الرابط المعتمد المعنون في علامة تبويب جديدة مع حماية `noopener,noreferrer`.
+  4. **تكامل نافذة تصحيح المواقع (Location Correction Sync):**
+     - ضبط نافذة التصحيح لتعبئة الرابط المعنون تلقائياً عند التقاط الموقع بالـ GPS، وحفظ التعديلات الجديدة بروابط معنونة باسم المركز الرسمي.
+  5. **ترقية السيرفيس وركر والمزامنة الشاملة:**
+     - ترقية `CACHE_NAME` إلى **`motorcare-cache-v2.0.35`** عبر كافة ملفات الخدمة الستة.
+     - مزامنة كافة الملفات عبر `scratch/sync_all_files.py` وإعادة بناء الإنتاج عبر `npm run build` ومزامنة أندرويد عبر `npx cap sync android`.
+* **نتائج الاختبارات:**
+  - اجتياز اختبار التكامل الشامل `scratch/test_service_centers_maps_fix.cjs` بنسبة 100% بنجاح عبر متصفح Chromium للتحقق من سلامة تكوين الروابط، شارات البطاقات في الواجهة، استجابة الأزرار، ونية التطبيق الأصلي.
+
+
+
 
 
 

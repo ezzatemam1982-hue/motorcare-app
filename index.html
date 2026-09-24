@@ -209,9 +209,15 @@
                 </div>
             </div>
 
-            <!-- تذييل الصفحة المدمج -->
-            <footer class="w-full text-center text-[10px] text-slate-400 dark:text-slate-600 mt-2 shrink-0">
-                MotorCare Enterprise Suite v2.0.5 &copy; 2026 - All Rights Reserved
+            <!-- تذييل الصفحة المدمج مع رابط سياسة الخصوصية الرسمي لـ Google Play -->
+            <footer class="w-full text-center text-[10px] text-slate-400 dark:text-slate-500 mt-2 shrink-0 space-y-1">
+                <div>
+                    <a href="privacy.html" target="_blank" class="hover:text-sky-500 font-bold inline-flex items-center gap-1 transition-colors">
+                        <i class="fa-solid fa-shield-halved text-emerald-500 text-[9px]"></i>
+                        <span>سياسة الخصوصية وشروط الاستخدام | Privacy Policy</span>
+                    </a>
+                </div>
+                <div>MotorCare Enterprise Suite &copy; 2026 - All Rights Reserved</div>
             </footer>
         </div>
     </div>
@@ -369,8 +375,10 @@
                 <button onclick="closeAccountCenter(); openContactModal();" class="w-full py-2.5 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/60 rounded-xl text-xs font-bold cursor-pointer transition-colors flex items-center justify-center gap-2">
                     <i class="fa-solid fa-headset text-indigo-500"></i> <span data-i18n="accountSupportBtn">الدعم الفني والشكاوى والمقترحات</span>
                 </button>
-<!-- Admin Hub Button Removed -->
-                <button id="btnUpgradeAccount" onclick="handleUpgradeAccount()" class="w-full py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-md hidden" data-i18n="upgradeAccountBtn">ترقية لحساب كامل مسجل</button>
+                <a href="privacy.html" target="_blank" class="w-full py-2 px-3 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs font-bold transition-colors flex items-center justify-between">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-emerald-500"></i> <span>سياسة الخصوصية وحذف البيانات</span></span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+                </a>
                 <button onclick="handleLogout()" class="w-full py-2.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs font-bold cursor-pointer transition-colors flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="btnLogout">تسجيل الخروج</span>
                 </button>
@@ -1332,6 +1340,11 @@
                         <i class="fa-solid fa-microchip"></i>
                         <span data-i18n="obdCodesBtn">أكواد الأعطال OBD-II</span>
                     </button>
+                    <span class="text-slate-300 dark:text-slate-700">•</span>
+                    <a href="privacy.html" target="_blank" class="text-slate-500 hover:text-sky-500 hover:underline cursor-pointer flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-shield-halved text-emerald-500"></i>
+                        <span>سياسة الخصوصية / Privacy</span>
+                    </a>
                 </div>
             </div>
         </footer>
@@ -1457,6 +1470,11 @@
                     <span class="flex items-center gap-2"><i class="fa-solid fa-headset text-indigo-500"></i> <span data-i18n="navContactCommunity">اتصل بنا ومركز المساعدة</span></span>
                     <i class="fa-solid fa-chevron-left text-indigo-400 text-xs rtl:rotate-0 ltr:rotate-180"></i>
                 </button>
+
+                <a href="privacy.html" target="_blank" onclick="closeMobileMoreDrawer();" class="w-full py-2.5 px-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-emerald-500"></i> <span>سياسة الخصوصية وحماية البيانات (Privacy)</span></span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+                </a>
 
                 <button onclick="handleLogout(); closeMobileMoreDrawer();" class="w-full py-2.5 px-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all shadow-2xs">
                     <span class="flex items-center gap-2"><i class="fa-solid fa-right-from-bracket text-rose-500"></i> <span data-i18n="btnLogout">تسجيل الخروج</span></span>

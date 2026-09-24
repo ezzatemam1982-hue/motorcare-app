@@ -415,13 +415,28 @@ for c in centers:
     lat = c.get("lat")
     lng = c.get("lng")
 
-    # Enforce verified, direct Google Maps coordinate URL on all 288 centers
+    agency_name = c.get("agency", "").strip()
+    center_name = c.get("name", "").strip()
+    area_name = c.get("area", "").strip()
+    gov_name = c.get("gov", "").strip()
+
+    # Labeled location title: Official dealership/center name + branch/gov
+    branch_label = f"{center_name} - {gov_name}" if gov_name and gov_name not in center_name else center_name
+    query_text = f"{center_name} {area_name} {gov_name} مصر".strip()
+
+    # Enforce verified, labeled Google Maps URL displaying official Business Name
+    from urllib.parse import quote
     if lat is not None and lng is not None:
-        c["mapsUrl"] = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
-        c["mapsQuery"] = f"{c.get('name', '')} {c.get('gov', '')} مصر".strip()
+        encoded_label = quote(branch_label)
+        c["mapsUrl"] = f"https://www.google.com/maps?q={lat},{lng}+({encoded_label})"
+        c["mapsQuery"] = query_text
+    else:
+        encoded_query = quote(query_text)
+        c["mapsUrl"] = f"https://www.google.com/maps/search/?api=1&query={encoded_query}"
+        c["mapsQuery"] = query_text
 
 print(f"Applied specific metadata fixes to {updated_count} centers.")
-print(f"Standardized mapsUrl to direct GPS coordinates across all {len(centers)} centers.")
+print(f"Standardized mapsUrl to labeled business name and location across all {len(centers)} centers.")
 
 # Save to service_centers.json
 with open('service_centers.json', 'w', encoding='utf-8') as f:

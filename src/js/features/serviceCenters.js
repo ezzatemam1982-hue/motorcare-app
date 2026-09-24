@@ -98,6 +98,89 @@
             renderServiceCenters();
         }
 
+        /**
+         * توليد رابط خرائط جوجل القياسي المعتمد مع اسم التوكيل / المركز المعتمد
+         * Standard Google Maps URL generation with verified Business Profile Name & Location
+         */
+        function getServiceCenterMapsUrl(center, userCorr) {
+            if (!center) return 'https://www.google.com/maps';
+
+            if (userCorr && userCorr.newMapsUrl && userCorr.newMapsUrl.startsWith('http') && !userCorr.newMapsUrl.includes('query=undefined')) {
+                return userCorr.newMapsUrl;
+            }
+
+            const name = (center.name || '').trim();
+            const agency = (center.agency || '').trim();
+            const area = (center.area || '').trim();
+            const gov = (center.gov || '').trim();
+
+            // Human-readable labeled location name: "اسم المركز - المحافظة"
+            const branchLabel = gov && !name.includes(gov) ? `${name} - ${gov}` : name;
+            const queryText = `${name} ${area} ${gov} مصر`.replace(/\s+/g, ' ').trim();
+
+            const activeLat = (userCorr && userCorr.newLat) ? userCorr.newLat : center.lat;
+            const activeLng = (userCorr && userCorr.newLng) ? userCorr.newLng : center.lng;
+
+            if (activeLat !== undefined && activeLng !== undefined && activeLat !== null && activeLng !== null && !isNaN(activeLat) && !isNaN(activeLng)) {
+                // Standard labeled location format: https://www.google.com/maps?q=lat,lng+(Business Name)
+                return `https://www.google.com/maps?q=${activeLat},${activeLng}+(${encodeURIComponent(branchLabel)})`;
+            }
+
+            // Standard business query search format
+            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryText)}`;
+        }
+
+        /**
+         * فتح موقع المركز في تطبيق خرائط جوجل الأصلي على الهاتف (geo URI intent) أو في المتصفح مع اسم المركز المعتمد
+         */
+        function openServiceCenterMap(centerId) {
+            const centers = window.MOTORCARE_SERVICE_CENTERS || [];
+            const center = centers.find(c => String(c.id) === String(centerId));
+            if (!center) return;
+
+            let userCorr = null;
+            try {
+                const raw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_scUserCorrections') : localStorage.getItem('motorCare_scUserCorrections'));
+                if (raw) userCorr = JSON.parse(raw)[center.id];
+            } catch(e) {}
+
+            const webUrl = getServiceCenterMapsUrl(center, userCorr);
+            const name = (center.name || '').trim();
+            const area = (center.area || '').trim();
+            const gov = (center.gov || '').trim();
+            const agency = (center.agency || '').trim();
+            const branchLabel = gov && !name.includes(gov) ? `${name} - ${gov}` : name;
+
+            const activeLat = (userCorr && userCorr.newLat) ? userCorr.newLat : center.lat;
+            const activeLng = (userCorr && userCorr.newLng) ? userCorr.newLng : center.lng;
+
+            // Detect native Capacitor / Android environment
+            const isNative = typeof window !== 'undefined' &&
+                             window.Capacitor &&
+                             typeof window.Capacitor.isNativePlatform === 'function' &&
+                             window.Capacitor.isNativePlatform();
+
+            if (isNative) {
+                // Support geo: URI intent for native Google Maps app:
+                // Format: geo:0,0?q=lat,lng(label) or geo:0,0?q=encodeURIComponent(name + ' ' + branchName)
+                let geoUri = `geo:0,0?q=${encodeURIComponent(`${name} ${area} ${gov}`.trim())}`;
+                if (activeLat !== undefined && activeLng !== undefined && activeLat !== null && activeLng !== null && !isNaN(activeLat) && !isNaN(activeLng)) {
+                    geoUri = `geo:${activeLat},${activeLng}?q=${encodeURIComponent(branchLabel)}`;
+                }
+
+                try {
+                    window.location.href = geoUri;
+                    setTimeout(() => {
+                        window.open(webUrl, '_system');
+                    }, 600);
+                } catch(e) {
+                    window.open(webUrl, '_system');
+                }
+            } else {
+                window.open(webUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
+
         function renderServiceCenters() {
             const container = document.getElementById('scCardsContainer');
             const countEl = document.getElementById('scResultsSummary');
@@ -243,18 +326,8 @@
                 const activeLat = (userCorr && userCorr.newLat) ? userCorr.newLat : c.lat;
                 const activeLng = (userCorr && userCorr.newLng) ? userCorr.newLng : c.lng;
 
-                // رابط الخريطة المعتمد: الأولوية لتصحيح المستخدم، ثم الرابط المباشر للمركز
-                let verifiedMapsUrl = '';
-                if (userCorr && userCorr.newMapsUrl) {
-                    verifiedMapsUrl = userCorr.newMapsUrl;
-                } else if (c.mapsUrl && !/query=-?\d+\.\d+,-?\d+\.\d+$/.test(c.mapsUrl)) {
-                    verifiedMapsUrl = c.mapsUrl;
-                } else if (activeLat && activeLng) {
-                    verifiedMapsUrl = `https://www.google.com/maps/search/?api=1&query=${activeLat},${activeLng}`;
-                } else {
-                    const cleanQuery = c.mapsQuery || `${c.name || ''} ${c.agency || ''} ${c.area || ''}`.trim();
-                    verifiedMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cleanQuery)}`;
-                }
+                // رابط الخريطة المعتمد: توليد الرابط القياسي المعياري مع اسم التوكيل/المركز المعتمد والمحافظة
+                const verifiedMapsUrl = getServiceCenterMapsUrl(c, userCorr);
 
                 return `
                     <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border ${isUserCorrected ? 'border-amber-300 dark:border-amber-700 ring-1 ring-amber-400/30' : 'border-slate-200 dark:border-slate-800'} hover:border-sky-300 dark:hover:border-sky-700 shadow-xs hover:shadow-md transition-all space-y-2.5">
@@ -313,7 +386,7 @@
                                 <span class="truncate">${phoneDisplay}</span>
                             </a>` : ''}
 
-                            <a href="${verifiedMapsUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] py-2 px-2.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all" title="فتح الموقع المعتمد في خرائط جوجل GPS">
+                            <a href="${verifiedMapsUrl}" onclick="event.preventDefault(); openServiceCenterMap('${c.id}');" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] py-2 px-2.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all cursor-pointer" title="فتح الموقع المعتمد في خرائط جوجل GPS مع اسم التوكيل">
                                 <i class="fa-solid fa-diamond-turn-right text-xs"></i>
                                 <span>فتح في الخرائط GPS 📍</span>
                             </a>
@@ -454,7 +527,11 @@
 
                     if (latInput) latInput.value = lat;
                     if (lngInput) lngInput.value = lng;
-                    if (mapsUrlInput) mapsUrlInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
+                    const centerId = document.getElementById('scCorrectionCenterId')?.value;
+                    const curCenter = (window.MOTORCARE_SERVICE_CENTERS || []).find(c => String(c.id) === String(centerId));
+                    if (mapsUrlInput) {
+                        mapsUrlInput.value = getServiceCenterMapsUrl({ ...(curCenter || {}), lat, lng });
+                    }
 
                     if (badge) {
                         badge.classList.remove('hidden');
@@ -590,9 +667,9 @@
 
             const nowIso = new Date().toISOString();
             const nowFormatted = new Date().toLocaleString('ar-EG');
-            const newMapsUrl = pastedMapsUrl.startsWith('http') && !pastedMapsUrl.includes('?') 
+            const newMapsUrl = (pastedMapsUrl.startsWith('http') && !pastedMapsUrl.includes('query=-') && !pastedMapsUrl.includes('query=undefined')) 
                 ? pastedMapsUrl 
-                : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+                : getServiceCenterMapsUrl({ ...center, lat, lng });
 
             // Build Correction Object
             const correctionData = {
@@ -1014,3 +1091,5 @@ try { if (typeof viewUserCorrectionsModal !== 'undefined') window.viewUserCorrec
 try { if (typeof closeUserCorrectionsHistoryModal !== 'undefined') window.closeUserCorrectionsHistoryModal = closeUserCorrectionsHistoryModal; } catch (e) {}
 try { if (typeof exportUserCorrectionsJSON !== 'undefined') window.exportUserCorrectionsJSON = exportUserCorrectionsJSON; } catch (e) {}
 try { if (typeof deleteUserCorrection !== 'undefined') window.deleteUserCorrection = deleteUserCorrection; } catch (e) {}
+try { if (typeof getServiceCenterMapsUrl !== 'undefined') window.getServiceCenterMapsUrl = getServiceCenterMapsUrl; } catch (e) {}
+try { if (typeof openServiceCenterMap !== 'undefined') window.openServiceCenterMap = openServiceCenterMap; } catch (e) {}

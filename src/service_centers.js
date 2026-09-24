@@ -25,8 +25,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 24.0889,
     "lng": 32.8998,
-    "mapsQuery": "مركز كيا المعتمد: مالك أنس - أسوان أسوان مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=24.0889,32.8998"
+    "mapsQuery": "مركز كيا المعتمد: مالك أنس - أسوان المنطقة الصناعية أسوان مصر",
+    "mapsUrl": "https://www.google.com/maps?q=24.0889,32.8998+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%85%D8%A7%D9%84%D9%83%20%D8%A3%D9%86%D8%B3%20-%20%D8%A3%D8%B3%D9%88%D8%A7%D9%86)"
   },
   {
     "id": "mitsubishi_karnak_aswan_sales",
@@ -54,8 +54,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 24.0754,
     "lng": 32.8895,
-    "mapsQuery": "شركة الكرنك - موزع مبيعات وقطع غيار ميتسوبيشي معتمد (أسوان) أسوان مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=24.0754,32.8895"
+    "mapsQuery": "شركة الكرنك - موزع مبيعات وقطع غيار ميتسوبيشي معتمد (أسوان) أسوان أسوان مصر",
+    "mapsUrl": "https://www.google.com/maps?q=24.0754,32.8895+(%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%83%D8%B1%D9%86%D9%83%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D9%88%D9%82%D8%B7%D8%B9%20%D8%BA%D9%8A%D8%A7%D8%B1%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A3%D8%B3%D9%88%D8%A7%D9%86%29)"
   },
   {
     "id": "gb_chery_haval_assiut",
@@ -81,11 +81,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص إلكتروني متقدم",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - أسيوط (مركز الصعيد المعتمد) أسيوط مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - أسيوط (مركز الصعيد المعتمد) أسيوط أسيوط مصر",
     "lat": 27.2104,
     "lng": 31.1598,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.2104,31.1598"
+    "mapsUrl": "https://www.google.com/maps?q=27.2104,31.1598+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7%20%28%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D8%B5%D8%B9%D9%8A%D8%AF%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%29)"
   },
   {
     "id": "mansour_asyut",
@@ -109,10 +109,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة وفحص كمبيوتر",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - أسيوط والصعيد أسيوط مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - أسيوط والصعيد أسيوط أسيوط مصر",
     "lat": 27.228,
     "lng": 31.134,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.228,31.134",
+    "mapsUrl": "https://www.google.com/maps?q=27.228,31.134+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7%20%D9%88%D8%A7%D9%84%D8%B5%D8%B9%D9%8A%D8%AF)",
     "rating": 4.7
   },
   {
@@ -135,10 +135,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة وفحص كمبيوتر",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز خدمة هيونداي غبور - أسيوط والصعيد أسيوط مصر",
+    "mapsQuery": "مركز خدمة هيونداي غبور - أسيوط والصعيد أسيوط أسيوط مصر",
     "lat": 27.235,
     "lng": 31.155,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.235,31.155",
+    "mapsUrl": "https://www.google.com/maps?q=27.235,31.155+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7%20%D9%88%D8%A7%D9%84%D8%B5%D8%B9%D9%8A%D8%AF)",
     "rating": 4.7
   },
   {
@@ -168,8 +168,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 27.1857,
     "lng": 31.1895,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع أسيوط أسيوط مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.1857,31.1895"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع أسيوط شارع هلالي أسيوط مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.1857,31.1895+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7)"
   },
   {
     "id": "mansour_mg_assiut",
@@ -194,11 +194,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "كشف إلكتروني متقدم",
       "قطع غيار معتمدة من المنصور"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - أسيوط (مركز خدمة الصعيد) أسيوط مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - أسيوط (مركز خدمة الصعيد) أسيوط أسيوط مصر",
     "lat": 27.1989,
     "lng": 31.1687,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.1989,31.1687"
+    "mapsUrl": "https://www.google.com/maps?q=27.1989,31.1687+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7%20%28%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%A7%D9%84%D8%B5%D8%B9%D9%8A%D8%AF%29)"
   },
   {
     "id": "peugeot_mansco_asyut",
@@ -220,10 +220,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز بيجو مانسكو المعتمد - أسيوط والصعيد أسيوط مصر",
+    "mapsQuery": "مركز بيجو مانسكو المعتمد - أسيوط والصعيد أسيوط أسيوط مصر",
     "lat": 27.229,
     "lng": 31.132,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.229,31.132",
+    "mapsUrl": "https://www.google.com/maps?q=27.229,31.132+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%A7%D9%86%D8%B3%D9%83%D9%88%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7%20%D9%88%D8%A7%D9%84%D8%B5%D8%B9%D9%8A%D8%AF)",
     "rating": 4.6
   },
   {
@@ -247,11 +247,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص بالكمبيوتر",
       "قطع غيار سوزوكي أصلية"
     ],
-    "mapsQuery": "مركز صيانة سوزوكي المعتمد - أسيوط والصعيد أسيوط مصر",
+    "mapsQuery": "مركز صيانة سوزوكي المعتمد - أسيوط والصعيد أسيوط أسيوط مصر",
     "lat": 27.1956,
     "lng": 31.1712,
     "rating": 4.6,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.1956,31.1712"
+    "mapsUrl": "https://www.google.com/maps?q=27.1956,31.1712+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7%20%D9%88%D8%A7%D9%84%D8%B5%D8%B9%D9%8A%D8%AF)"
   },
   {
     "id": "toyota_loc_79_el_zanaty",
@@ -276,8 +276,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 27.18347,
     "lng": 31.179949,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة الزناتي أسيوط مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.18347,31.179949"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة الزناتي أسيوط أسيوط مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.18347,31.179949+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%B2%D9%86%D8%A7%D8%AA%D9%8A%20-%20%D8%A3%D8%B3%D9%8A%D9%88%D8%B7)"
   },
   {
     "id": "kia_dealer_sales_10__d8_a7_d9_84_d9",
@@ -304,8 +304,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.0462,
     "lng": 31.3533,
-    "mapsQuery": "موزع كيا المعتمد: أبو زيد للسيارات - مدينة نصر القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0462,31.3533"
+    "mapsQuery": "موزع كيا المعتمد: أبو زيد للسيارات - مدينة نصر مدينة نصر القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0462,31.3533+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3%D8%A8%D9%88%20%D8%B2%D9%8A%D8%AF%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_karnak_luxor_airport_service",
@@ -333,8 +333,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 25.7142,
     "lng": 32.6895,
-    "mapsQuery": "شركة الكرنك - مركز خدمة وصيانة ميتسوبيشي المعتمد (الأقصر) الأقصر مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=25.7142,32.6895"
+    "mapsQuery": "شركة الكرنك - مركز خدمة وصيانة ميتسوبيشي المعتمد (الأقصر) الأقصر الأقصر مصر",
+    "mapsUrl": "https://www.google.com/maps?q=25.7142,32.6895+(%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%83%D8%B1%D9%86%D9%83%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D8%B1%29)"
   },
   {
     "id": "mitsubishi_karnak_luxor_sales",
@@ -361,8 +361,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 25.6985,
     "lng": 32.6452,
-    "mapsQuery": "شركة الكرنك - معرض مبيعات ميتسوبيشي معتمد (الأقصر) الأقصر مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=25.6985,32.6452"
+    "mapsQuery": "شركة الكرنك - معرض مبيعات ميتسوبيشي معتمد (الأقصر) الأقصر الأقصر مصر",
+    "mapsUrl": "https://www.google.com/maps?q=25.6985,32.6452+(%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%83%D8%B1%D9%86%D9%83%20-%20%D9%85%D8%B9%D8%B1%D8%B6%20%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D8%B1%29)"
   },
   {
     "id": "toyota_loc_84_al_masriya_co",
@@ -387,8 +387,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 25.692274,
     "lng": 32.652027,
-    "mapsQuery": "موزع تويوتا المعتمد: المؤسسة المصرية الأقصر مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=25.692274,32.652027"
+    "mapsQuery": "موزع تويوتا المعتمد: المؤسسة المصرية الأقصر الأقصر مصر",
+    "mapsUrl": "https://www.google.com/maps?q=25.692274,32.652027+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%85%D8%A4%D8%B3%D8%B3%D8%A9%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D8%B1)"
   },
   {
     "id": "bosch_alex_smouha",
@@ -410,10 +410,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص دورات الوقود والكهرباء",
       "بطاريات وشمعات بوش الأصلية"
     ],
-    "mapsQuery": "مركز بوش كايرو سيرفس المعتمد - الإسكندرية (سموحة) الإسكندرية مصر",
+    "mapsQuery": "مركز بوش كايرو سيرفس المعتمد - الإسكندرية (سموحة) سموحة الإسكندرية مصر",
     "lat": 31.211,
     "lng": 29.947,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.211,29.947",
+    "mapsUrl": "https://www.google.com/maps?q=31.211,29.947+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%88%D8%B4%20%D9%83%D8%A7%D9%8A%D8%B1%D9%88%20%D8%B3%D9%8A%D8%B1%D9%81%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%B3%D9%85%D9%88%D8%AD%D8%A9%29)",
     "rating": 4.8
   },
   {
@@ -440,11 +440,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن",
       "قطع غيار وضمان شامل"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - العامرية ومرغم (الإسكندرية 3S) الإسكندرية مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - العامرية ومرغم (الإسكندرية 3S) العامرية الإسكندرية مصر",
     "lat": 31.0945,
     "lng": 29.8312,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0945,29.8312"
+    "mapsUrl": "https://www.google.com/maps?q=31.0945,29.8312+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9%20%D9%88%D9%85%D8%B1%D8%BA%D9%85%20%28%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%203S%29)"
   },
   {
     "id": "mansour_alex_ameriya",
@@ -468,10 +468,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار شيفورليه وأوبل وإم جي"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - الإسكندرية (العامرية والصحراوي) الإسكندرية مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - الإسكندرية (العامرية والصحراوي) العامرية الإسكندرية مصر",
     "lat": 31.042,
     "lng": 29.805,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.042,29.805",
+    "mapsUrl": "https://www.google.com/maps?q=31.042,29.805+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%B5%D8%AD%D8%B1%D8%A7%D9%88%D9%8A%29)",
     "rating": 4.7
   },
   {
@@ -496,10 +496,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وتكييف",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز المنصور للسيارات المعتمد - الإسكندرية (سموحة) الإسكندرية مصر",
+    "mapsQuery": "مركز المنصور للسيارات المعتمد - الإسكندرية (سموحة) سموحة الإسكندرية مصر",
     "lat": 31.213,
     "lng": 29.946,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.213,29.946",
+    "mapsUrl": "https://www.google.com/maps?q=31.213,29.946+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%B3%D9%85%D9%88%D8%AD%D8%A9%29)",
     "rating": 4.7
   },
   {
@@ -522,10 +522,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "زيوت وفلاتر وتيل",
       "ضبط زوايا"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - الإسكندرية (العامرية والصحراوي) الإسكندرية مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - الإسكندرية (العامرية والصحراوي) العامرية الإسكندرية مصر",
     "lat": 31.041,
     "lng": 29.806,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.041,29.806",
+    "mapsUrl": "https://www.google.com/maps?q=31.041,29.806+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%B5%D8%AD%D8%B1%D8%A7%D9%88%D9%8A%29)",
     "rating": 4.7
   },
   {
@@ -548,10 +548,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "إطارات وبطاريات",
       "فحص ميكانيكا وتيل"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - الإسكندرية (كليوباترا وسيدي جابر) الإسكندرية مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - الإسكندرية (كليوباترا وسيدي جابر) كليوباترا الإسكندرية مصر",
     "lat": 31.218,
     "lng": 29.936,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.218,29.936",
+    "mapsUrl": "https://www.google.com/maps?q=31.218,29.936+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D9%83%D9%84%D9%8A%D9%88%D8%A8%D8%A7%D8%AA%D8%B1%D8%A7%20%D9%88%D8%B3%D9%8A%D8%AF%D9%8A%20%D8%AC%D8%A7%D8%A8%D8%B1%29)",
     "rating": 4.8
   },
   {
@@ -575,10 +575,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل هيونداي غبور - الإسكندرية (مرغم) الإسكندرية مصر",
+    "mapsQuery": "توكيل هيونداي غبور - الإسكندرية (مرغم) مرغم الإسكندرية مصر",
     "lat": 31.085,
     "lng": 29.832,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.085,29.832",
+    "mapsUrl": "https://www.google.com/maps?q=31.085,29.832+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D9%85%D8%B1%D8%BA%D9%85%29)",
     "rating": 4.7
   },
   {
@@ -601,10 +601,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص عفشة وتيل",
       "قطع غيار هيونداي"
     ],
-    "mapsQuery": "مركز خدمة هيونداي غبور - الإسكندرية (محرم بك) الإسكندرية مصر",
+    "mapsQuery": "مركز خدمة هيونداي غبور - الإسكندرية (محرم بك) محرم بك الإسكندرية مصر",
     "lat": 31.185,
     "lng": 29.921,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.185,29.921",
+    "mapsUrl": "https://www.google.com/maps?q=31.185,29.921+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D9%85%D8%AD%D8%B1%D9%85%20%D8%A8%D9%83%29)",
     "rating": 4.7
   },
   {
@@ -634,8 +634,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 31.2156,
     "lng": 29.9578,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع سموحة الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.2156,29.9578"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع سموحة سموحة الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.2156,29.9578+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%B3%D9%85%D9%88%D8%AD%D8%A9%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "mansour_mg_alex_desert",
@@ -660,11 +660,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "إصلاحات ميكانيكا وضمان شامل",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - الإسكندرية (الكيلو 28 الصحراوي 3S) الإسكندرية مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - الإسكندرية (الكيلو 28 الصحراوي 3S) العامرية الإسكندرية مصر",
     "lat": 31.0612,
     "lng": 29.7945,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0612,29.7945"
+    "mapsUrl": "https://www.google.com/maps?q=31.0612,29.7945+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%A7%D9%84%D9%83%D9%8A%D9%84%D9%88%2028%20%D8%A7%D9%84%D8%B5%D8%AD%D8%B1%D8%A7%D9%88%D9%8A%203S%29)"
   },
   {
     "id": "mercedes_ana_alex",
@@ -686,10 +686,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار مرسيدس-بنز أصلية"
     ],
-    "mapsQuery": "مرسيدس-بنز الإسكندرية الوطنية للسيارات (ANA) - سموحة الإسكندرية مصر",
+    "mapsQuery": "مرسيدس-بنز الإسكندرية الوطنية للسيارات (ANA) - سموحة سموحة الإسكندرية مصر",
     "lat": 31.215,
     "lng": 29.948,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.215,29.948",
+    "mapsUrl": "https://www.google.com/maps?q=31.215,29.948+(%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%28ANA%29%20-%20%D8%B3%D9%85%D9%88%D8%AD%D8%A9)",
     "rating": 4.8
   },
   {
@@ -719,8 +719,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.1785,
     "lng": 29.9142,
-    "mapsQuery": "بترو جروب - مركز خدمة وصيانة ميتسوبيشي المعتمد 3S (محرم بك) الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.1785,29.9142"
+    "mapsQuery": "بترو جروب - مركز خدمة وصيانة ميتسوبيشي المعتمد 3S (محرم بك) محرم بك الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.1785,29.9142+(%D8%A8%D8%AA%D8%B1%D9%88%20%D8%AC%D8%B1%D9%88%D8%A8%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%203S%20%28%D9%85%D8%AD%D8%B1%D9%85%20%D8%A8%D9%83%29%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "mitsubishi_petrogroup_alex_sales",
@@ -747,8 +747,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.2125,
     "lng": 29.9285,
-    "mapsQuery": "بترو جروب - معرض مبيعات ميتسوبيشي معتمد (الإبراهيمية) الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.2125,29.9285"
+    "mapsQuery": "بترو جروب - معرض مبيعات ميتسوبيشي معتمد (الإبراهيمية) الإبراهيمية الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.2125,29.9285+(%D8%A8%D8%AA%D8%B1%D9%88%20%D8%AC%D8%B1%D9%88%D8%A8%20-%20%D9%85%D8%B9%D8%B1%D8%B6%20%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A%D8%A9%29%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "mitsubishi_alrezk_alex_sales",
@@ -775,8 +775,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.2185,
     "lng": 29.9498,
-    "mapsQuery": "شركة الرزق لتجارة السيارات - موزع ميتسوبيشي معتمد (سموحة) الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.2185,29.9498"
+    "mapsQuery": "شركة الرزق لتجارة السيارات - موزع ميتسوبيشي معتمد (سموحة) سموحة الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.2185,29.9498+(%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%B1%D8%B2%D9%82%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%B3%D9%85%D9%88%D8%AD%D8%A9%29%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "mitsubishi_elmamoun_alex_quickservice",
@@ -804,8 +804,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.2052,
     "lng": 29.9078,
-    "mapsQuery": "مركز المأمون - صيانة سريعة وقطع غيار ميتسوبيشي معتمد (الأزاريطة) الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.2052,29.9078"
+    "mapsQuery": "مركز المأمون - صيانة سريعة وقطع غيار ميتسوبيشي معتمد (الأزاريطة) الأزاريطة الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.2052,29.9078+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%85%D8%A3%D9%85%D9%88%D9%86%20-%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%B3%D8%B1%D9%8A%D8%B9%D8%A9%20%D9%88%D9%82%D8%B7%D8%B9%20%D8%BA%D9%8A%D8%A7%D8%B1%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%A3%D8%B2%D8%A7%D8%B1%D9%8A%D8%B7%D8%A9%29%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "nissan_alex_smouha",
@@ -827,10 +827,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وكهرباء",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل نيسان موتور - الإسكندرية (سموحة) الإسكندرية مصر",
+    "mapsQuery": "توكيل نيسان موتور - الإسكندرية (سموحة) سموحة الإسكندرية مصر",
     "lat": 31.216,
     "lng": 29.949,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.216,29.949",
+    "mapsUrl": "https://www.google.com/maps?q=31.216,29.949+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%B3%D9%85%D9%88%D8%AD%D8%A9%29)",
     "rating": 4.7
   },
   {
@@ -853,10 +853,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار أصلية بضمان الوكيل"
     ],
-    "mapsQuery": "توكيل بيجو مانسكو - الإسكندرية (محرم بك) الإسكندرية مصر",
+    "mapsQuery": "توكيل بيجو مانسكو - الإسكندرية (محرم بك) محرم بك الإسكندرية مصر",
     "lat": 31.182,
     "lng": 29.918,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.182,29.918",
+    "mapsUrl": "https://www.google.com/maps?q=31.182,29.918+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%A7%D9%86%D8%B3%D9%83%D9%88%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D9%85%D8%AD%D8%B1%D9%85%20%D8%A8%D9%83%29)",
     "rating": 4.7
   },
   {
@@ -879,10 +879,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل رينو EIM - الإسكندرية (العامرية والصحراوي) الإسكندرية مصر",
+    "mapsQuery": "توكيل رينو EIM - الإسكندرية (العامرية والصحراوي) العامرية الإسكندرية مصر",
     "lat": 31.054,
     "lng": 29.816,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.054,29.816",
+    "mapsUrl": "https://www.google.com/maps?q=31.054,29.816+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B1%D9%8A%D9%86%D9%88%20EIM%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%B5%D8%AD%D8%B1%D8%A7%D9%88%D9%8A%29)",
     "rating": 4.7
   },
   {
@@ -906,11 +906,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير سيور كاتينة وزيوت وتيل فرامل",
       "قطع غيار رينو الأصلية بضمان"
     ],
-    "mapsQuery": "توكيل رينو مصر - EIM الإسكندرية (سموحة / كوبري النزهة) الإسكندرية مصر",
+    "mapsQuery": "توكيل رينو مصر - EIM الإسكندرية (سموحة / كوبري النزهة) سموحة الإسكندرية مصر",
     "lat": 31.2154,
     "lng": 29.9541,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.2154,29.9541"
+    "mapsUrl": "https://www.google.com/maps?q=31.2154,29.9541+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B1%D9%8A%D9%86%D9%88%20%D9%85%D8%B5%D8%B1%20-%20EIM%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%B3%D9%85%D9%88%D8%AD%D8%A9%20/%20%D9%83%D9%88%D8%A8%D8%B1%D9%8A%20%D8%A7%D9%84%D9%86%D8%B2%D9%87%D8%A9%29)"
   },
   {
     "id": "renault_eim_alex_smouha",
@@ -932,10 +932,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وتكييف",
       "قطع غيار رينو الأصلية"
     ],
-    "mapsQuery": "مركز رينو EIM المعتمد - الإسكندرية (سموحة ومحور المحمودية) الإسكندرية مصر",
+    "mapsQuery": "مركز رينو EIM المعتمد - الإسكندرية (سموحة ومحور المحمودية) سموحة الإسكندرية مصر",
     "lat": 31.205,
     "lng": 29.952,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.205,29.952",
+    "mapsUrl": "https://www.google.com/maps?q=31.205,29.952+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B1%D9%8A%D9%86%D9%88%20EIM%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%B3%D9%85%D9%88%D8%AD%D8%A9%20%D9%88%D9%85%D8%AD%D9%88%D8%B1%20%D8%A7%D9%84%D9%85%D8%AD%D9%85%D9%88%D8%AF%D9%8A%D8%A9%29)",
     "rating": 4.7
   },
   {
@@ -959,10 +959,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص وبرمجة كمبيوتر",
       "قطع غيار VAG أصلية"
     ],
-    "mapsQuery": "مركز سكودا وسيات كيان المعتمد - الإسكندرية الإسكندرية مصر",
+    "mapsQuery": "مركز سكودا وسيات كيان المعتمد - الإسكندرية سموحة الإسكندرية مصر",
     "lat": 31.212,
     "lng": 29.951,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.212,29.951",
+    "mapsUrl": "https://www.google.com/maps?q=31.212,29.951+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%88%D8%B3%D9%8A%D8%A7%D8%AA%20%D9%83%D9%8A%D8%A7%D9%86%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -986,11 +986,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن",
       "قطع غيار أصلية وكفالة معتمدة"
     ],
-    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز الإسكندرية الإسكندرية مصر",
+    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز الإسكندرية العامرية الإسكندرية مصر",
     "lat": 31.0823,
     "lng": 29.8145,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0823,29.8145"
+    "mapsUrl": "https://www.google.com/maps?q=31.0823,29.8145+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "suzuki_modern_alex",
@@ -1012,10 +1012,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة وفحص كمبيوتر",
       "قطع غيار أصلية بضمان"
     ],
-    "mapsQuery": "مركز خدمة سوزوكي مودرن موتورز - الإسكندرية (الحضرة) الإسكندرية مصر",
+    "mapsQuery": "مركز خدمة سوزوكي مودرن موتورز - الإسكندرية (الحضرة) الحضرة الإسكندرية مصر",
     "lat": 31.198,
     "lng": 29.932,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.198,29.932",
+    "mapsUrl": "https://www.google.com/maps?q=31.198,29.932+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%28%D8%A7%D9%84%D8%AD%D8%B6%D8%B1%D8%A9%29)",
     "rating": 4.7
   },
   {
@@ -1045,8 +1045,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.883579,
     "lng": 28.86919,
-    "mapsQuery": "تويوتا إيجيبت - العلمين مطروح مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.883579,28.86919"
+    "mapsQuery": "تويوتا إيجيبت - العلمين العلمين مطروح مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.883579,28.86919+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D8%B9%D9%84%D9%85%D9%8A%D9%86%20-%20%D9%85%D8%B7%D8%B1%D9%88%D8%AD)"
   },
   {
     "id": "toyota_loc_48_toyota_egypt_smouha",
@@ -1071,8 +1071,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.176447,
     "lng": 29.904735,
-    "mapsQuery": "تويوتا إيجيبت - سموحة الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.176447,29.904735"
+    "mapsQuery": "تويوتا إيجيبت - سموحة سموحة الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.176447,29.904735+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%B3%D9%85%D9%88%D8%AD%D8%A9%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_21_toyota_egypt_moharam_beik",
@@ -1103,8 +1103,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.17501,
     "lng": 29.904271,
-    "mapsQuery": "تويوتا إيجيبت - محرم بك الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.17501,29.904271"
+    "mapsQuery": "تويوتا إيجيبت - محرم بك محرم بك الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.17501,29.904271+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D9%85%D8%AD%D8%B1%D9%85%20%D8%A8%D9%83%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_101_brothers",
@@ -1129,8 +1129,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.191886,
     "lng": 29.908913,
-    "mapsQuery": "موزع تويوتا المعتمد: الاخوة الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.191886,29.908913"
+    "mapsQuery": "موزع تويوتا المعتمد: الاخوة الإسكندرية الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.191886,29.908913+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%A7%D8%AE%D9%88%D8%A9%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_102_al_wafeeq",
@@ -1156,8 +1156,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.210546,
     "lng": 29.961628,
-    "mapsQuery": "موزع تويوتا المعتمد: الوفيق الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.210546,29.961628"
+    "mapsQuery": "موزع تويوتا المعتمد: الوفيق ق الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.210546,29.961628+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%88%D9%81%D9%8A%D9%82%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_49_al_rezk_trading_Smouha",
@@ -1182,8 +1182,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.21658,
     "lng": 29.943749,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة الرزق التجارية الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.21658,29.943749"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة الرزق التجارية الإسكندرية الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.21658,29.943749+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%B1%D8%B2%D9%82%20%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_50_al_rezk_trading",
@@ -1211,8 +1211,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.067501,
     "lng": 29.821978,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة الرزق التجارية الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.067501,29.821978"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة الرزق التجارية الإسكندرية الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.067501,29.821978+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%B1%D8%B2%D9%82%20%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_77_al_wafeek_co",
@@ -1237,8 +1237,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.210546,
     "lng": 29.961628,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة الوفيق للتجارة الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.210546,29.961628"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة الوفيق للتجارة ق للتجارة الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.210546,29.961628+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%88%D9%81%D9%8A%D9%82%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_28_ramsis_group_company",
@@ -1263,8 +1263,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.207667,
     "lng": 29.926637,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة رمسيس للتجارة والاستيراد /شركة رمسيس جروب الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.207667,29.926637"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة رمسيس للتجارة والاستيراد /شركة رمسيس جروب الإسكندرية الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.207667,29.926637+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%B1%D9%85%D8%B3%D9%8A%D8%B3%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20/%D8%B4%D8%B1%D9%83%D8%A9%20%D8%B1%D9%85%D8%B3%D9%8A%D8%B3%20%D8%AC%D8%B1%D9%88%D8%A8%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_27_shukrano_for_trading_import",
@@ -1289,8 +1289,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.220079,
     "lng": 29.940745,
-    "mapsQuery": "موزع تويوتا المعتمد: شكرانو للتجارة والأستيراد الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.220079,29.940745"
+    "mapsQuery": "موزع تويوتا المعتمد: شكرانو للتجارة والأستيراد الإسكندرية الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.220079,29.940745+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D9%83%D8%B1%D8%A7%D9%86%D9%88%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D9%88%D8%A7%D9%84%D8%A3%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "kia_dealer_sales_4__d8_a7_d9_84_d8",
@@ -1317,8 +1317,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.5965,
     "lng": 32.2715,
-    "mapsQuery": "موزع كيا المعتمد: القاضي (النهضة) - الإسماعيلية الإسماعيلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.5965,32.2715"
+    "mapsQuery": "موزع كيا المعتمد: القاضي (النهضة) - الإسماعيلية وسط البلد الإسماعيلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.5965,32.2715+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%82%D8%A7%D8%B6%D9%8A%20%28%D8%A7%D9%84%D9%86%D9%87%D8%B6%D8%A9%29%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "mitsubishi_elhawi_ismailia_sales",
@@ -1345,8 +1345,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.5841,
     "lng": 32.2845,
-    "mapsQuery": "شركة الحاوي للتجارة - موزع ميتسوبيشي معتمد (الإسماعيلية) الإسماعيلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.5841,32.2845"
+    "mapsQuery": "شركة الحاوي للتجارة - موزع ميتسوبيشي معتمد (الإسماعيلية) الإسماعيلية الإسماعيلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.5841,32.2845+(%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D9%88%D9%8A%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9%29)"
   },
   {
     "id": "mitsubishi_newcar_ismailia_service",
@@ -1374,8 +1374,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.5789,
     "lng": 32.2541,
-    "mapsQuery": "نيوكار (New Car) - مركز خدمة وصيانة ميتسوبيشي المعتمد (الإسماعيلية) الإسماعيلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.5789,32.2541"
+    "mapsQuery": "نيوكار (New Car) - مركز خدمة وصيانة ميتسوبيشي المعتمد (الإسماعيلية) الإسماعيلية الإسماعيلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.5789,32.2541+(%D9%86%D9%8A%D9%88%D9%83%D8%A7%D8%B1%20%28New%20Car%29%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9%29)"
   },
   {
     "id": "suzuki_canal_ismailia",
@@ -1397,11 +1397,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص أجهزة إلكترونية وتيل فرامل وزيوت",
       "قطع غيار ياباني وهندي أصلية بضمان"
     ],
-    "mapsQuery": "مركز صيانة سوزوكي المعتمد - الإسماعيلية والقناة الإسماعيلية مصر",
+    "mapsQuery": "مركز صيانة سوزوكي المعتمد - الإسماعيلية والقناة الإسماعيلية الإسماعيلية مصر",
     "lat": 30.5912,
     "lng": 32.2745,
     "rating": 4.6,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.5912,32.2745"
+    "mapsUrl": "https://www.google.com/maps?q=30.5912,32.2745+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D9%82%D9%86%D8%A7%D8%A9)"
   },
   {
     "id": "toyota_loc_11_toyota_egypt_ismailia",
@@ -1432,8 +1432,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.572596,
     "lng": 32.240485,
-    "mapsQuery": "تويوتا إيجيبت - الإسماعيلية الإسماعيلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.572596,32.240485"
+    "mapsQuery": "تويوتا إيجيبت - الإسماعيلية الإسماعيلية الإسماعيلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.572596,32.240485+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "kia_auth_service_12__d9_86_d9_8a_d9",
@@ -1461,8 +1461,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.6012,
     "lng": 32.268,
-    "mapsQuery": "مركز كيا المعتمد: نيو كار - الإسماعيلية الإسماعيلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.6012,32.268"
+    "mapsQuery": "مركز كيا المعتمد: نيو كار - الإسماعيلية حي السلام الإسماعيلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.6012,32.268+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%86%D9%8A%D9%88%20%D9%83%D8%A7%D8%B1%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "gb_chery_haval_hurghada",
@@ -1487,11 +1487,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وتكييف",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - الغردقة والبحر الأحمر البحر الأحمر مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - الغردقة والبحر الأحمر الغردقة البحر الأحمر مصر",
     "lat": 27.2389,
     "lng": 33.8098,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.2389,33.8098"
+    "mapsUrl": "https://www.google.com/maps?q=27.2389,33.8098+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%AF%D9%82%D8%A9%20%D9%88%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)"
   },
   {
     "id": "fitfix_hurghada",
@@ -1513,10 +1513,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "إطارات وبطاريات وتكييف",
       "ضبط زوايا"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - الغردقة والبحر الأحمر البحر الأحمر مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - الغردقة والبحر الأحمر الغردقة البحر الأحمر مصر",
     "lat": 27.235,
     "lng": 33.821,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.235,33.821",
+    "mapsUrl": "https://www.google.com/maps?q=27.235,33.821+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%AF%D9%82%D8%A9%20%D9%88%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)",
     "rating": 4.7
   },
   {
@@ -1540,10 +1540,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تكييف وتبريد",
       "قطع غيار غبور الأصلية"
     ],
-    "mapsQuery": "مركز خدمة هيونداي وشيري غبور - الغردقة البحر الأحمر مصر",
+    "mapsQuery": "مركز خدمة هيونداي وشيري غبور - الغردقة الغردقة البحر الأحمر مصر",
     "lat": 27.245,
     "lng": 33.812,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.245,33.812",
+    "mapsUrl": "https://www.google.com/maps?q=27.245,33.812+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D9%88%D8%B4%D9%8A%D8%B1%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%AF%D9%82%D8%A9%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)",
     "rating": 4.6
   },
   {
@@ -1566,10 +1566,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وتكييف",
       "قطع غيار أصلية بضمان مرسيدس"
     ],
-    "mapsQuery": "مرسيدس-بنز أوتوستار المعتمد (Auto Star) - الغردقة والبحر الأحمر البحر الأحمر مصر",
+    "mapsQuery": "مرسيدس-بنز أوتوستار المعتمد (Auto Star) - الغردقة والبحر الأحمر الغردقة البحر الأحمر مصر",
     "lat": 27.165,
     "lng": 33.829,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.165,33.829",
+    "mapsUrl": "https://www.google.com/maps?q=27.165,33.829+(%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20%D8%A3%D9%88%D8%AA%D9%88%D8%B3%D8%AA%D8%A7%D8%B1%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28Auto%20Star%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%AF%D9%82%D8%A9%20%D9%88%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)",
     "rating": 4.7
   },
   {
@@ -1598,8 +1598,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 27.2375,
     "lng": 33.8112,
-    "mapsQuery": "المصرية للسيارات - مركز خدمة ومبيعات ميتسوبيشي المعتمد 3S (الغردقة) البحر الأحمر مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.2375,33.8112"
+    "mapsQuery": "المصرية للسيارات - مركز خدمة ومبيعات ميتسوبيشي المعتمد 3S (الغردقة) الغردقة البحر الأحمر مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.2375,33.8112+(%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%203S%20%28%D8%A7%D9%84%D8%BA%D8%B1%D8%AF%D9%82%D8%A9%29%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)"
   },
   {
     "id": "toyota_loc_52_abou_heta_for_ie_t_cars_redsea",
@@ -1628,8 +1628,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 27.228597,
     "lng": 33.779905,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة أبوحتة لتجارة السيارات والاستيرادو التصدير البحر الأحمر مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.228597,33.779905"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة أبوحتة لتجارة السيارات والاستيرادو التصدير البحر الأحمر البحر الأحمر مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.228597,33.779905+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A3%D8%A8%D9%88%D8%AD%D8%AA%D8%A9%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%D9%88%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AF%D9%8A%D8%B1%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)"
   },
   {
     "id": "eatc_hurghada",
@@ -1652,10 +1652,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وتكييف",
       "قطع غيار VAG أصلية"
     ],
-    "mapsQuery": "مركز فولكس فاجن وأودي EATC - الغردقة البحر الأحمر مصر",
+    "mapsQuery": "مركز فولكس فاجن وأودي EATC - الغردقة الغردقة البحر الأحمر مصر",
     "lat": 27.238,
     "lng": 33.818,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.238,33.818",
+    "mapsUrl": "https://www.google.com/maps?q=27.238,33.818+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%88%D9%84%D9%83%D8%B3%20%D9%81%D8%A7%D8%AC%D9%86%20%D9%88%D8%A3%D9%88%D8%AF%D9%8A%20EATC%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%AF%D9%82%D8%A9%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)",
     "rating": 4.7
   },
   {
@@ -1681,8 +1681,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.030925,
     "lng": 30.461158,
-    "mapsQuery": "موزع تويوتا المعتمد: المسلوخ البحيرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.030925,30.461158"
+    "mapsQuery": "موزع تويوتا المعتمد: المسلوخ البحيرة البحيرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.030925,30.461158+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%85%D8%B3%D9%84%D9%88%D8%AE%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D9%8A%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_103_ElTony_Company",
@@ -1707,8 +1707,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.116245,
     "lng": 30.185292,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة التوني البحيرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.116245,30.185292"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة التوني البحيرة البحيرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.116245,30.185292+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%AA%D9%88%D9%86%D9%8A%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D9%8A%D8%B1%D8%A9)"
   },
   {
     "id": "kia_dealer_sales_6__d8_a7_d9_84_d8",
@@ -1735,8 +1735,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.7562,
     "lng": 30.6985,
-    "mapsQuery": "موزع كيا المعتمد: العلا - كوم حمادة البحيرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.7562,30.6985"
+    "mapsQuery": "موزع كيا المعتمد: العلا - كوم حمادة كوم حمادة البحيرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.7562,30.6985+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B9%D9%84%D8%A7%20-%20%D9%83%D9%88%D9%85%20%D8%AD%D9%85%D8%A7%D8%AF%D8%A9%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D9%8A%D8%B1%D8%A9)"
   },
   {
     "id": "bmw_global_aburawash",
@@ -1759,10 +1759,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "صيانة فتيس ZF 8-Speed",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل بي إم دبليو جلوبال أوتو - أبورواش الجيزة مصر",
+    "mapsQuery": "توكيل بي إم دبليو جلوبال أوتو - أبورواش أبورواش الجيزة مصر",
     "lat": 30.0865,
     "lng": 31.0245,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0865,31.0245",
+    "mapsUrl": "https://www.google.com/maps?q=30.0865,31.0245+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%20%D8%A5%D9%85%20%D8%AF%D8%A8%D9%84%D9%8A%D9%88%20%D8%AC%D9%84%D9%88%D8%A8%D8%A7%D9%84%20%D8%A3%D9%88%D8%AA%D9%88%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -1787,11 +1787,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن معتمد دولياً",
       "قطع غيار BMW أصلية بضمان سنتين"
     ],
-    "mapsQuery": "توكيل بي إم دبليو وميني مصر - جلوبال أوتو أبورواش (3S Flagship) الجيزة مصر",
+    "mapsQuery": "توكيل بي إم دبليو وميني مصر - جلوبال أوتو أبورواش (3S Flagship) أبورواش الجيزة مصر",
     "lat": 30.0812,
     "lng": 31.0267,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0812,31.0267"
+    "mapsUrl": "https://www.google.com/maps?q=30.0812,31.0267+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%20%D8%A5%D9%85%20%D8%AF%D8%A8%D9%84%D9%8A%D9%88%20%D9%88%D9%85%D9%8A%D9%86%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D8%AC%D9%84%D9%88%D8%A8%D8%A7%D9%84%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%283S%20Flagship%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "bmw_munich_zayed",
@@ -1814,10 +1814,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "برمجة كنترول وتحديث خرائط ونظام iDrive",
       "عمرة فتيس وصيانة دورات التبريد"
     ],
-    "mapsQuery": "مركز ميونخ موتورز المتخصص المعتمد لسيارات BMW الجيزة مصر",
+    "mapsQuery": "مركز ميونخ موتورز المتخصص المعتمد لسيارات BMW الشيخ زايد الجيزة مصر",
     "lat": 30.012,
     "lng": 30.978,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.012,30.978",
+    "mapsUrl": "https://www.google.com/maps?q=30.012,30.978+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%85%D9%8A%D9%88%D9%86%D8%AE%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D8%A7%D9%84%D9%85%D8%AA%D8%AE%D8%B5%D8%B5%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20BMW%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -1840,10 +1840,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر KTS",
       "زيوت وفلاتر وبطاريات بوش أصلية"
     ],
-    "mapsQuery": "مركز بوش كار سيرفيس المعتمد - الشيخ زايد الجيزة مصر",
+    "mapsQuery": "مركز بوش كار سيرفيس المعتمد - الشيخ زايد الشيخ زايد الجيزة مصر",
     "lat": 30.042,
     "lng": 30.985,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.042,30.985",
+    "mapsUrl": "https://www.google.com/maps?q=30.042,30.985+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%88%D8%B4%20%D9%83%D8%A7%D8%B1%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%20%D8%B2%D8%A7%D9%8A%D8%AF%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.7
   },
   {
@@ -1869,10 +1869,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل شانجان وهافال ومازدا - غبور أوتو أبورواش الجيزة مصر",
+    "mapsQuery": "توكيل شانجان وهافال ومازدا - غبور أوتو أبورواش أبورواش الجيزة مصر",
     "lat": 30.0882,
     "lng": 31.0228,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0882,31.0228",
+    "mapsUrl": "https://www.google.com/maps?q=30.0882,31.0228+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B4%D8%A7%D9%86%D8%AC%D8%A7%D9%86%20%D9%88%D9%87%D8%A7%D9%81%D8%A7%D9%84%20%D9%88%D9%85%D8%A7%D8%B2%D8%AF%D8%A7%20-%20%D8%BA%D8%A8%D9%88%D8%B1%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.7
   },
   {
@@ -1899,11 +1899,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان فرن معتمد",
       "قطع غيار أصلية بالضمان الرسمي"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - أبورواش (المجمع الصناعي المتكامل 3S) الجيزة مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - أبورواش (المجمع الصناعي المتكامل 3S) أبورواش الجيزة مصر",
     "lat": 30.0712,
     "lng": 31.0215,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0712,31.0215"
+    "mapsUrl": "https://www.google.com/maps?q=30.0712,31.0215+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B5%D9%86%D8%A7%D8%B9%D9%8A%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "mansour_aburawash",
@@ -1929,10 +1929,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "أكبر مجمع سمكرة ودهان بالليزر",
       "قطع غيار ACDelco وجنرال موتورز الأصلية"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - أبورواش (المجمع الرئيسي 3S) الجيزة مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - أبورواش (المجمع الرئيسي 3S) أبورواش الجيزة مصر",
     "lat": 30.083,
     "lng": 31.024,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.083,31.024",
+    "mapsUrl": "https://www.google.com/maps?q=30.083,31.024+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -1955,10 +1955,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة محركات وعفشة",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل دي إف إس كيه (DFSK) - ناشيونال موتورز 6 أكتوبر الجيزة مصر",
+    "mapsQuery": "توكيل دي إف إس كيه (DFSK) - ناشيونال موتورز 6 أكتوبر 6 أكتوبر الجيزة مصر",
     "lat": 29.948,
     "lng": 30.912,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.948,30.912",
+    "mapsUrl": "https://www.google.com/maps?q=29.948,30.912+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AF%D9%8A%20%D8%A5%D9%81%20%D8%A5%D8%B3%20%D9%83%D9%8A%D9%87%20%28DFSK%29%20-%20%D9%86%D8%A7%D8%B4%D9%8A%D9%88%D9%86%D8%A7%D9%84%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%206%20%D8%A3%D9%83%D8%AA%D9%88%D8%A8%D8%B1%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.6
   },
   {
@@ -1984,11 +1984,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر wiTECH المعتمد",
       "قطع غيار أصلية بالضمان وكفالة الوكيل"
     ],
-    "mapsQuery": "توكيل فيات وجيب وألفا روميو مصر - ستيلانتس أبورواش (المركز الرئيسي 3S) الجيزة مصر",
+    "mapsQuery": "توكيل فيات وجيب وألفا روميو مصر - ستيلانتس أبورواش (المركز الرئيسي 3S) أبورواش الجيزة مصر",
     "lat": 30.0776,
     "lng": 31.0256,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0776,31.0256"
+    "mapsUrl": "https://www.google.com/maps?q=30.0776,31.0256+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%8A%D8%A7%D8%AA%20%D9%88%D8%AC%D9%8A%D8%A8%20%D9%88%D8%A3%D9%84%D9%81%D8%A7%20%D8%B1%D9%88%D9%85%D9%8A%D9%88%20%D9%85%D8%B5%D8%B1%20-%20%D8%B3%D8%AA%D9%8A%D9%84%D8%A7%D9%86%D8%AA%D8%B3%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "fitfix_zayed",
@@ -2010,10 +2010,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل",
       "إطارات وبطاريات وضبط زوايا"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - الشيخ زايد الجيزة مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - الشيخ زايد الشيخ زايد الجيزة مصر",
     "lat": 30.045,
     "lng": 31.008,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.045,31.008",
+    "mapsUrl": "https://www.google.com/maps?q=30.045,31.008+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%20%D8%B2%D8%A7%D9%8A%D8%AF%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -2036,10 +2036,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "زيوت وفلاتر وتيل فرامل",
       "إطارات وضبط زوايا"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - شارع الهرم الجيزة مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - شارع الهرم الهرم الجيزة مصر",
     "lat": 29.996,
     "lng": 31.178,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.996,31.178",
+    "mapsUrl": "https://www.google.com/maps?q=29.996,31.178+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%B4%D8%A7%D8%B1%D8%B9%20%D8%A7%D9%84%D9%87%D8%B1%D9%85%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.7
   },
   {
@@ -2062,10 +2062,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة محركات EcoBoost وتيربو",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل فورد أوتو جميل - أبورواش الجيزة مصر",
+    "mapsQuery": "توكيل فورد أوتو جميل - أبورواش أبورواش الجيزة مصر",
     "lat": 30.0862,
     "lng": 31.0248,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0862,31.0248",
+    "mapsUrl": "https://www.google.com/maps?q=30.0862,31.0248+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%88%D8%B1%D8%AF%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%AC%D9%85%D9%8A%D9%84%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.7
   },
   {
@@ -2088,10 +2088,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر أصلي",
       "قطع غيار جيلي الأصلية"
     ],
-    "mapsQuery": "توكيل جيلي مصر - أوتو موبيليتي أبورواش الجيزة مصر",
+    "mapsQuery": "توكيل جيلي مصر - أوتو موبيليتي أبورواش أبورواش الجيزة مصر",
     "lat": 30.086,
     "lng": 31.024,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.086,31.024",
+    "mapsUrl": "https://www.google.com/maps?q=30.086,31.024+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D9%84%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D8%A3%D9%88%D8%AA%D9%88%20%D9%85%D9%88%D8%A8%D9%8A%D9%84%D9%8A%D8%AA%D9%8A%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.7
   },
   {
@@ -2116,10 +2116,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "قطع غيار هيونداي موبيس الأصلية",
       "فحص كمبيوتر GDS"
     ],
-    "mapsQuery": "توكيل هيونداي مصر - غبور أوتو أبورواش (المقر الرئيسي) الجيزة مصر",
+    "mapsQuery": "توكيل هيونداي مصر - غبور أوتو أبورواش (المقر الرئيسي) أبورواش الجيزة مصر",
     "lat": 30.089,
     "lng": 31.023,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.089,31.023",
+    "mapsUrl": "https://www.google.com/maps?q=30.089,31.023+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D8%BA%D8%A8%D9%88%D8%B1%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -2145,10 +2145,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل جيتور وجاك القصراوي جروب - أبورواش الجيزة مصر",
+    "mapsQuery": "توكيل جيتور وجاك القصراوي جروب - أبورواش أبورواش الجيزة مصر",
     "lat": 30.0872,
     "lng": 31.0218,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0872,31.0218",
+    "mapsUrl": "https://www.google.com/maps?q=30.0872,31.0218+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D8%AA%D9%88%D8%B1%20%D9%88%D8%AC%D8%A7%D9%83%20%D8%A7%D9%84%D9%82%D8%B5%D8%B1%D8%A7%D9%88%D9%8A%20%D8%AC%D8%B1%D9%88%D8%A8%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -2173,11 +2173,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن معتمد",
       "قطع غيار أصلية بالضمان وكفالة القصراوي"
     ],
-    "mapsQuery": "توكيل جيتور وجاك مصر - مجموعة القصراوي أبورواش (المقر الرئيسي المتكامل 3S) الجيزة مصر",
+    "mapsQuery": "توكيل جيتور وجاك مصر - مجموعة القصراوي أبورواش (المقر الرئيسي المتكامل 3S) أبورواش الجيزة مصر",
     "lat": 30.0745,
     "lng": 31.0234,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0745,31.0234"
+    "mapsUrl": "https://www.google.com/maps?q=30.0745,31.0234+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D8%AA%D9%88%D8%B1%20%D9%88%D8%AC%D8%A7%D9%83%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%20%D8%A7%D9%84%D9%82%D8%B5%D8%B1%D8%A7%D9%88%D9%8A%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "kia_eit_service_5__d8_a7_d8_a8_d9",
@@ -2206,8 +2206,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.0712,
     "lng": 31.0255,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع أبو رواش (المقر الرئيسي) الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0712,31.0255"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع أبو رواش (المقر الرئيسي) أبو رواش الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0712,31.0255+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A3%D8%A8%D9%88%20%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "kia_eit_service_6__d8_a7_d9_84_d8",
@@ -2236,8 +2236,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.0384,
     "lng": 30.9856,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع الشيخ زايد الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0384,30.9856"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع الشيخ زايد الشيخ زايد الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0384,30.9856+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%20%D8%B2%D8%A7%D9%8A%D8%AF%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "mansour_mg_october",
@@ -2262,11 +2262,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن معتمد",
       "قطع غيار معتمدة بالضمان الرسمي"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - 6 أكتوبر (المجمع الصناعي المتكامل 3S) الجيزة مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - 6 أكتوبر (المجمع الصناعي المتكامل 3S) 6 أكتوبر الجيزة مصر",
     "lat": 29.9345,
     "lng": 30.8712,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9345,30.8712"
+    "mapsUrl": "https://www.google.com/maps?q=29.9345,30.8712+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%206%20%D8%A3%D9%83%D8%AA%D9%88%D8%A8%D8%B1%20%28%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B5%D9%86%D8%A7%D8%B9%D9%8A%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "mercedes_star_national_aburawash",
@@ -2289,11 +2289,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن معتمد من شتوتغارت",
       "قطع غيار مرسيدس أصلية بضمان الوكيل"
     ],
-    "mapsQuery": "توكيل مرسيدس-بنز مصر - ستار ناشيونال أبورواش (المقر المتكامل 3S) الجيزة مصر",
+    "mapsQuery": "توكيل مرسيدس-بنز مصر - ستار ناشيونال أبورواش (المقر المتكامل 3S) أبورواش الجيزة مصر",
     "lat": 30.0845,
     "lng": 31.0298,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0845,31.0298"
+    "mapsUrl": "https://www.google.com/maps?q=30.0845,31.0298+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20%D9%85%D8%B5%D8%B1%20-%20%D8%B3%D8%AA%D8%A7%D8%B1%20%D9%86%D8%A7%D8%B4%D9%8A%D9%88%D9%86%D8%A7%D9%84%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "mercedes_gna_aburawash",
@@ -2315,10 +2315,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة محركات وجيربوكس 9G-Tronic",
       "قطع غيار مرسيدس الأصلية"
     ],
-    "mapsQuery": "مرسيدس-بنز الجيزة الوطنية للسيارات (GNA) - أبورواش الجيزة مصر",
+    "mapsQuery": "مرسيدس-بنز الجيزة الوطنية للسيارات (GNA) - أبورواش أبورواش الجيزة مصر",
     "lat": 30.0875,
     "lng": 31.0225,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0875,31.0225",
+    "mapsUrl": "https://www.google.com/maps?q=30.0875,31.0225+(%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9%20%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%28GNA%29%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4)",
     "rating": 4.9
   },
   {
@@ -2346,8 +2346,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.9921,
     "lng": 31.1554,
-    "mapsQuery": "الهدى للتجارة - موزع قطع غيار ميتسوبيشي معتمد (فيصل) الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9921,31.1554"
+    "mapsQuery": "الهدى للتجارة - موزع قطع غيار ميتسوبيشي معتمد (فيصل) فيصل الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9921,31.1554+(%D8%A7%D9%84%D9%87%D8%AF%D9%89%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%82%D8%B7%D8%B9%20%D8%BA%D9%8A%D8%A7%D8%B1%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D9%81%D9%8A%D8%B5%D9%84%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "mitsubishi_first1car_giza",
@@ -2374,8 +2374,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.0054,
     "lng": 31.2189,
-    "mapsQuery": "شركة فيرست 1 كار (First 1 Car) - موزع ميتسوبيشي معتمد (الجيزة) الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0054,31.2189"
+    "mapsQuery": "شركة فيرست 1 كار (First 1 Car) - موزع ميتسوبيشي معتمد (الجيزة) الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0054,31.2189+(%D8%B4%D8%B1%D9%83%D8%A9%20%D9%81%D9%8A%D8%B1%D8%B3%D8%AA%201%20%D9%83%D8%A7%D8%B1%20%28First%201%20Car%29%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9%29)"
   },
   {
     "id": "mitsubishi_diamond_aburawash_3s",
@@ -2405,8 +2405,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.0712,
     "lng": 31.0421,
-    "mapsQuery": "ميتسوبيشي دايموند موتورز - المقر الرئيسي أبو رواش (3S) الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0712,31.0421"
+    "mapsQuery": "ميتسوبيشي دايموند موتورز - المقر الرئيسي أبو رواش (3S) أبو رواش الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0712,31.0421+(%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%AF%D8%A7%D9%8A%D9%85%D9%88%D9%86%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%20%D8%A3%D8%A8%D9%88%20%D8%B1%D9%88%D8%A7%D8%B4%20%283S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "mitsubishi_diamond_parts_mohandessin",
@@ -2433,8 +2433,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.0612,
     "lng": 31.1985,
-    "mapsQuery": "ميتسوبيشي دايموند موتورز - منفذ قطع الغيار المعتمد (المهندسين) الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0612,31.1985"
+    "mapsQuery": "ميتسوبيشي دايموند موتورز - منفذ قطع الغيار المعتمد (المهندسين) المهندسين الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0612,31.1985+(%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%AF%D8%A7%D9%8A%D9%85%D9%88%D9%86%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D9%85%D9%86%D9%81%D8%B0%20%D9%82%D8%B7%D8%B9%20%D8%A7%D9%84%D8%BA%D9%8A%D8%A7%D8%B1%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D9%85%D9%87%D9%86%D8%AF%D8%B3%D9%8A%D9%86%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "nissan_autoegypt_aburawash",
@@ -2457,10 +2457,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان بأحدث الأفران",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل نيسان أوتو إيجيبت - أبورواش (المجمع المتكامل) الجيزة مصر",
+    "mapsQuery": "توكيل نيسان أوتو إيجيبت - أبورواش (المجمع المتكامل) أبورواش الجيزة مصر",
     "lat": 30.084,
     "lng": 31.026,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.084,31.026",
+    "mapsUrl": "https://www.google.com/maps?q=30.084,31.026+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -2484,11 +2484,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل فرامل",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل نيسان مصر - أوتو إيجيبت الجيزة (المهندسين) الجيزة مصر",
+    "mapsQuery": "توكيل نيسان مصر - أوتو إيجيبت الجيزة (المهندسين) المهندسين الجيزة مصر",
     "lat": 30.0542,
     "lng": 31.2012,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0542,31.2012"
+    "mapsUrl": "https://www.google.com/maps?q=30.0542,31.2012+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D9%85%D8%B5%D8%B1%20-%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9%20%28%D8%A7%D9%84%D9%85%D9%87%D9%86%D8%AF%D8%B3%D9%8A%D9%86%29)"
   },
   {
     "id": "nissan_egypt_october_hq",
@@ -2511,11 +2511,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن بالمعايير اليابانية",
       "قطع غيار نيسان أصلية بالضمان"
     ],
-    "mapsQuery": "توكيل نيسان موتور إيجيبت - مصنع ومركز خدمة 6 أكتوبر الرئيسي (3S) الجيزة مصر",
+    "mapsQuery": "توكيل نيسان موتور إيجيبت - مصنع ومركز خدمة 6 أكتوبر الرئيسي (3S) 6 أكتوبر الجيزة مصر",
     "lat": 29.9612,
     "lng": 30.9124,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9612,30.9124"
+    "mapsUrl": "https://www.google.com/maps?q=29.9612,30.9124+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D9%85%D8%B5%D9%86%D8%B9%20%D9%88%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%206%20%D8%A3%D9%83%D8%AA%D9%88%D8%A8%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%20%283S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "peugeot_mansour_october",
@@ -2538,11 +2538,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "إصلاحات ميكانيكا وضمان بيجو الرسمي",
       "قطع غيار فرنسية أصلية"
     ],
-    "mapsQuery": "توكيل بيجو مصر - المنصور 6 أكتوبر (المنطقة الصناعية) الجيزة مصر",
+    "mapsQuery": "توكيل بيجو مصر - المنصور 6 أكتوبر (المنطقة الصناعية) 6 أكتوبر الجيزة مصر",
     "lat": 29.9389,
     "lng": 30.8689,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9389,30.8689"
+    "mapsUrl": "https://www.google.com/maps?q=29.9389,30.8689+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%206%20%D8%A3%D9%83%D8%AA%D9%88%D8%A8%D8%B1%20%28%D8%A7%D9%84%D9%85%D9%86%D8%B7%D9%82%D8%A9%20%D8%A7%D9%84%D8%B5%D9%86%D8%A7%D8%B9%D9%8A%D8%A9%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "peugeot_mansco_aburawash",
@@ -2565,10 +2565,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة وفرن دهان ألماني",
       "قطع غيار بيجو أصلية"
     ],
-    "mapsQuery": "توكيل بيجو مصر - مانسكو أبورواش (المجمع الرئيسي) الجيزة مصر",
+    "mapsQuery": "توكيل بيجو مصر - مانسكو أبورواش (المجمع الرئيسي) أبورواش الجيزة مصر",
     "lat": 30.0885,
     "lng": 31.0215,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0885,31.0215",
+    "mapsUrl": "https://www.google.com/maps?q=30.0885,31.0215+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D8%A7%D9%86%D8%B3%D9%83%D9%88%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -2591,10 +2591,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل فرامل",
       "فحص دوري"
     ],
-    "mapsQuery": "مركز بيجو مانسكو للصيانة السريعة - الدقي الجيزة مصر",
+    "mapsQuery": "مركز بيجو مانسكو للصيانة السريعة - الدقي الدقي الجيزة مصر",
     "lat": 30.038,
     "lng": 31.212,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.038,31.212",
+    "mapsUrl": "https://www.google.com/maps?q=30.038,31.212+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%A7%D9%86%D8%B3%D9%83%D9%88%20%D9%84%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9%D8%A9%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%8A%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.6
   },
   {
@@ -2618,10 +2618,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عفشة وفرامل وتكييف",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل رينو مصر - EIM أبورواش الجيزة مصر",
+    "mapsQuery": "توكيل رينو مصر - EIM أبورواش أبورواش الجيزة مصر",
     "lat": 30.0754,
     "lng": 31.0218,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0754,31.0218",
+    "mapsUrl": "https://www.google.com/maps?q=30.0754,31.0218+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B1%D9%8A%D9%86%D9%88%20%D9%85%D8%B5%D8%B1%20-%20EIM%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.7
   },
   {
@@ -2645,11 +2645,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان معتمد",
       "قطع غيار سيات أصلية"
     ],
-    "mapsQuery": "توكيل سيات وكوبرا مصر - كيان إيجيبت أبورواش (3S) الجيزة مصر",
+    "mapsQuery": "توكيل سيات وكوبرا مصر - كيان إيجيبت أبورواش (3S) أبورواش الجيزة مصر",
     "lat": 30.0762,
     "lng": 31.0241,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0762,31.0241"
+    "mapsUrl": "https://www.google.com/maps?q=30.0762,31.0241+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%8A%D8%A7%D8%AA%20%D9%88%D9%83%D9%88%D8%A8%D8%B1%D8%A7%20%D9%85%D8%B5%D8%B1%20-%20%D9%83%D9%8A%D8%A7%D9%86%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%283S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "skoda_kayan_aburawash",
@@ -2672,11 +2672,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن معتمد",
       "قطع غيار سكودا أصلية بضمان وكفالة الوكيل"
     ],
-    "mapsQuery": "توكيل سكودا مصر - كيان إيجيبت أبورواش (المركز المتكامل 3S) الجيزة مصر",
+    "mapsQuery": "توكيل سكودا مصر - كيان إيجيبت أبورواش (المركز المتكامل 3S) أبورواش الجيزة مصر",
     "lat": 30.0768,
     "lng": 31.0245,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0768,31.0245"
+    "mapsUrl": "https://www.google.com/maps?q=30.0768,31.0245+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%85%D8%B5%D8%B1%20-%20%D9%83%D9%8A%D8%A7%D9%86%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "kayan_aburawash",
@@ -2700,10 +2700,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان بأحدث الأفران",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل سكودا وسيات كيان إيجيبت - أبورواش (المقر الرئيسي) الجيزة مصر",
+    "mapsQuery": "توكيل سكودا وسيات كيان إيجيبت - أبورواش (المقر الرئيسي) أبورواش الجيزة مصر",
     "lat": 30.0895,
     "lng": 31.0205,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0895,31.0205",
+    "mapsUrl": "https://www.google.com/maps?q=30.0895,31.0205+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%88%D8%B3%D9%8A%D8%A7%D8%AA%20%D9%83%D9%8A%D8%A7%D9%86%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -2727,10 +2727,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل",
       "فحص كمبيوتر ODIS"
     ],
-    "mapsQuery": "مركز خدمة سكودا وسيات السريع كيان - الشيخ زايد الجيزة مصر",
+    "mapsQuery": "مركز خدمة سكودا وسيات السريع كيان - الشيخ زايد الشيخ زايد الجيزة مصر",
     "lat": 30.039,
     "lng": 31.003,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.039,31.003",
+    "mapsUrl": "https://www.google.com/maps?q=30.039,31.003+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%88%D8%B3%D9%8A%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9%20%D9%83%D9%8A%D8%A7%D9%86%20-%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%20%D8%B2%D8%A7%D9%8A%D8%AF%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.7
   },
   {
@@ -2754,10 +2754,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان معتمد",
       "قطع غيار سوزوكي أصلية بضمان"
     ],
-    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز أبورواش (المركز الرئيسي 3S) الجيزة مصر",
+    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز أبورواش (المركز الرئيسي 3S) أبورواش الجيزة مصر",
     "lat": 30.0789,
     "lng": 31.0289,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0789,31.0289",
+    "mapsUrl": "https://www.google.com/maps?q=30.0789,31.0289+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%28%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%203S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -2789,8 +2789,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.078549,
     "lng": 31.049675,
-    "mapsQuery": "تويوتا إيجيبت - أبو رواش الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.078549,31.049675"
+    "mapsQuery": "تويوتا إيجيبت - أبو رواش أبو رواش الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.078549,31.049675+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A3%D8%A8%D9%88%20%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_20_toyota_egypt_sheikh_zayed",
@@ -2820,8 +2820,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.015615,
     "lng": 31.00338,
-    "mapsQuery": "تويوتا إيجيبت - الشيخ زايد الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.015615,31.00338"
+    "mapsQuery": "تويوتا إيجيبت - الشيخ زايد الشيخ زايد الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.015615,31.00338+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%20%D8%B2%D8%A7%D9%8A%D8%AF%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_97_Global",
@@ -2846,8 +2846,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.046547,
     "lng": 31.192996,
-    "mapsQuery": "موزع تويوتا المعتمد: Global الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.046547,31.192996"
+    "mapsQuery": "موزع تويوتا المعتمد: Global الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.046547,31.192996+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20Global%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_44_express_auto_service",
@@ -2872,8 +2872,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.994205,
     "lng": 31.156574,
-    "mapsQuery": "موزع تويوتا المعتمد: اكسبريس أوتو سيرفيس الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.994205,31.156574"
+    "mapsQuery": "موزع تويوتا المعتمد: اكسبريس أوتو سيرفيس س الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.994205,31.156574+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%83%D8%B3%D8%A8%D8%B1%D9%8A%D8%B3%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_30_el_bargasy_for_trading_mar",
@@ -2898,8 +2898,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.018449,
     "lng": 31.215326,
-    "mapsQuery": "موزع تويوتا المعتمد: البرجسى للتجارة و التسويق الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.018449,31.215326"
+    "mapsQuery": "موزع تويوتا المعتمد: البرجسى للتجارة و التسويق الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.018449,31.215326+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%A8%D8%B1%D8%AC%D8%B3%D9%89%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D9%88%20%D8%A7%D9%84%D8%AA%D8%B3%D9%88%D9%8A%D9%82%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_96_al_bargasi_for_trading_and_marketing",
@@ -2924,8 +2924,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.981756,
     "lng": 31.149149,
-    "mapsQuery": "موزع تويوتا المعتمد: البرجسى للتجارة و التسويق الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.981756,31.149149"
+    "mapsQuery": "موزع تويوتا المعتمد: البرجسى للتجارة و التسويق الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.981756,31.149149+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%A8%D8%B1%D8%AC%D8%B3%D9%89%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D9%88%20%D8%A7%D9%84%D8%AA%D8%B3%D9%88%D9%8A%D9%82%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_98_elmasreya",
@@ -2950,8 +2950,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.123593,
     "lng": 31.144293,
-    "mapsQuery": "موزع تويوتا المعتمد: المؤسسة المصرية الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.123593,31.144293"
+    "mapsQuery": "موزع تويوتا المعتمد: المؤسسة المصرية الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.123593,31.144293+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%85%D8%A4%D8%B3%D8%B3%D8%A9%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_24_arabian_group_for_traiding_and_distribution",
@@ -2976,8 +2976,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.054521,
     "lng": 31.192875,
-    "mapsQuery": "موزع تويوتا المعتمد: المجموعة العربية للتجارة والتوزيع الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.054521,31.192875"
+    "mapsQuery": "موزع تويوتا المعتمد: المجموعة العربية للتجارة والتوزيع الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.054521,31.192875+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D9%88%D8%A7%D9%84%D8%AA%D9%88%D8%B2%D9%8A%D8%B9%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_90_al_masriya",
@@ -3002,8 +3002,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.12359,
     "lng": 31.145165,
-    "mapsQuery": "موزع تويوتا المعتمد: المصرية الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.12359,31.145165"
+    "mapsQuery": "موزع تويوتا المعتمد: المصرية الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.12359,31.145165+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_91_al_watanya",
@@ -3028,8 +3028,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.325684,
     "lng": 30.855028,
-    "mapsQuery": "موزع تويوتا المعتمد: الوطنية الفيوم مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.325684,30.855028"
+    "mapsQuery": "موزع تويوتا المعتمد: الوطنية الفيوم الفيوم مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.325684,30.855028+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%81%D9%8A%D9%88%D9%85)"
   },
   {
     "id": "toyota_loc_31_international_motors",
@@ -3054,8 +3054,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.056297,
     "lng": 31.209993,
-    "mapsQuery": "موزع تويوتا المعتمد: انترناشيونال موتورز امكو الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.056297,31.209993"
+    "mapsQuery": "موزع تويوتا المعتمد: انترناشيونال موتورز امكو الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.056297,31.209993+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%86%D8%AA%D8%B1%D9%86%D8%A7%D8%B4%D9%8A%D9%88%D9%86%D8%A7%D9%84%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D8%A7%D9%85%D9%83%D9%88%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_111_toyotech_mohandsen",
@@ -3080,8 +3080,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.068134,
     "lng": 31.204806,
-    "mapsQuery": "موزع تويوتا المعتمد: تويوتك الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.068134,31.204806"
+    "mapsQuery": "موزع تويوتا المعتمد: تويوتك الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.068134,31.204806+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D9%83%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_99_safari",
@@ -3106,8 +3106,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.974443,
     "lng": 31.145143,
-    "mapsQuery": "موزع تويوتا المعتمد: سفارى الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.974443,31.145143"
+    "mapsQuery": "موزع تويوتا المعتمد: سفارى الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.974443,31.145143+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B3%D9%81%D8%A7%D8%B1%D9%89%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_85_toyotech",
@@ -3132,8 +3132,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.954523,
     "lng": 31.218332,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة تويوتك الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.954523,31.218332"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة تويوتك الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.954523,31.218332+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D9%83%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "toyota_loc_43_al_saleh_company",
@@ -3158,8 +3158,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.664204,
     "lng": 31.196574,
-    "mapsQuery": "موزع تويوتا المعتمد: مؤسسة الصالح الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.664204,31.196574"
+    "mapsQuery": "موزع تويوتا المعتمد: مؤسسة الصالح الجيزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.664204,31.196574+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%85%D8%A4%D8%B3%D8%B3%D8%A9%20%D8%A7%D9%84%D8%B5%D8%A7%D9%84%D8%AD%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "eatc_aburawash",
@@ -3183,10 +3183,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "صيانة فتيس DSG وS-Tronic",
       "قطع غيار VAG أصلية ألمانية"
     ],
-    "mapsQuery": "توكيل فولكس فاجن وأودي مصر - EATC أبورواش (3S) الجيزة مصر",
+    "mapsQuery": "توكيل فولكس فاجن وأودي مصر - EATC أبورواش (3S) أبورواش الجيزة مصر",
     "lat": 30.0888,
     "lng": 31.021,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0888,31.021",
+    "mapsUrl": "https://www.google.com/maps?q=30.0888,31.021+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%88%D9%84%D9%83%D8%B3%20%D9%81%D8%A7%D8%AC%D9%86%20%D9%88%D8%A3%D9%88%D8%AF%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20EATC%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20%283S%29%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -3211,10 +3211,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان سويدي متطور",
       "قطع غيار أصلية بضمان عز العرب"
     ],
-    "mapsQuery": "توكيل فولفو وبروتون مصر - مجموعة عز العرب أبورواش الجيزة مصر",
+    "mapsQuery": "توكيل فولفو وبروتون مصر - مجموعة عز العرب أبورواش أبورواش الجيزة مصر",
     "lat": 30.0878,
     "lng": 31.022,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0878,31.022",
+    "mapsUrl": "https://www.google.com/maps?q=30.0878,31.022+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%88%D9%84%D9%81%D9%88%20%D9%88%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%86%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%20%D8%B9%D8%B2%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%20%D8%A3%D8%A8%D9%88%D8%B1%D9%88%D8%A7%D8%B4%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)",
     "rating": 4.8
   },
   {
@@ -3243,8 +3243,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.061,
     "lng": 31.1965,
-    "mapsQuery": "مركز كيا المعتمد: SMG المهندسين الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.061,31.1965"
+    "mapsQuery": "مركز كيا المعتمد: SMG المهندسين المهندسين الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.061,31.1965+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20SMG%20%D8%A7%D9%84%D9%85%D9%87%D9%86%D8%AF%D8%B3%D9%8A%D9%86%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "kia_dealer_sales_2__d8_b9_d8_b1_d8",
@@ -3271,8 +3271,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.9753,
     "lng": 30.9421,
-    "mapsQuery": "موزع كيا المعتمد: عربيات - 6 أكتوبر الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9753,30.9421"
+    "mapsQuery": "موزع كيا المعتمد: عربيات - 6 أكتوبر 6 أكتوبر الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9753,30.9421+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B9%D8%B1%D8%A8%D9%8A%D8%A7%D8%AA%20-%206%20%D8%A3%D9%83%D8%AA%D9%88%D8%A8%D8%B1%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "kia_auth_service_5__d8_a7_d9_84_d8",
@@ -3300,8 +3300,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.0635,
     "lng": 31.2185,
-    "mapsQuery": "مركز كيا المعتمد: الرواس - العجوزة الجيزة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0635,31.2185"
+    "mapsQuery": "مركز كيا المعتمد: الرواس - العجوزة العجوزة الجيزة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0635,31.2185+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%B3%20-%20%D8%A7%D9%84%D8%B9%D8%AC%D9%88%D8%B2%D8%A9%20-%20%D8%A7%D9%84%D8%AC%D9%8A%D8%B2%D8%A9)"
   },
   {
     "id": "gb_chery_haval_mansoura",
@@ -3327,11 +3327,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير قطع الغيار الأصلية",
       "صيانة سريعة"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - المنصورة والدلتا الدقهلية مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - المنصورة والدلتا المنصورة الدقهلية مصر",
     "lat": 31.0289,
     "lng": 31.3854,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0289,31.3854"
+    "mapsUrl": "https://www.google.com/maps?q=31.0289,31.3854+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20%D9%88%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "mansour_mansoura",
@@ -3355,10 +3355,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وكهرباء",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - المنصورة (الدلتا) الدقهلية مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - المنصورة (الدلتا) المنصورة الدقهلية مصر",
     "lat": 31.038,
     "lng": 31.378,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.038,31.378",
+    "mapsUrl": "https://www.google.com/maps?q=31.038,31.378+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20%28%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%29%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)",
     "rating": 4.6
   },
   {
@@ -3381,10 +3381,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ضبط زوايا واتزان",
       "إطارات وبطاريات وتيل"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - المنصورة (الدقهلية) الدقهلية مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - المنصورة (الدقهلية) المنصورة الدقهلية مصر",
     "lat": 31.045,
     "lng": 31.385,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.045,31.385",
+    "mapsUrl": "https://www.google.com/maps?q=31.045,31.385+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20%28%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9%29)",
     "rating": 4.7
   },
   {
@@ -3407,10 +3407,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وكهرباء",
       "قطع غيار هيونداي أصلية"
     ],
-    "mapsQuery": "مركز أحمد موتورز المعتمد لسيارات هيونداي (المنصورة) الدقهلية مصر",
+    "mapsQuery": "مركز أحمد موتورز المعتمد لسيارات هيونداي (المنصورة) المنصورة الدقهلية مصر",
     "lat": 31.036,
     "lng": 31.365,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.036,31.365",
+    "mapsUrl": "https://www.google.com/maps?q=31.036,31.365+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A3%D8%AD%D9%85%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%28%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%29%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -3435,10 +3435,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "قطع غيار أصلية",
       "سمكرة ودهان"
     ],
-    "mapsQuery": "مركز خدمة وصيانة هيونداي غبور - المنصورة (سندوب) الدقهلية مصر",
+    "mapsQuery": "مركز خدمة وصيانة هيونداي غبور - المنصورة (سندوب) المنصورة الدقهلية مصر",
     "lat": 31.0185,
     "lng": 31.372,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0185,31.372",
+    "mapsUrl": "https://www.google.com/maps?q=31.0185,31.372+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20%28%D8%B3%D9%86%D8%AF%D9%88%D8%A8%29%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)",
     "rating": 4.6
   },
   {
@@ -3464,11 +3464,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "كشف كمبيوتر متقدم",
       "قطع غيار إم جي وشيفروليه أصلية"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - المنصورة (الدلتا) الدقهلية مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - المنصورة (الدلتا) المنصورة الدقهلية مصر",
     "lat": 31.0189,
     "lng": 31.3654,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0189,31.3654"
+    "mapsUrl": "https://www.google.com/maps?q=31.0189,31.3654+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20%28%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%29%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "mitsubishi_eladawy_mansoura_parts",
@@ -3495,8 +3495,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.0345,
     "lng": 31.3789,
-    "mapsQuery": "العدوى - موزع قطع غيار ميتسوبيشي معتمد (المنصورة) الدقهلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0345,31.3789"
+    "mapsQuery": "العدوى - موزع قطع غيار ميتسوبيشي معتمد (المنصورة) المنصورة الدقهلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.0345,31.3789+(%D8%A7%D9%84%D8%B9%D8%AF%D9%88%D9%89%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%82%D8%B7%D8%B9%20%D8%BA%D9%8A%D8%A7%D8%B1%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%29%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "mitsubishi_burqan_mansoura_service",
@@ -3524,8 +3524,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.0645,
     "lng": 31.3654,
-    "mapsQuery": "برقان انترناشونال - مركز صيانة ميتسوبيشي المعتمد (المنصورة) الدقهلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0645,31.3654"
+    "mapsQuery": "برقان انترناشونال - مركز صيانة ميتسوبيشي المعتمد (المنصورة) المنصورة الدقهلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.0645,31.3654+(%D8%A8%D8%B1%D9%82%D8%A7%D9%86%20%D8%A7%D9%86%D8%AA%D8%B1%D9%86%D8%A7%D8%B4%D9%88%D9%86%D8%A7%D9%84%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%29%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "nissan_delta_mansoura",
@@ -3547,10 +3547,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وكهرباء",
       "قطع غيار نيسان أصلية"
     ],
-    "mapsQuery": "مركز صيانة نيسان المعتمد - المنصورة (الدلتا) الدقهلية مصر",
+    "mapsQuery": "مركز صيانة نيسان المعتمد - المنصورة (الدلتا) المنصورة الدقهلية مصر",
     "lat": 31.036,
     "lng": 31.365,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.036,31.365",
+    "mapsUrl": "https://www.google.com/maps?q=31.036,31.365+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20%28%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%29%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)",
     "rating": 4.6
   },
   {
@@ -3576,8 +3576,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.042256,
     "lng": 31.384062,
-    "mapsQuery": "موزع تويوتا المعتمد: بن جميل الدقهلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.042256,31.384062"
+    "mapsQuery": "موزع تويوتا المعتمد: بن جميل الدقهلية الدقهلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.042256,31.384062+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A8%D9%86%20%D8%AC%D9%85%D9%8A%D9%84%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_59_el_nahas_company",
@@ -3602,8 +3602,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.39613,
     "lng": 31.191166,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة النحاس الدقهلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.39613,31.191166"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة النحاس الدقهلية الدقهلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.39613,31.191166+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%86%D8%AD%D8%A7%D8%B3%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "kia_auth_service_7__d8_a7_d9_84_d9",
@@ -3631,8 +3631,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.0425,
     "lng": 31.3785,
-    "mapsQuery": "مركز كيا المعتمد: عيسى كارز - المنصورة الدقهلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0425,31.3785"
+    "mapsQuery": "مركز كيا المعتمد: عيسى كارز - المنصورة المنصورة الدقهلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.0425,31.3785+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B9%D9%8A%D8%B3%D9%89%20%D9%83%D8%A7%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "kia_auth_service_18__d8_a7_d9_84_d9",
@@ -3660,8 +3660,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.9652,
     "lng": 31.2415,
-    "mapsQuery": "مركز كيا المعتمد: العدوي - سمنود الدقهلية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.9652,31.2415"
+    "mapsQuery": "مركز كيا المعتمد: العدوي - سمنود سمنود الدقهلية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.9652,31.2415+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B9%D8%AF%D9%88%D9%8A%20-%20%D8%B3%D9%85%D9%86%D9%88%D8%AF%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%87%D9%84%D9%8A%D8%A9)"
   },
   {
     "id": "gb_chery_haval_suez",
@@ -3687,11 +3687,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص منظومة التبريد والتكييف",
       "قطع غيار غبور بضمان"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - السويس ومدن القناة السويس مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - السويس ومدن القناة السويس السويس مصر",
     "lat": 29.9754,
     "lng": 32.5312,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9754,32.5312"
+    "mapsUrl": "https://www.google.com/maps?q=29.9754,32.5312+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3%20%D9%88%D9%85%D8%AF%D9%86%20%D8%A7%D9%84%D9%82%D9%86%D8%A7%D8%A9)"
   },
   {
     "id": "hyundai_gb_suez",
@@ -3713,10 +3713,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وكهرباء",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز صيانة هيونداي غبور - السويس السويس مصر",
+    "mapsQuery": "مركز صيانة هيونداي غبور - السويس السويس السويس مصر",
     "lat": 29.982,
     "lng": 32.534,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.982,32.534",
+    "mapsUrl": "https://www.google.com/maps?q=29.982,32.534+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3)",
     "rating": 4.6
   },
   {
@@ -3744,8 +3744,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.990764,
     "lng": 32.539362,
-    "mapsQuery": "موزع تويوتا المعتمد: بروفيشنال اوتو السويس مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.990764,32.539362"
+    "mapsQuery": "موزع تويوتا المعتمد: بروفيشنال اوتو شنال اوتو السويس مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.990764,32.539362+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A8%D8%B1%D9%88%D9%81%D9%8A%D8%B4%D9%86%D8%A7%D9%84%20%D8%A7%D9%88%D8%AA%D9%88%20-%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3)"
   },
   {
     "id": "toyota_loc_51_professional_auto",
@@ -3770,8 +3770,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.970122,
     "lng": 32.524882,
-    "mapsQuery": "موزع تويوتا المعتمد: بروفيشنال اوتو السويس مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.970122,32.524882"
+    "mapsQuery": "موزع تويوتا المعتمد: بروفيشنال اوتو شنال اوتو السويس مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.970122,32.524882+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A8%D8%B1%D9%88%D9%81%D9%8A%D8%B4%D9%86%D8%A7%D9%84%20%D8%A7%D9%88%D8%AA%D9%88%20-%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3)"
   },
   {
     "id": "kia_dealer_sales_7__d8_a7_d9_84_d8",
@@ -3798,8 +3798,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.2985,
     "lng": 31.7456,
-    "mapsQuery": "موزع كيا المعتمد: القاضي (نهضة مصر) - العاشر من رمضان الشرقية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.2985,31.7456"
+    "mapsQuery": "موزع كيا المعتمد: القاضي (نهضة مصر) - العاشر من رمضان العاشر من رمضان الشرقية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.2985,31.7456+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%82%D8%A7%D8%B6%D9%8A%20%28%D9%86%D9%87%D8%B6%D8%A9%20%D9%85%D8%B5%D8%B1%29%20-%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B4%D8%B1%20%D9%85%D9%86%20%D8%B1%D9%85%D8%B6%D8%A7%D9%86%20-%20%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_110_awlad_saad_copany",
@@ -3824,8 +3824,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.733332,
     "lng": 31.808126,
-    "mapsQuery": "موزع تويوتا المعتمد: شركه أولاد سعد الشرقية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.733332,31.808126"
+    "mapsQuery": "موزع تويوتا المعتمد: شركه أولاد سعد الشرقية الشرقية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.733332,31.808126+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D9%87%20%D8%A3%D9%88%D9%84%D8%A7%D8%AF%20%D8%B3%D8%B9%D8%AF%20-%20%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_83_eissa_ahmed",
@@ -3850,8 +3850,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.733332,
     "lng": 31.808126,
-    "mapsQuery": "موزع تويوتا المعتمد: عيسى الشرقية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.733332,31.808126"
+    "mapsQuery": "موزع تويوتا المعتمد: عيسى الشرقية الشرقية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.733332,31.808126+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B9%D9%8A%D8%B3%D9%89%20-%20%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_108_fekry",
@@ -3876,8 +3876,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.17266,
     "lng": 31.43137,
-    "mapsQuery": "موزع تويوتا المعتمد: فكرى الشرقية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.17266,31.43137"
+    "mapsQuery": "موزع تويوتا المعتمد: فكرى الشرقية الشرقية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.17266,31.43137+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%81%D9%83%D8%B1%D9%89%20-%20%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A%D8%A9)"
   },
   {
     "id": "mansour_tanta",
@@ -3901,10 +3901,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة وفرن دهان",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - طنطا (مجمع الدلتا دفرة) الغربية مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - طنطا (مجمع الدلتا دفرة) طنطا الغربية مصر",
     "lat": 30.738,
     "lng": 31.028,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.738,31.028",
+    "mapsUrl": "https://www.google.com/maps?q=30.738,31.028+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20%28%D9%85%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%20%D8%AF%D9%81%D8%B1%D8%A9%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)",
     "rating": 4.8
   },
   {
@@ -3928,10 +3928,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة وفحص كمبيوتر",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز خدمة وصيانة هيونداي وشيري غبور - طنطا (دفرة) الغربية مصر",
+    "mapsQuery": "مركز خدمة وصيانة هيونداي وشيري غبور - طنطا (دفرة) طنطا الغربية مصر",
     "lat": 30.7385,
     "lng": 31.0255,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.7385,31.0255",
+    "mapsUrl": "https://www.google.com/maps?q=30.7385,31.0255+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D9%88%D8%B4%D9%8A%D8%B1%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20%28%D8%AF%D9%81%D8%B1%D8%A9%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -3960,8 +3960,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.4352,
     "lng": 31.5365,
-    "mapsQuery": "مركز كيا المعتمد: العدوي - جمصة دمياط مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.4352,31.5365"
+    "mapsQuery": "مركز كيا المعتمد: العدوي - جمصة جمصة دمياط مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.4352,31.5365+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B9%D8%AF%D9%88%D9%8A%20-%20%D8%AC%D9%85%D8%B5%D8%A9%20-%20%D8%AF%D9%85%D9%8A%D8%A7%D8%B7)"
   },
   {
     "id": "kia_auth_service_9__d8_b7_d9_86_d8",
@@ -3989,8 +3989,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.8256,
     "lng": 31.0215,
-    "mapsQuery": "مركز كيا المعتمد: أبو شادي موتورز - طنطا الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.8256,31.0215"
+    "mapsQuery": "مركز كيا المعتمد: أبو شادي موتورز - طنطا طنطا الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.8256,31.0215+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3%D8%A8%D9%88%20%D8%B4%D8%A7%D8%AF%D9%8A%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "kia_dealer_sales_3__d8_a7_d9_84_d9",
@@ -4017,8 +4017,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.9452,
     "lng": 31.1352,
-    "mapsQuery": "موزع كيا المعتمد: الجندي - المحلة الكبرى الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.9452,31.1352"
+    "mapsQuery": "موزع كيا المعتمد: الجندي - المحلة الكبرى المحلة الكبرى الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.9452,31.1352+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%AC%D9%86%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%85%D8%AD%D9%84%D8%A9%20%D8%A7%D9%84%D9%83%D8%A8%D8%B1%D9%89%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "kia_dealer_sales_8__d8_b7_d9_86_d8",
@@ -4045,8 +4045,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.7915,
     "lng": 31.0025,
-    "mapsQuery": "موزع كيا المعتمد: القصراوي للاستثمار - طنطا الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.7915,31.0025"
+    "mapsQuery": "موزع كيا المعتمد: القصراوي للاستثمار - طنطا طنطا الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.7915,31.0025+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%82%D8%B5%D8%B1%D8%A7%D9%88%D9%8A%20%D9%84%D9%84%D8%A7%D8%B3%D8%AA%D8%AB%D9%85%D8%A7%D8%B1%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "mansour_mg_tanta",
@@ -4071,11 +4071,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "زيوت وفلاتر وتيل فرامل وضبط زوايا",
       "قطع غيار بالضمان الرسمي"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - طنطا (وسط الدلتا) الغربية مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - طنطا (وسط الدلتا) طنطا الغربية مصر",
     "lat": 30.8012,
     "lng": 31.0154,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.8012,31.0154"
+    "mapsUrl": "https://www.google.com/maps?q=30.8012,31.0154+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20%28%D9%88%D8%B3%D8%B7%20%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "mitsubishi_elkhayal_tanta_sales",
@@ -4102,8 +4102,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.7915,
     "lng": 31.0025,
-    "mapsQuery": "الشركة المتحدة لتجارة السيارات (الخيال) - موزع ميتسوبيشي معتمد (طنطا) الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.7915,31.0025"
+    "mapsQuery": "الشركة المتحدة لتجارة السيارات (الخيال) - موزع ميتسوبيشي معتمد (طنطا) طنطا الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.7915,31.0025+(%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF%D8%A9%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%28%D8%A7%D9%84%D8%AE%D9%8A%D8%A7%D9%84%29%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%B7%D9%86%D8%B7%D8%A7%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "peugeot_mansco_tanta",
@@ -4125,10 +4125,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وتكييف",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز الشال المعتمد لبيجو مانسكو - طنطا (الدلتا) الغربية مصر",
+    "mapsQuery": "مركز الشال المعتمد لبيجو مانسكو - طنطا (الدلتا) طنطا الغربية مصر",
     "lat": 30.774,
     "lng": 31.009,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.774,31.009",
+    "mapsUrl": "https://www.google.com/maps?q=30.774,31.009+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D8%B4%D8%A7%D9%84%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D9%84%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%A7%D9%86%D8%B3%D9%83%D9%88%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20%28%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -4151,10 +4151,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز رينو EIM المعتمد - طنطا (الدلتا) الغربية مصر",
+    "mapsQuery": "مركز رينو EIM المعتمد - طنطا (الدلتا) طنطا الغربية مصر",
     "lat": 30.776,
     "lng": 31.011,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.776,31.011",
+    "mapsUrl": "https://www.google.com/maps?q=30.776,31.011+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B1%D9%8A%D9%86%D9%88%20EIM%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20%28%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)",
     "rating": 4.6
   },
   {
@@ -4178,11 +4178,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر الأعطال",
       "قطع غيار سوزوكي أصلية"
     ],
-    "mapsQuery": "مركز صيانة سوزوكي المعتمد بالدلتا - طنطا الغربية مصر",
+    "mapsQuery": "مركز صيانة سوزوكي المعتمد بالدلتا - طنطا طنطا الغربية مصر",
     "lat": 30.7812,
     "lng": 31.0024,
     "rating": 4.6,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.7812,31.0024"
+    "mapsUrl": "https://www.google.com/maps?q=30.7812,31.0024+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D8%A8%D8%A7%D9%84%D8%AF%D9%84%D8%AA%D8%A7%20-%20%D8%B7%D9%86%D8%B7%D8%A7%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_55_toyota_egypt_mansoura",
@@ -4212,8 +4212,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.035014,
     "lng": 31.381004,
-    "mapsQuery": "تويوتا إيجيبت - المنصورة الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.035014,31.381004"
+    "mapsQuery": "تويوتا إيجيبت - المنصورة المنصورة الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.035014,31.381004+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D8%A9%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_37_united_automotive_cofor_car",
@@ -4243,8 +4243,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.810628,
     "lng": 31.011256,
-    "mapsQuery": "موزع تويوتا المعتمد: الشركة المتحدة لتجارة السيارات و الاستيراد و التصدير الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.810628,31.011256"
+    "mapsQuery": "موزع تويوتا المعتمد: الشركة المتحدة لتجارة السيارات و الاستيراد و التصدير الغربية الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.810628,31.011256+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF%D8%A9%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D9%88%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AF%D9%8A%D8%B1%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_104_united_atomotive_co_for_trading_car",
@@ -4273,8 +4273,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.812961,
     "lng": 30.750276,
-    "mapsQuery": "موزع تويوتا المعتمد: الشركه المتحده لتجارة السيارات و الإستيراد  و التصدير (الخيال) الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.812961,30.750276"
+    "mapsQuery": "موزع تويوتا المعتمد: الشركه المتحده لتجارة السيارات و الإستيراد  و التصدير (الخيال) الغربية الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.812961,30.750276+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D9%87%20%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF%D9%87%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%20%D8%A7%D9%84%D8%A5%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%20%D9%88%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AF%D9%8A%D8%B1%20%28%D8%A7%D9%84%D8%AE%D9%8A%D8%A7%D9%84%29%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "kia_auth_service_8__d8_a7_d9_84_d9",
@@ -4302,8 +4302,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.9612,
     "lng": 31.1523,
-    "mapsQuery": "مركز كيا المعتمد: الجندي - المحلة الكبرى الكيلو 3 الغربية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.9612,31.1523"
+    "mapsQuery": "مركز كيا المعتمد: الجندي - المحلة الكبرى الكيلو 3 المحلة الكبرى الغربية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.9612,31.1523+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%AC%D9%86%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%85%D8%AD%D9%84%D8%A9%20%D8%A7%D9%84%D9%83%D8%A8%D8%B1%D9%89%20%D8%A7%D9%84%D9%83%D9%8A%D9%84%D9%88%203%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "kia_auth_service_14__d8_a3_d8_a8_d9",
@@ -4331,8 +4331,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 27.2385,
     "lng": 33.8265,
-    "mapsQuery": "مركز كيا المعتمد: أبو حتة - الغردقة البحر الأحمر مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.2385,33.8265"
+    "mapsQuery": "مركز كيا المعتمد: أبو حتة - الغردقة الغردقة البحر الأحمر مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.2385,33.8265+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3%D8%A8%D9%88%20%D8%AD%D8%AA%D8%A9%20-%20%D8%A7%D9%84%D8%BA%D8%B1%D8%AF%D9%82%D8%A9%20-%20%D8%A7%D9%84%D8%A8%D8%AD%D8%B1%20%D8%A7%D9%84%D8%A3%D8%AD%D9%85%D8%B1)"
   },
   {
     "id": "toyota_loc_92_mansour",
@@ -4357,8 +4357,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.325684,
     "lng": 30.855028,
-    "mapsQuery": "موزع تويوتا المعتمد: منصور الفيوم مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.325684,30.855028"
+    "mapsQuery": "موزع تويوتا المعتمد: منصور الفيوم الفيوم مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.325684,30.855028+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%85%D9%86%D8%B5%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%81%D9%8A%D9%88%D9%85)"
   },
   {
     "id": "bmw_global_katameya",
@@ -4382,10 +4382,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان بأعلى المعايير الألمانية",
       "قطع غيار أصلية بضمان"
     ],
-    "mapsQuery": "توكيل بي إم دبليو مصر - جلوبال أوتو القطامية (المجمع المتكامل) القاهرة مصر",
+    "mapsQuery": "توكيل بي إم دبليو مصر - جلوبال أوتو القطامية (المجمع المتكامل) القطامية القاهرة مصر",
     "lat": 29.988,
     "lng": 31.331,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.988,31.331",
+    "mapsUrl": "https://www.google.com/maps?q=29.988,31.331+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%20%D8%A5%D9%85%20%D8%AF%D8%A8%D9%84%D9%8A%D9%88%20%D9%85%D8%B5%D8%B1%20-%20%D8%AC%D9%84%D9%88%D8%A8%D8%A7%D9%84%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20%28%D8%A7%D9%84%D9%85%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.9
   },
   {
@@ -4410,11 +4410,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص بطاريات الهايبرد والكهرباء",
       "قطع غيار معتمدة بالضمان"
     ],
-    "mapsQuery": "توكيل بي إم دبليو وميني مصر - جلوبال أوتو القطامية القاهرة مصر",
+    "mapsQuery": "توكيل بي إم دبليو وميني مصر - جلوبال أوتو القطامية القطامية القاهرة مصر",
     "lat": 29.9876,
     "lng": 31.3389,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9876,31.3389"
+    "mapsUrl": "https://www.google.com/maps?q=29.9876,31.3389+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%20%D8%A5%D9%85%20%D8%AF%D8%A8%D9%84%D9%8A%D9%88%20%D9%88%D9%85%D9%8A%D9%86%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D8%AC%D9%84%D9%88%D8%A8%D8%A7%D9%84%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "bmw_global_tagamoa",
@@ -4437,10 +4437,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وبرمجة كنترول",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز بي إم دبليو جلوبال أوتو المعتمد - التجمع الخامس القاهرة مصر",
+    "mapsQuery": "مركز بي إم دبليو جلوبال أوتو المعتمد - التجمع الخامس التجمع الخامس القاهرة مصر",
     "lat": 29.998,
     "lng": 31.449,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.998,31.449",
+    "mapsUrl": "https://www.google.com/maps?q=29.998,31.449+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%8A%20%D8%A5%D9%85%20%D8%AF%D8%A8%D9%84%D9%8A%D9%88%20%D8%AC%D9%84%D9%88%D8%A8%D8%A7%D9%84%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4464,10 +4464,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "عمرة محركات وفتيس مانيوال وأوتوماتيك",
       "قطع غيار بي واي دي الأصلية"
     ],
-    "mapsQuery": "توكيل بي واي دي ولادا - شركة الأمل لتصنيع السيارات (المعادي) القاهرة مصر",
+    "mapsQuery": "توكيل بي واي دي ولادا - شركة الأمل لتصنيع السيارات (المعادي) المعادي القاهرة مصر",
     "lat": 29.935,
     "lng": 31.278,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.935,31.278",
+    "mapsUrl": "https://www.google.com/maps?q=29.935,31.278+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%20%D9%88%D8%A7%D9%8A%20%D8%AF%D9%8A%20%D9%88%D9%84%D8%A7%D8%AF%D8%A7%20-%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%A3%D9%85%D9%84%20%D9%84%D8%AA%D8%B5%D9%86%D9%8A%D8%B9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%28%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.6
   },
   {
@@ -4491,10 +4491,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ضبط زوايا واتزان وحقن وقود وديزل وتكييف",
       "قطع غيار بوش الأصلية بضمان معتمد"
     ],
-    "mapsQuery": "مركز بوش كار سيرفيس الألماني المعتمد (Bosch Car Service) - القطامية (A-part) القاهرة مصر",
+    "mapsQuery": "مركز بوش كار سيرفيس الألماني المعتمد (Bosch Car Service) - القطامية (A-part) القطامية القاهرة مصر",
     "lat": 29.9885,
     "lng": 31.3328,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9885,31.3328",
+    "mapsUrl": "https://www.google.com/maps?q=29.9885,31.3328+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%88%D8%B4%20%D9%83%D8%A7%D8%B1%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20%D8%A7%D9%84%D8%A3%D9%84%D9%85%D8%A7%D9%86%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28Bosch%20Car%20Service%29%20-%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20%28A-part%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.9
   },
   {
@@ -4518,10 +4518,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "صيانة فرامل وعفشة وتكييف",
       "قطع غيار بوش"
     ],
-    "mapsQuery": "مركز بوش كار سيرفيس المعتمد - التجمع الخامس القاهرة مصر",
+    "mapsQuery": "مركز بوش كار سيرفيس المعتمد - التجمع الخامس التجمع الخامس القاهرة مصر",
     "lat": 30.0055,
     "lng": 31.4565,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0055,31.4565",
+    "mapsUrl": "https://www.google.com/maps?q=30.0055,31.4565+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%88%D8%B4%20%D9%83%D8%A7%D8%B1%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4547,11 +4547,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص وضبط زوايا واتزان",
       "قطع غيار معتمدة بالضمان"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - القطامية (شيري وهافال وشانجان) القاهرة مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - القطامية (شيري وهافال وشانجان) القطامية القاهرة مصر",
     "lat": 29.9912,
     "lng": 31.3312,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9912,31.3312"
+    "mapsUrl": "https://www.google.com/maps?q=29.9912,31.3312+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20%28%D8%B4%D9%8A%D8%B1%D9%8A%20%D9%88%D9%87%D8%A7%D9%81%D8%A7%D9%84%20%D9%88%D8%B4%D8%A7%D9%86%D8%AC%D8%A7%D9%86%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mansour_madinaty",
@@ -4575,10 +4575,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "زيوت وفلاتر وتيل",
       "فحص إلكتروني"
     ],
-    "mapsQuery": "مركز المنصور للسيارات للصيانة السريعة - مدينتي والشروق القاهرة مصر",
+    "mapsQuery": "مركز المنصور للسيارات للصيانة السريعة - مدينتي والشروق مدينتي القاهرة مصر",
     "lat": 30.098,
     "lng": 31.625,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.098,31.625",
+    "mapsUrl": "https://www.google.com/maps?q=30.098,31.625+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%84%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9%D8%A9%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%AA%D9%8A%20%D9%88%D8%A7%D9%84%D8%B4%D8%B1%D9%88%D9%82%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -4603,10 +4603,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وكمبيوتر",
       "قطع غيار GM وMG أصلية"
     ],
-    "mapsQuery": "مركز المنصور للسيارات وMG - القطامية (شيل أوت) القاهرة مصر",
+    "mapsQuery": "مركز المنصور للسيارات وMG - القطامية (شيل أوت) القطامية القاهرة مصر",
     "lat": 29.989,
     "lng": 31.336,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.989,31.336",
+    "mapsUrl": "https://www.google.com/maps?q=29.989,31.336+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88MG%20-%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20%28%D8%B4%D9%8A%D9%84%20%D8%A3%D9%88%D8%AA%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -4631,10 +4631,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وكهرباء",
       "قطع غيار أصلية بضمان المنصور"
     ],
-    "mapsQuery": "مركز صيانة المنصور للسيارات - مدينة نصر القاهرة مصر",
+    "mapsQuery": "مركز صيانة المنصور للسيارات - مدينة نصر مدينة نصر القاهرة مصر",
     "lat": 30.065,
     "lng": 31.328,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.065,31.328",
+    "mapsUrl": "https://www.google.com/maps?q=30.065,31.328+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -4658,10 +4658,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "صيانة فتيس أوتوماتيك ومانيوال ومحركات MultiAir",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز عصام وصلاح المعتمد لسيارات فيات وألفا روميو القاهرة مصر",
+    "mapsQuery": "مركز عصام وصلاح المعتمد لسيارات فيات وألفا روميو جسر السويس القاهرة مصر",
     "lat": 30.118,
     "lng": 31.345,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.118,31.345",
+    "mapsUrl": "https://www.google.com/maps?q=30.118,31.345+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B9%D8%B5%D8%A7%D9%85%20%D9%88%D8%B5%D9%84%D8%A7%D8%AD%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%81%D9%8A%D8%A7%D8%AA%20%D9%88%D8%A3%D9%84%D9%81%D8%A7%20%D8%B1%D9%88%D9%85%D9%8A%D9%88%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4685,10 +4685,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "كاوتش بريدجستون وفيرستون أصلي",
       "تغيير تيل وبطاريات"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد (Fit & Fix) - التجمع الخامس القاهرة مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد (Fit & Fix) - التجمع الخامس التجمع الخامس القاهرة مصر",
     "lat": 30.024,
     "lng": 31.442,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.024,31.442",
+    "mapsUrl": "https://www.google.com/maps?q=30.024,31.442+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28Fit%20%26%20Fix%29%20-%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4711,10 +4711,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "إطارات وضبط اتزان وزوايا",
       "فحص فرامل وبطاريات"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - المعادي (تقسيم اللاسلكي) القاهرة مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - المعادي (تقسيم اللاسلكي) المعادي القاهرة مصر",
     "lat": 29.972,
     "lng": 31.288,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.972,31.288",
+    "mapsUrl": "https://www.google.com/maps?q=29.972,31.288+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20%28%D8%AA%D9%82%D8%B3%D9%8A%D9%85%20%D8%A7%D9%84%D9%84%D8%A7%D8%B3%D9%84%D9%83%D9%8A%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4737,10 +4737,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "زيوت وفلاتر وبطاريات",
       "إطارات وميزان كمبيوتر"
     ],
-    "mapsQuery": "مركز فيت آند فيكس المعتمد - مدينة نصر (عباس العقاد) القاهرة مصر",
+    "mapsQuery": "مركز فيت آند فيكس المعتمد - مدينة نصر (عباس العقاد) مدينة نصر القاهرة مصر",
     "lat": 30.054,
     "lng": 31.346,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.054,31.346",
+    "mapsUrl": "https://www.google.com/maps?q=30.054,31.346+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%8A%D8%AA%20%D8%A2%D9%86%D8%AF%20%D9%81%D9%8A%D9%83%D8%B3%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20%28%D8%B9%D8%A8%D8%A7%D8%B3%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%AF%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4764,11 +4764,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص بطاريات السيارات الكهربائية",
       "سمكرة ودهان معتمد وقطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل جيلي مصر - أبو غالي موتورز الشروق (المقر الرئيسي المتكامل 3S Flagship) القاهرة مصر",
+    "mapsQuery": "توكيل جيلي مصر - أبو غالي موتورز الشروق (المقر الرئيسي المتكامل 3S Flagship) الشروق القاهرة مصر",
     "lat": 30.1589,
     "lng": 31.6214,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1589,31.6214"
+    "mapsUrl": "https://www.google.com/maps?q=30.1589,31.6214+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D9%84%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D8%A3%D8%A8%D9%88%20%D8%BA%D8%A7%D9%84%D9%8A%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D8%A7%D9%84%D8%B4%D8%B1%D9%88%D9%82%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%20Flagship%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "honda_futtaim_cairofestival",
@@ -4791,10 +4791,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار هوندا الأصلية بضمان الفطيم"
     ],
-    "mapsQuery": "توكيل هوندا مصر - الفطيم كايرو فيستيفال سيتي القاهرة مصر",
+    "mapsQuery": "توكيل هوندا مصر - الفطيم كايرو فيستيفال سيتي التجمع الخامس القاهرة مصر",
     "lat": 30.0295,
     "lng": 31.4085,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0295,31.4085",
+    "mapsUrl": "https://www.google.com/maps?q=30.0295,31.4085+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%87%D9%88%D9%86%D8%AF%D8%A7%20%D9%85%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%81%D8%B7%D9%8A%D9%85%20%D9%83%D8%A7%D9%8A%D8%B1%D9%88%20%D9%81%D9%8A%D8%B3%D8%AA%D9%8A%D9%81%D8%A7%D9%84%20%D8%B3%D9%8A%D8%AA%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4818,10 +4818,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "زيوت وفلاتر وبوجيهات وتيل",
       "فحص إلكتروني شامل"
     ],
-    "mapsQuery": "غبور كويك سيرفيس للصيانة السريعة - مدينة نصر القاهرة مصر",
+    "mapsQuery": "غبور كويك سيرفيس للصيانة السريعة - مدينة نصر مدينة نصر القاهرة مصر",
     "lat": 30.055,
     "lng": 31.348,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.055,31.348",
+    "mapsUrl": "https://www.google.com/maps?q=30.055,31.348+(%D8%BA%D8%A8%D9%88%D8%B1%20%D9%83%D9%88%D9%8A%D9%83%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20%D9%84%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%B9%D8%A9%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4845,10 +4845,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وعفشة وتكييف",
       "قطع غيار أصلية بضمان السبع"
     ],
-    "mapsQuery": "مركز السبع أوتوموتيف المعتمد - المعادي القاهرة مصر",
+    "mapsQuery": "مركز السبع أوتوموتيف المعتمد - المعادي المعادي القاهرة مصر",
     "lat": 29.981,
     "lng": 31.302,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.981,31.302",
+    "mapsUrl": "https://www.google.com/maps?q=29.981,31.302+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D8%B3%D8%A8%D8%B9%20%D8%A3%D9%88%D8%AA%D9%88%D9%85%D9%88%D8%AA%D9%8A%D9%81%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -4872,10 +4872,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر",
       "قطع غيار موبيس الأصلية"
     ],
-    "mapsQuery": "مركز خدمة هيونداي غبور - القطامية القاهرة مصر",
+    "mapsQuery": "مركز خدمة هيونداي غبور - القطامية القطامية القاهرة مصر",
     "lat": 29.986,
     "lng": 31.334,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.986,31.334",
+    "mapsUrl": "https://www.google.com/maps?q=29.986,31.334+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -4899,10 +4899,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر وبرمجة",
       "قطع غيار جيتور أصلية"
     ],
-    "mapsQuery": "توكيل جيتور القصراوي جروب - محور شنزو آبي (مدينة نصر) القاهرة مصر",
+    "mapsQuery": "توكيل جيتور القصراوي جروب - محور شنزو آبي (مدينة نصر) مدينة نصر القاهرة مصر",
     "lat": 30.048,
     "lng": 31.372,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.048,31.372",
+    "mapsUrl": "https://www.google.com/maps?q=30.048,31.372+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D8%AA%D9%88%D8%B1%20%D8%A7%D9%84%D9%82%D8%B5%D8%B1%D8%A7%D9%88%D9%8A%20%D8%AC%D8%B1%D9%88%D8%A8%20-%20%D9%85%D8%AD%D9%88%D8%B1%20%D8%B4%D9%86%D8%B2%D9%88%20%D8%A2%D8%A8%D9%8A%20%28%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -4927,11 +4927,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل فرامل",
       "قطع غيار وضمان القصراوي الرسمي"
     ],
-    "mapsQuery": "توكيل جيتور وجاك مصر - مجموعة القصراوي المعادي القاهرة مصر",
+    "mapsQuery": "توكيل جيتور وجاك مصر - مجموعة القصراوي المعادي المعادي القاهرة مصر",
     "lat": 29.9789,
     "lng": 31.2912,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9789,31.2912"
+    "mapsUrl": "https://www.google.com/maps?q=29.9789,31.2912+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D8%AA%D9%88%D8%B1%20%D9%88%D8%AC%D8%A7%D9%83%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%20%D8%A7%D9%84%D9%82%D8%B5%D8%B1%D8%A7%D9%88%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_eit_service_7__d8_a7_d9_84_d8",
@@ -4960,8 +4960,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 31.0452,
     "lng": 29.8452,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع العامرية الإسكندرية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.0452,29.8452"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع العامرية العامرية الإسكندرية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.0452,29.8452+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%B1%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9)"
   },
   {
     "id": "kia_eit_service_4__d8_a7_d9_84_d9",
@@ -4990,8 +4990,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.0052,
     "lng": 31.4285,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع التجمع الخامس القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0052,31.4285"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع التجمع الخامس القاهرة الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0052,31.4285+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_eit_service_11__d8_a7_d9_84_d9",
@@ -5020,8 +5020,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.0215,
     "lng": 31.4652,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع التسعين الشمالي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0215,31.4652"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع التسعين الشمالي القاهرة الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0215,31.4652+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A7%D9%84%D8%AA%D8%B3%D8%B9%D9%8A%D9%86%20%D8%A7%D9%84%D8%B4%D9%85%D8%A7%D9%84%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_eit_service_12__d8_a7_d9_84_d9",
@@ -5050,8 +5050,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.1025,
     "lng": 31.6256,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع مدينتي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1025,31.6256"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع مدينتي مدينتي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1025,31.6256+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D9%85%D8%AF%D9%8A%D9%86%D8%AA%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_eit_service_2__d8_a7_d9_84_d9",
@@ -5080,8 +5080,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 29.9865,
     "lng": 31.3325,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع القطامية القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9865,31.3325"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع القطامية القطامية القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9865,31.3325+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_eit_service_3__d8_a7_d9_84_d9",
@@ -5110,8 +5110,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.0256,
     "lng": 31.2785,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع المقطم القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0256,31.2785"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع المقطم المقطم القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0256,31.2785+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%A7%D9%84%D9%85%D9%82%D8%B7%D9%85%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_eit_service_10__d8_b4_d9_8a_d8",
@@ -5140,8 +5140,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.1065,
     "lng": 31.3785,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع شيراتون القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1065,31.3785"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع شيراتون مصر الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1065,31.3785+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%B4%D9%8A%D8%B1%D8%A7%D8%AA%D9%88%D9%86%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_eit_service_1__d9_85_d8_b5_d8",
@@ -5170,8 +5170,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.9,
     "lat": 30.0925,
     "lng": 31.3185,
-    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع روكسي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0925,31.3185"
+    "mapsQuery": "توكيل كيا إيجيبت (EIT) - فرع روكسي مصر الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0925,31.3185+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%83%D9%8A%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28EIT%29%20-%20%D9%81%D8%B1%D8%B9%20%D8%B1%D9%88%D9%83%D8%B3%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_auth_service_3_gis_20_d8_b7_d8",
@@ -5199,8 +5199,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.1652,
     "lng": 31.4852,
-    "mapsQuery": "مركز كيا المعتمد: GIS طريق الإسماعيلية القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1652,31.4852"
+    "mapsQuery": "مركز كيا المعتمد: GIS طريق الإسماعيلية طريق الإسماعيلية القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1652,31.4852+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20GIS%20%D8%B7%D8%B1%D9%8A%D9%82%20%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_auth_service_4_glow_20_d8_a7_d",
@@ -5228,8 +5228,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.0285,
     "lng": 31.2295,
-    "mapsQuery": "مركز كيا المعتمد: Glow المنيل القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0285,31.2295"
+    "mapsQuery": "مركز كيا المعتمد: Glow المنيل المنيل القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0285,31.2295+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20Glow%20%D8%A7%D9%84%D9%85%D9%86%D9%8A%D9%84%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_auth_service_2__d8_a7_d9_84_d9",
@@ -5257,8 +5257,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 29.9725,
     "lng": 31.3025,
-    "mapsQuery": "مركز كيا المعتمد: السبع أوتو سيرفيس - المعادي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9725,31.3025"
+    "mapsQuery": "مركز كيا المعتمد: السبع أوتو سيرفيس - المعادي المعادي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9725,31.3025+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B3%D8%A8%D8%B9%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kia_auth_service_1__d9_85_d8_b5_d8",
@@ -5286,8 +5286,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.0885,
     "lng": 31.3652,
-    "mapsQuery": "مركز كيا المعتمد: القاهرة أوتو - طريق السويس القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0885,31.3652"
+    "mapsQuery": "مركز كيا المعتمد: القاهرة أوتو - طريق السويس مصر الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0885,31.3652+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%20%D8%A3%D9%88%D8%AA%D9%88%20-%20%D8%B7%D8%B1%D9%8A%D9%82%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3)"
   },
   {
     "id": "kia_dealer_sales_1__d8_a7_d9_84_d9",
@@ -5314,8 +5314,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.9652,
     "lng": 31.2852,
-    "mapsQuery": "موزع كيا المعتمد: المتحدة القصراوي - المعادي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9652,31.2852"
+    "mapsQuery": "موزع كيا المعتمد: المتحدة القصراوي - المعادي المعادي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9652,31.2852+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF%D8%A9%20%D8%A7%D9%84%D9%82%D8%B5%D8%B1%D8%A7%D9%88%D9%8A%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mansour_mg_nasr_city",
@@ -5340,11 +5340,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل فرامل",
       "قطع غيار أصلية وكفالة المنصور"
     ],
-    "mapsQuery": "توكيل المنصور للسيارات - مدينة نصر (شارع الطيران) القاهرة مصر",
+    "mapsQuery": "توكيل المنصور للسيارات - مدينة نصر (شارع الطيران) مدينة نصر القاهرة مصر",
     "lat": 30.0512,
     "lng": 31.3321,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0512,31.3321"
+    "mapsUrl": "https://www.google.com/maps?q=30.0512,31.3321+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20%28%D8%B4%D8%A7%D8%B1%D8%B9%20%D8%A7%D9%84%D8%B7%D9%8A%D8%B1%D8%A7%D9%86%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mercedes_star_national_kattameya",
@@ -5366,11 +5366,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص أنظمة التعليق الهوائي Airmatic وبرمجة المحرك والجيربوكس 9G-Tronic",
       "قطع غيار أصلية وضمان شامل"
     ],
-    "mapsQuery": "توكيل مرسيدس-بنز مصر - ستار ناشيونال القطامية القاهرة مصر",
+    "mapsQuery": "توكيل مرسيدس-بنز مصر - ستار ناشيونال القطامية القطامية القاهرة مصر",
     "lat": 29.9915,
     "lng": 31.3412,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9915,31.3412"
+    "mapsUrl": "https://www.google.com/maps?q=29.9915,31.3412+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20%D9%85%D8%B5%D8%B1%20-%20%D8%B3%D8%AA%D8%A7%D8%B1%20%D9%86%D8%A7%D8%B4%D9%8A%D9%88%D9%86%D8%A7%D9%84%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mercedes_cna_katameya",
@@ -5393,10 +5393,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان بالليزر",
       "قطع غيار مرسيدس أصلية مستوردة بضمان"
     ],
-    "mapsQuery": "مرسيدس-بنز القاهرة الوطنية للسيارات (CNA) - القطامية القاهرة مصر",
+    "mapsQuery": "مرسيدس-بنز القاهرة الوطنية للسيارات (CNA) - القطامية القطامية القاهرة مصر",
     "lat": 29.987,
     "lng": 31.332,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.987,31.332",
+    "mapsUrl": "https://www.google.com/maps?q=29.987,31.332+(%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%20%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%28CNA%29%20-%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9)",
     "rating": 4.9
   },
   {
@@ -5419,10 +5419,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر وبرمجة",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مرسيدس-بنز ستار الوطنية للسيارات (SNA) - التجمع الخامس القاهرة مصر",
+    "mapsQuery": "مرسيدس-بنز ستار الوطنية للسيارات (SNA) - التجمع الخامس التجمع الخامس القاهرة مصر",
     "lat": 30.008,
     "lng": 31.459,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.008,31.459",
+    "mapsUrl": "https://www.google.com/maps?q=30.008,31.459+(%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20%D8%B3%D8%AA%D8%A7%D8%B1%20%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A%D8%A9%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%28SNA%29%20-%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -5445,10 +5445,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر Xentry وبرمجة كنترول أونلاين",
       "صيانة فتيس هيدروليك وعفشة Airmatic"
     ],
-    "mapsQuery": "مركز شتوتجارت المتخصص المعتمد لسيارات مرسيدس-بنز القاهرة مصر",
+    "mapsQuery": "مركز شتوتجارت المتخصص المعتمد لسيارات مرسيدس-بنز التجمع الخامس القاهرة مصر",
     "lat": 30.0065,
     "lng": 31.457,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0065,31.457",
+    "mapsUrl": "https://www.google.com/maps?q=30.0065,31.457+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B4%D8%AA%D9%88%D8%AA%D8%AC%D8%A7%D8%B1%D8%AA%20%D8%A7%D9%84%D9%85%D8%AA%D8%AE%D8%B5%D8%B5%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%85%D8%B1%D8%B3%D9%8A%D8%AF%D8%B3-%D8%A8%D9%86%D8%B2%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -5477,8 +5477,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.0592,
     "lng": 31.3315,
-    "mapsQuery": "أبو حتة تريد (العالمية للتجارة والتوكيلات) - موزع ميتسوبيشي معتمد (مدينة نصر) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0592,31.3315"
+    "mapsQuery": "أبو حتة تريد (العالمية للتجارة والتوكيلات) - موزع ميتسوبيشي معتمد (مدينة نصر) مدينة نصر القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0592,31.3315+(%D8%A3%D8%A8%D9%88%20%D8%AD%D8%AA%D8%A9%20%D8%AA%D8%B1%D9%8A%D8%AF%20%28%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D9%88%D8%A7%D9%84%D8%AA%D9%88%D9%83%D9%8A%D9%84%D8%A7%D8%AA%29%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_elrawas_parts_downtown",
@@ -5505,8 +5505,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.0519,
     "lng": 31.2415,
-    "mapsQuery": "الرواس - موزع قطع غيار ميتسوبيشي معتمد (وسط البلد) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0519,31.2415"
+    "mapsQuery": "الرواس - موزع قطع غيار ميتسوبيشي معتمد (وسط البلد) وسط البلد القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0519,31.2415+(%D8%A7%D9%84%D8%B1%D9%88%D8%A7%D8%B3%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%82%D8%B7%D8%B9%20%D8%BA%D9%8A%D8%A7%D8%B1%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D9%88%D8%B3%D8%B7%20%D8%A7%D9%84%D8%A8%D9%84%D8%AF%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_saudi_obour_3s",
@@ -5535,8 +5535,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.1795,
     "lng": 31.4589,
-    "mapsQuery": "السعودي جروب (CIG) - مركز ميتسوبيشي المعتمد 3S (العبور) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1795,31.4589"
+    "mapsQuery": "السعودي جروب (CIG) - مركز ميتسوبيشي المعتمد 3S (العبور) العبور القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1795,31.4589+(%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%20%D8%AC%D8%B1%D9%88%D8%A8%20%28CIG%29%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%203S%20%28%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_saudi_parts_herfeyeen",
@@ -5563,8 +5563,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.1601,
     "lng": 31.3975,
-    "mapsQuery": "السعودي جروب (CIG) - منفذ قطع غيار ميتسوبيشي معتمد (الحرفيين) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1601,31.3975"
+    "mapsQuery": "السعودي جروب (CIG) - منفذ قطع غيار ميتسوبيشي معتمد (الحرفيين) مدينة السلام القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1601,31.3975+(%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%20%D8%AC%D8%B1%D9%88%D8%A8%20%28CIG%29%20-%20%D9%85%D9%86%D9%81%D8%B0%20%D9%82%D8%B7%D8%B9%20%D8%BA%D9%8A%D8%A7%D8%B1%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D8%AD%D8%B1%D9%81%D9%8A%D9%8A%D9%86%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_almasria_heliopolis",
@@ -5592,8 +5592,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.0884,
     "lng": 31.3341,
-    "mapsQuery": "الشركة المصرية للسيارات - موزع ميتسوبيشي معتمد (مصر الجديدة) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0884,31.3341"
+    "mapsQuery": "الشركة المصرية للسيارات - موزع ميتسوبيشي معتمد (مصر الجديدة) مصر الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0884,31.3341+(%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D9%85%D8%B5%D8%B1%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_alhoda_parts_maadi",
@@ -5620,8 +5620,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.9678,
     "lng": 31.3094,
-    "mapsQuery": "الهدى للتجارة - موزع قطع غيار ميتسوبيشي معتمد (المعادي) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9678,31.3094"
+    "mapsQuery": "الهدى للتجارة - موزع قطع غيار ميتسوبيشي معتمد (المعادي) المعادي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9678,31.3094+(%D8%A7%D9%84%D9%87%D8%AF%D9%89%20%D9%84%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%82%D8%B7%D8%B9%20%D8%BA%D9%8A%D8%A7%D8%B1%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_bauto_sheraton",
@@ -5648,8 +5648,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.1068,
     "lng": 31.3789,
-    "mapsQuery": "بي أوتو (B Auto) - موزع ميتسوبيشي معتمد (شيراتون) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1068,31.3789"
+    "mapsQuery": "بي أوتو (B Auto) - موزع ميتسوبيشي معتمد (شيراتون) مصر الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1068,31.3789+(%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%28B%20Auto%29%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%B4%D9%8A%D8%B1%D8%A7%D8%AA%D9%88%D9%86%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_diamond_newcairo_fuji_3s",
@@ -5678,8 +5678,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 29.9885,
     "lng": 31.4398,
-    "mapsQuery": "ميتسوبيشي دايموند موتورز - القاهرة الجديدة فوجي (3S) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9885,31.4398"
+    "mapsQuery": "ميتسوبيشي دايموند موتورز - القاهرة الجديدة فوجي (3S) القاهرة الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9885,31.4398+(%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%AF%D8%A7%D9%8A%D9%85%D9%88%D9%86%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20%D9%81%D9%88%D8%AC%D9%8A%20%283S%29)"
   },
   {
     "id": "mitsubishi_diamond_maadi_autostrad_3s",
@@ -5708,8 +5708,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 29.9721,
     "lng": 31.2914,
-    "mapsQuery": "ميتسوبيشي دايموند موتورز - المعادي (3S) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9721,31.2914"
+    "mapsQuery": "ميتسوبيشي دايموند موتورز - المعادي (3S) المعادي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9721,31.2914+(%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%AF%D8%A7%D9%8A%D9%85%D9%88%D9%86%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20%283S%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_diamond_kattameya_showroom",
@@ -5737,8 +5737,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 29.9882,
     "lng": 31.3325,
-    "mapsQuery": "ميتسوبيشي دايموند موتورز - معرض القطامية القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9882,31.3325"
+    "mapsQuery": "ميتسوبيشي دايموند موتورز - معرض القطامية القطامية القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9882,31.3325+(%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%AF%D8%A7%D9%8A%D9%85%D9%88%D9%86%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D9%85%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_diamond_parts_meriland",
@@ -5765,8 +5765,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.1042,
     "lng": 31.3287,
-    "mapsQuery": "ميتسوبيشي دايموند موتورز - منفذ قطع الغيار المعتمد (جسر السويس) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1042,31.3287"
+    "mapsQuery": "ميتسوبيشي دايموند موتورز - منفذ قطع الغيار المعتمد (جسر السويس) مصر الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1042,31.3287+(%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%AF%D8%A7%D9%8A%D9%85%D9%88%D9%86%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D9%85%D9%86%D9%81%D8%B0%20%D9%82%D8%B7%D8%B9%20%D8%A7%D9%84%D8%BA%D9%8A%D8%A7%D8%B1%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%AC%D8%B3%D8%B1%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "mitsubishi_diamond_parts_nasrcity",
@@ -5793,8 +5793,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.0468,
     "lng": 31.3489,
-    "mapsQuery": "ميتسوبيشي دايموند موتورز - منفذ قطع الغيار المعتمد (مدينة نصر) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0468,31.3489"
+    "mapsQuery": "ميتسوبيشي دايموند موتورز - منفذ قطع الغيار المعتمد (مدينة نصر) مدينة نصر القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.0468,31.3489+(%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%AF%D8%A7%D9%8A%D9%85%D9%88%D9%86%D8%AF%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D9%85%D9%86%D9%81%D8%B0%20%D9%82%D8%B7%D8%B9%20%D8%A7%D9%84%D8%BA%D9%8A%D8%A7%D8%B1%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "nissan_new_cairo_tagamoa",
@@ -5817,11 +5817,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "قطع غيار أصلية وزيوت نيسان المعتمدة",
       "ضمان الوكيل"
     ],
-    "mapsQuery": "توكيل نيسان مصر - القاهرة الجديدة (التجمع الأول) القاهرة مصر",
+    "mapsQuery": "توكيل نيسان مصر - القاهرة الجديدة (التجمع الأول) القاهرة الجديدة القاهرة مصر",
     "lat": 30.0489,
     "lng": 31.4312,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0489,31.4312"
+    "mapsUrl": "https://www.google.com/maps?q=30.0489,31.4312+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D9%85%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20%28%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%A3%D9%88%D9%84%29)"
   },
   {
     "id": "nissan_autoegypt_tagamoa",
@@ -5844,10 +5844,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز خدمة نيسان أوتو إيجيبت المعتمد - التجمع الخامس القاهرة مصر",
+    "mapsQuery": "مركز خدمة نيسان أوتو إيجيبت المعتمد - التجمع الخامس التجمع الخامس القاهرة مصر",
     "lat": 30.021,
     "lng": 31.435,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.021,31.435",
+    "mapsUrl": "https://www.google.com/maps?q=30.021,31.435+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -5870,10 +5870,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وعفشة وتكييف",
       "قطع غيار نيسان أصلية بضمان"
     ],
-    "mapsQuery": "مركز خدمة نيسان السبع المعتمد - المعادي القاهرة مصر",
+    "mapsQuery": "مركز خدمة نيسان السبع المعتمد - المعادي المعادي القاهرة مصر",
     "lat": 29.9815,
     "lng": 31.3025,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9815,31.3025",
+    "mapsUrl": "https://www.google.com/maps?q=29.9815,31.3025+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D8%A7%D9%84%D8%B3%D8%A8%D8%B9%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -5896,10 +5896,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وكهرباء",
       "قطع غيار نيسان الأصلية"
     ],
-    "mapsQuery": "مركز خدمة نيسان المعتمد - مدينة نصر القاهرة مصر",
+    "mapsQuery": "مركز خدمة نيسان المعتمد - مدينة نصر مدينة نصر القاهرة مصر",
     "lat": 30.056,
     "lng": 31.352,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.056,31.352",
+    "mapsUrl": "https://www.google.com/maps?q=30.056,31.352+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -5922,10 +5922,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز صيانة نيسان المعتمد - النزهة والهايكستب القاهرة مصر",
+    "mapsQuery": "مركز صيانة نيسان المعتمد - النزهة والهايكستب النزهة الجديدة القاهرة مصر",
     "lat": 30.128,
     "lng": 31.378,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.128,31.378",
+    "mapsUrl": "https://www.google.com/maps?q=30.128,31.378+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D9%86%D8%B2%D9%87%D8%A9%20%D9%88%D8%A7%D9%84%D9%87%D8%A7%D9%8A%D9%83%D8%B3%D8%AA%D8%A8%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -5950,10 +5950,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "صيانة دورات التبريد والمحركات التيربو",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز أوبل هاوس المتخصص المعتمد (Opel House) القاهرة مصر",
+    "mapsQuery": "مركز أوبل هاوس المتخصص المعتمد (Opel House) مدينة نصر القاهرة مصر",
     "lat": 30.052,
     "lng": 31.354,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.052,31.354",
+    "mapsUrl": "https://www.google.com/maps?q=30.052,31.354+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A3%D9%88%D8%A8%D9%84%20%D9%87%D8%A7%D9%88%D8%B3%20%D8%A7%D9%84%D9%85%D8%AA%D8%AE%D8%B5%D8%B5%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28Opel%20House%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -5977,11 +5977,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "كشف كمبيوتر Diagbox المعتمد",
       "قطع غيار أصلية بالضمان"
     ],
-    "mapsQuery": "توكيل بيجو مصر - المنصور مدينة نصر (المركز المتكامل 3S) القاهرة مصر",
+    "mapsQuery": "توكيل بيجو مصر - المنصور مدينة نصر (المركز المتكامل 3S) مدينة نصر القاهرة مصر",
     "lat": 30.0489,
     "lng": 31.3289,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0489,31.3289"
+    "mapsUrl": "https://www.google.com/maps?q=30.0489,31.3289+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20%28%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "peugeot_mansco_tagamoa",
@@ -6003,10 +6003,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا ومحركات PureTech وتيربو",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز بيجو مانسكو المعتمد - التجمع الثالث وشمال القطامية القاهرة مصر",
+    "mapsQuery": "مركز بيجو مانسكو المعتمد - التجمع الثالث وشمال القطامية التجمع الخامس القاهرة مصر",
     "lat": 29.992,
     "lng": 31.395,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.992,31.395",
+    "mapsUrl": "https://www.google.com/maps?q=29.992,31.395+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%A7%D9%86%D8%B3%D9%83%D9%88%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%84%D8%AB%20%D9%88%D8%B4%D9%85%D8%A7%D9%84%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -6029,10 +6029,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز بيجو مانسكو المعتمد - مدينة نصر القاهرة مصر",
+    "mapsQuery": "مركز بيجو مانسكو المعتمد - مدينة نصر مدينة نصر القاهرة مصر",
     "lat": 30.051,
     "lng": 31.312,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.051,31.312",
+    "mapsUrl": "https://www.google.com/maps?q=30.051,31.312+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%8A%D8%AC%D9%88%20%D9%85%D8%A7%D9%86%D8%B3%D9%83%D9%88%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -6056,11 +6056,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن كمبيوتر معتمد",
       "قطع غيار رينو أصلية بالضمان وكفالة الوكيل"
     ],
-    "mapsQuery": "توكيل رينو مصر - EIM المقطم (المقر الرئيسي المتكامل 3S) القاهرة مصر",
+    "mapsQuery": "توكيل رينو مصر - EIM المقطم (المقر الرئيسي المتكامل 3S) المقطم القاهرة مصر",
     "lat": 30.0124,
     "lng": 31.3056,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0124,31.3056"
+    "mapsUrl": "https://www.google.com/maps?q=30.0124,31.3056+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B1%D9%8A%D9%86%D9%88%20%D9%85%D8%B5%D8%B1%20-%20EIM%20%D8%A7%D9%84%D9%85%D9%82%D8%B7%D9%85%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "renault_eim_mokatam",
@@ -6083,10 +6083,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار رينو الأصلية بضمان EIM"
     ],
-    "mapsQuery": "توكيل رينو مصر - EIM المقطم (المقر الرئيسي) القاهرة مصر",
+    "mapsQuery": "توكيل رينو مصر - EIM المقطم (المقر الرئيسي) المقطم القاهرة مصر",
     "lat": 30.0215,
     "lng": 31.2685,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0215,31.2685",
+    "mapsUrl": "https://www.google.com/maps?q=30.0215,31.2685+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B1%D9%8A%D9%86%D9%88%20%D9%85%D8%B5%D8%B1%20-%20EIM%20%D8%A7%D9%84%D9%85%D9%82%D8%B7%D9%85%20%28%D8%A7%D9%84%D9%85%D9%82%D8%B1%20%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -6111,10 +6111,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "صيانة فتيس EDC وأوتوماتيك",
       "قطع غيار فرنسية أصلية"
     ],
-    "mapsQuery": "مركز الفرنسية المتخصص لسيارات رينو وبيجو القاهرة مصر",
+    "mapsQuery": "مركز الفرنسية المتخصص لسيارات رينو وبيجو المعادي القاهرة مصر",
     "lat": 29.965,
     "lng": 31.289,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.965,31.289",
+    "mapsUrl": "https://www.google.com/maps?q=29.965,31.289+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%81%D8%B1%D9%86%D8%B3%D9%8A%D8%A9%20%D8%A7%D9%84%D9%85%D8%AA%D8%AE%D8%B5%D8%B5%20%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%B1%D9%8A%D9%86%D9%88%20%D9%88%D8%A8%D9%8A%D8%AC%D9%88%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -6137,10 +6137,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص كمبيوتر Clip",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز رينو EIM المعتمد - القطامية القاهرة مصر",
+    "mapsQuery": "مركز رينو EIM المعتمد - القطامية القطامية القاهرة مصر",
     "lat": 29.987,
     "lng": 31.335,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.987,31.335",
+    "mapsUrl": "https://www.google.com/maps?q=29.987,31.335+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B1%D9%8A%D9%86%D9%88%20EIM%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -6164,11 +6164,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل وشمعات إشعال",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل سكودا مصر - كيان إيجيبت القطامية القاهرة مصر",
+    "mapsQuery": "توكيل سكودا مصر - كيان إيجيبت القطامية القطامية القاهرة مصر",
     "lat": 29.9882,
     "lng": 31.3345,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9882,31.3345"
+    "mapsUrl": "https://www.google.com/maps?q=29.9882,31.3345+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%85%D8%B5%D8%B1%20-%20%D9%83%D9%8A%D8%A7%D9%86%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "kayan_katameya",
@@ -6192,10 +6192,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "صيانة فتيس DSG وتيربو TSI",
       "قطع غيار أصلية مستوردة بضمان"
     ],
-    "mapsQuery": "توكيل سكودا وسيات مصر - كيان إيجيبت (القطامية) القاهرة مصر",
+    "mapsQuery": "توكيل سكودا وسيات مصر - كيان إيجيبت (القطامية) القطامية القاهرة مصر",
     "lat": 29.9875,
     "lng": 31.333,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9875,31.333",
+    "mapsUrl": "https://www.google.com/maps?q=29.9875,31.333+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%88%D8%B3%D9%8A%D8%A7%D8%AA%20%D9%85%D8%B5%D8%B1%20-%20%D9%83%D9%8A%D8%A7%D9%86%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20%28%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.8
   },
   {
@@ -6222,10 +6222,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص وبرمجة ODIS أونلاين",
       "قطع غيار أصلية ألمانية"
     ],
-    "mapsQuery": "مركز VAG جروب المتخصص المعتمد لسيارات سكودا وسيات وفولكس القاهرة مصر",
+    "mapsQuery": "مركز VAG جروب المتخصص المعتمد لسيارات سكودا وسيات وفولكس التجمع الخامس القاهرة مصر",
     "lat": 30.006,
     "lng": 31.456,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.006,31.456",
+    "mapsUrl": "https://www.google.com/maps?q=30.006,31.456+(%D9%85%D8%B1%D9%83%D8%B2%20VAG%20%D8%AC%D8%B1%D9%88%D8%A8%20%D8%A7%D9%84%D9%85%D8%AA%D8%AE%D8%B5%D8%B5%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%88%D8%B3%D9%8A%D8%A7%D8%AA%20%D9%88%D9%81%D9%88%D9%84%D9%83%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.9
   },
   {
@@ -6249,10 +6249,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وعفشة وتكييف",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز زوام المعتمد لسكودا وسيات - المعادي القاهرة مصر",
+    "mapsQuery": "مركز زوام المعتمد لسكودا وسيات - المعادي المعادي القاهرة مصر",
     "lat": 29.9805,
     "lng": 31.3015,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9805,31.3015",
+    "mapsUrl": "https://www.google.com/maps?q=29.9805,31.3015+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B2%D9%88%D8%A7%D9%85%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%D9%84%D8%B3%D9%83%D9%88%D8%AF%D8%A7%20%D9%88%D8%B3%D9%8A%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -6276,11 +6276,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير سيور وزيوت وفلاتر وتيل فرامل",
       "قطع غيار معتمدة بالضمان"
     ],
-    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز القطامية القاهرة مصر",
+    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز القطامية القطامية القاهرة مصر",
     "lat": 29.9892,
     "lng": 31.3284,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9892,31.3284"
+    "mapsUrl": "https://www.google.com/maps?q=29.9892,31.3284+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "suzuki_modern_heliopolis",
@@ -6303,11 +6303,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "كشف كمبيوتر وكهرباء",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز مصر الجديدة القاهرة مصر",
+    "mapsQuery": "توكيل سوزوكي مصر - مودرن موتورز مصر الجديدة مصر الجديدة القاهرة مصر",
     "lat": 30.0894,
     "lng": 31.3392,
     "rating": 4.7,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.0894,31.3392"
+    "mapsUrl": "https://www.google.com/maps?q=30.0894,31.3392+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D9%85%D8%B5%D8%B1%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "suzuki_modern_nozha",
@@ -6329,10 +6329,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وكهرباء",
       "قطع غيار سوزوكي الأصلية"
     ],
-    "mapsQuery": "مركز صيانة سوزوكي مودرن موتورز - النزهة والهايكستب القاهرة مصر",
+    "mapsQuery": "مركز صيانة سوزوكي مودرن موتورز - النزهة والهايكستب النزهة الجديدة القاهرة مصر",
     "lat": 30.1285,
     "lng": 31.3785,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1285,31.3785",
+    "mapsUrl": "https://www.google.com/maps?q=30.1285,31.3785+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%B3%D9%88%D8%B2%D9%88%D9%83%D9%8A%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D9%86%D8%B2%D9%87%D8%A9%20%D9%88%D8%A7%D9%84%D9%87%D8%A7%D9%8A%D9%83%D8%B3%D8%AA%D8%A8%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)",
     "rating": 4.7
   },
   {
@@ -6363,8 +6363,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.043406,
     "lng": 31.211321,
-    "mapsQuery": "تويوتا إيجيبت - الدقي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.043406,31.211321"
+    "mapsQuery": "تويوتا إيجيبت - الدقي الدقي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.043406,31.211321+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D8%AF%D9%82%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_12_toyota_egypt_el_abaseya",
@@ -6393,8 +6393,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.063367,
     "lng": 31.281823,
-    "mapsQuery": "تويوتا إيجيبت - العباسية القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.063367,31.281823"
+    "mapsQuery": "تويوتا إيجيبت - العباسية العباسية القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.063367,31.281823+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D8%B9%D8%A8%D8%A7%D8%B3%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_71_toyota_egypt_maadi",
@@ -6422,8 +6422,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 29.992668,
     "lng": 31.284664,
-    "mapsQuery": "تويوتا إيجيبت - المعادي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.992668,31.284664"
+    "mapsQuery": "تويوتا إيجيبت - المعادي المعادي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.992668,31.284664+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_19_toyota_egypt_gesr_al_suez",
@@ -6449,8 +6449,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.142906,
     "lng": 31.387696,
-    "mapsQuery": "تويوتا إيجيبت - جسر السويس القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.142906,31.387696"
+    "mapsQuery": "تويوتا إيجيبت - جسر السويس جسر السويس القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.142906,31.387696+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%AC%D8%B3%D8%B1%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_72_toyota_egypt_joseph_tito",
@@ -6478,8 +6478,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.135823,
     "lng": 31.373294,
-    "mapsQuery": "تويوتا إيجيبت - جوزيف تيتو القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.135823,31.373294"
+    "mapsQuery": "تويوتا إيجيبت - جوزيف تيتو جوزيف تيتو القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.135823,31.373294+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%AC%D9%88%D8%B2%D9%8A%D9%81%20%D8%AA%D9%8A%D8%AA%D9%88%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_17_toyota_egypt_cairo_festival_city",
@@ -6507,8 +6507,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.029825,
     "lng": 31.404866,
-    "mapsQuery": "تويوتا إيجيبت - كايرو فيستيفال القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.029825,31.404866"
+    "mapsQuery": "تويوتا إيجيبت - كايرو فيستيفال كايرو فيستيفال القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.029825,31.404866+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D9%83%D8%A7%D9%8A%D8%B1%D9%88%20%D9%81%D9%8A%D8%B3%D8%AA%D9%8A%D9%81%D8%A7%D9%84%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_93_toyota_egypt_lexus_branch",
@@ -6537,8 +6537,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.029615,
     "lng": 31.404366,
-    "mapsQuery": "تويوتا إيجيبت - لكزس ايجيبت - فرع القاهرة الجديدة القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.029615,31.404366"
+    "mapsQuery": "تويوتا إيجيبت - لكزس ايجيبت - فرع القاهرة الجديدة فرع القاهرة الجديدة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.029615,31.404366+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D9%84%D9%83%D8%B2%D8%B3%20%D8%A7%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D9%81%D8%B1%D8%B9%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9)"
   },
   {
     "id": "toyota_loc_56_toyota_egypt_madinaty",
@@ -6566,8 +6566,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.101446,
     "lng": 31.57423,
-    "mapsQuery": "تويوتا إيجيبت - مدينتي القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.101446,31.57423"
+    "mapsQuery": "تويوتا إيجيبت - مدينتي مدينتي القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.101446,31.57423+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%AA%D9%8A%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_42_amg_motors",
@@ -6595,8 +6595,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.984699,
     "lng": 31.357418,
-    "mapsQuery": "موزع تويوتا المعتمد: أ.أم.جي موتورز القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.984699,31.357418"
+    "mapsQuery": "موزع تويوتا المعتمد: أ.أم.جي موتورز القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.984699,31.357418+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3.%D8%A3%D9%85.%D8%AC%D9%8A%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_75_auto_drive",
@@ -6621,8 +6621,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.078821,
     "lng": 31.312137,
-    "mapsQuery": "موزع تويوتا المعتمد: أوتو درايف القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.078821,31.312137"
+    "mapsQuery": "موزع تويوتا المعتمد: أوتو درايف القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.078821,31.312137+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%AF%D8%B1%D8%A7%D9%8A%D9%81%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_94_argenza",
@@ -6647,8 +6647,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.061492,
     "lng": 31.362611,
-    "mapsQuery": "موزع تويوتا المعتمد: ارجينزا القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.061492,31.362611"
+    "mapsQuery": "موزع تويوتا المعتمد: ارجينزا القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.061492,31.362611+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D8%B1%D8%AC%D9%8A%D9%86%D8%B2%D8%A7%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_65_gam",
@@ -6676,8 +6676,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.974924,
     "lng": 31.378838,
-    "mapsQuery": "موزع تويوتا المعتمد: الشركة العالمية لصيانة السيارات (GAM) القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.974924,31.378838"
+    "mapsQuery": "موزع تويوتا المعتمد: الشركة العالمية لصيانة السيارات (GAM) القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.974924,31.378838+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9%20%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%28GAM%29%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_29_united_co_for_cars",
@@ -6702,8 +6702,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.067297,
     "lng": 31.196548,
-    "mapsQuery": "موزع تويوتا المعتمد: الشركة المتحدة لتجارة السيارات القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.067297,31.196548"
+    "mapsQuery": "موزع تويوتا المعتمد: الشركة المتحدة لتجارة السيارات القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.067297,31.196548+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF%D8%A9%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_47_perfect_car_toyota_al_rehab",
@@ -6729,8 +6729,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.069739,
     "lng": 31.519445,
-    "mapsQuery": "موزع تويوتا المعتمد: تويوتا الرحاب - برفكت كار القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.069739,31.519445"
+    "mapsQuery": "موزع تويوتا المعتمد: تويوتا الرحاب - برفكت كار برفكت كار القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.069739,31.519445+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D8%B1%D8%AD%D8%A7%D8%A8%20-%20%D8%A8%D8%B1%D9%81%D9%83%D8%AA%20%D9%83%D8%A7%D8%B1%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_41_deals_automotive",
@@ -6755,8 +6755,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.973854,
     "lng": 31.280506,
-    "mapsQuery": "موزع تويوتا المعتمد: ديلز اوتوموتيف للسيارات القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.973854,31.280506"
+    "mapsQuery": "موزع تويوتا المعتمد: ديلز اوتوموتيف للسيارات القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.973854,31.280506+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%AF%D9%8A%D9%84%D8%B2%20%D8%A7%D9%88%D8%AA%D9%88%D9%85%D9%88%D8%AA%D9%8A%D9%81%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_74_classic_service",
@@ -6781,8 +6781,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.061492,
     "lng": 31.362611,
-    "mapsQuery": "موزع تويوتا المعتمد: كلاسيك سيرفيس القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.061492,31.362611"
+    "mapsQuery": "موزع تويوتا المعتمد: كلاسيك سيرفيس س القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.061492,31.362611+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%83%D9%84%D8%A7%D8%B3%D9%8A%D9%83%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_81_el_yousef_co",
@@ -6807,8 +6807,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 27.720494,
     "lng": 30.748161,
-    "mapsQuery": "موزع تويوتا المعتمد: مؤسسة اليوسف المنيا مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.720494,30.748161"
+    "mapsQuery": "موزع تويوتا المعتمد: مؤسسة اليوسف ملوي المنيا مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.720494,30.748161+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%85%D8%A4%D8%B3%D8%B3%D8%A9%20%D8%A7%D9%84%D9%8A%D9%88%D8%B3%D9%81%20-%20%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7)"
   },
   {
     "id": "toyota_loc_46_toyota_el_herafeyeen_center",
@@ -6834,8 +6834,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.15085,
     "lng": 31.40295,
-    "mapsQuery": "موزع تويوتا المعتمد: مركز تويوتا الحرفيين القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.15085,31.40295"
+    "mapsQuery": "موزع تويوتا المعتمد: مركز تويوتا الحرفيين ين القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.15085,31.40295+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D8%AD%D8%B1%D9%81%D9%8A%D9%8A%D9%86%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_34_newhigh_motors",
@@ -6860,8 +6860,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.087812,
     "lng": 31.336464,
-    "mapsQuery": "موزع تويوتا المعتمد: نيوهاي موتورز القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.087812,31.336464"
+    "mapsQuery": "موزع تويوتا المعتمد: نيوهاي موتورز القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.087812,31.336464+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%86%D9%8A%D9%88%D9%87%D8%A7%D9%8A%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_32_wally_auto",
@@ -6886,8 +6886,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.087393,
     "lng": 31.300588,
-    "mapsQuery": "موزع تويوتا المعتمد: والي اوتو القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.087393,31.300588"
+    "mapsQuery": "موزع تويوتا المعتمد: والي اوتو القاهرة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.087393,31.300588+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%88%D8%A7%D9%84%D9%8A%20%D8%A7%D9%88%D8%AA%D9%88%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_76_we_fix_car_lounge",
@@ -6913,8 +6913,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.115627,
     "lng": 31.366389,
-    "mapsQuery": "موزع تويوتا المعتمد: وي فيكس القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.115627,31.366389"
+    "mapsQuery": "موزع تويوتا المعتمد: وي فيكس كس القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.115627,31.366389+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%88%D9%8A%20%D9%81%D9%8A%D9%83%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "eatc_express_tagamoa",
@@ -6937,10 +6937,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وبوجيهات وتيل",
       "فحص إلكتروني ألماني"
     ],
-    "mapsQuery": "مركز فولكس فاجن وأودي إكسبريس سيرفيس - القاهرة الجديدة القاهرة مصر",
+    "mapsQuery": "مركز فولكس فاجن وأودي إكسبريس سيرفيس - القاهرة الجديدة التجمع الخامس القاهرة مصر",
     "lat": 30.018,
     "lng": 31.442,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.018,31.442",
+    "mapsUrl": "https://www.google.com/maps?q=30.018,31.442+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%81%D9%88%D9%84%D9%83%D8%B3%20%D9%81%D8%A7%D8%AC%D9%86%20%D9%88%D8%A3%D9%88%D8%AF%D9%8A%20%D8%A5%D9%83%D8%B3%D8%A8%D8%B1%D9%8A%D8%B3%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9)",
     "rating": 4.7
   },
   {
@@ -6964,10 +6964,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "فحص ميكانيكا وكهرباء",
       "قطع غيار أصلية بضمان جلوبال أوتو"
     ],
-    "mapsQuery": "مركز بي إم دبليو جلوبال أوتو - مدينة العبور القليوبية مصر",
+    "mapsQuery": "مركز بي إم دبليو جلوبال أوتو - مدينة العبور العبور القليوبية مصر",
     "lat": 30.224,
     "lng": 31.469,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.224,31.469",
+    "mapsUrl": "https://www.google.com/maps?q=30.224,31.469+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%A8%D9%8A%20%D8%A5%D9%85%20%D8%AF%D8%A8%D9%84%D9%8A%D9%88%20%D8%AC%D9%84%D9%88%D8%A8%D8%A7%D9%84%20%D8%A3%D9%88%D8%AA%D9%88%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.8
   },
   {
@@ -6994,11 +6994,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "إصلاح ميكانيكا وعفشة وتكييف",
       "قطع غيار غبور الأصلية"
     ],
-    "mapsQuery": "توكيل جي بي أوتو غبور - مدينة العبور (المركز المتكامل 3S) القليوبية مصر",
+    "mapsQuery": "توكيل جي بي أوتو غبور - مدينة العبور (المركز المتكامل 3S) العبور القليوبية مصر",
     "lat": 30.2245,
     "lng": 31.4687,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.2245,31.4687"
+    "mapsUrl": "https://www.google.com/maps?q=30.2245,31.4687+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%20%D8%A8%D9%8A%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20%28%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%203S%29%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "fiat_dynamics_obour",
@@ -7022,10 +7022,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان",
       "قطع غيار موبار أصلية"
     ],
-    "mapsQuery": "توكيل فيات وألفا روميو مصر - داينامكس للتوزيع (العبور) القليوبية مصر",
+    "mapsQuery": "توكيل فيات وألفا روميو مصر - داينامكس للتوزيع (العبور) العبور القليوبية مصر",
     "lat": 30.225,
     "lng": 31.471,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.225,31.471",
+    "mapsUrl": "https://www.google.com/maps?q=30.225,31.471+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%8A%D8%A7%D8%AA%20%D9%88%D8%A3%D9%84%D9%81%D8%A7%20%D8%B1%D9%88%D9%85%D9%8A%D9%88%20%D9%85%D8%B5%D8%B1%20-%20%D8%AF%D8%A7%D9%8A%D9%86%D8%A7%D9%85%D9%83%D8%B3%20%D9%84%D9%84%D8%AA%D9%88%D8%B2%D9%8A%D8%B9%20%28%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%29%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -7049,10 +7049,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان بأحدث الأفران",
       "قطع غيار Motorcraft الأصلية"
     ],
-    "mapsQuery": "توكيل فورد مصر - أوتو جميل العبور (3S) القليوبية مصر",
+    "mapsQuery": "توكيل فورد مصر - أوتو جميل العبور (3S) العبور القليوبية مصر",
     "lat": 30.223,
     "lng": 31.467,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.223,31.467",
+    "mapsUrl": "https://www.google.com/maps?q=30.223,31.467+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%88%D8%B1%D8%AF%20%D9%85%D8%B5%D8%B1%20-%20%D8%A3%D9%88%D8%AA%D9%88%20%D8%AC%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20%283S%29%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.8
   },
   {
@@ -7076,11 +7076,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "تغيير زيوت وفلاتر وتيل",
       "قطع غيار جيلي الأصلية"
     ],
-    "mapsQuery": "توكيل جيلي مصر - أبو غالي موتورز مدينة العبور القليوبية مصر",
+    "mapsQuery": "توكيل جيلي مصر - أبو غالي موتورز مدينة العبور العبور القليوبية مصر",
     "lat": 30.2214,
     "lng": 31.4721,
     "rating": 4.8,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.2214,31.4721"
+    "mapsUrl": "https://www.google.com/maps?q=30.2214,31.4721+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D9%84%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D8%A3%D8%A8%D9%88%20%D8%BA%D8%A7%D9%84%D9%8A%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "honda_futtaim_obour",
@@ -7102,10 +7102,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وعفشة وتكييف",
       "قطع غيار هوندا الأصلية"
     ],
-    "mapsQuery": "مركز خدمة هوندا الفطيم - مدينة العبور القليوبية مصر",
+    "mapsQuery": "مركز خدمة هوندا الفطيم - مدينة العبور العبور القليوبية مصر",
     "lat": 30.221,
     "lng": 31.464,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.221,31.464",
+    "mapsUrl": "https://www.google.com/maps?q=30.221,31.464+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%87%D9%88%D9%86%D8%AF%D8%A7%20%D8%A7%D9%84%D9%81%D8%B7%D9%8A%D9%85%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -7130,10 +7130,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "قطع غيار أصلية",
       "سمكرة ودهان"
     ],
-    "mapsQuery": "مركز خدمة وصيانة هيونداي غبور - طريق الإسماعيلية والعبور (الكيلو 21) القليوبية مصر",
+    "mapsQuery": "مركز خدمة وصيانة هيونداي غبور - طريق الإسماعيلية والعبور (الكيلو 21) العبور / طريق الإسماعيلية القليوبية مصر",
     "lat": 30.154931,
     "lng": 31.436691,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.154931,31.436691",
+    "mapsUrl": "https://www.google.com/maps?q=30.154931,31.436691+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D8%B7%D8%B1%D9%8A%D9%82%20%D8%A7%D9%84%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84%D9%8A%D8%A9%20%D9%88%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20%28%D8%A7%D9%84%D9%83%D9%8A%D9%84%D9%88%2021%29%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -7158,10 +7158,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "قطع غيار أصلية",
       "سمكرة ودهان"
     ],
-    "mapsQuery": "مركز صيانة هيونداي غبور - قليوب القليوبية مصر",
+    "mapsQuery": "مركز صيانة هيونداي غبور - قليوب قليوب القليوبية مصر",
     "lat": 30.174,
     "lng": 31.258,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.174,31.258",
+    "mapsUrl": "https://www.google.com/maps?q=30.174,31.258+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%87%D9%8A%D9%88%D9%86%D8%AF%D8%A7%D9%8A%20%D8%BA%D8%A8%D9%88%D8%B1%20-%20%D9%82%D9%84%D9%8A%D9%88%D8%A8%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.7
   },
   {
@@ -7189,10 +7189,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "أكبر مجمع سمكرة ودهان بالليزر",
       "قطع غيار أصلية مستوردة بضمان"
     ],
-    "mapsQuery": "توكيل جيب وسوبارو وجيلي - مجموعة أبو غالي موتورز (العبور المتكامل) القليوبية مصر",
+    "mapsQuery": "توكيل جيب وسوبارو وجيلي - مجموعة أبو غالي موتورز (العبور المتكامل) العبور القليوبية مصر",
     "lat": 30.198,
     "lng": 31.458,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.198,31.458",
+    "mapsUrl": "https://www.google.com/maps?q=30.198,31.458+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D8%AC%D9%8A%D8%A8%20%D9%88%D8%B3%D9%88%D8%A8%D8%A7%D8%B1%D9%88%20%D9%88%D8%AC%D9%8A%D9%84%D9%8A%20-%20%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%20%D8%A3%D8%A8%D9%88%20%D8%BA%D8%A7%D9%84%D9%8A%20%D9%85%D9%88%D8%AA%D9%88%D8%B1%D8%B2%20%28%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20%D8%A7%D9%84%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%29%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.8
   },
   {
@@ -7215,10 +7215,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "ميكانيكا وكهرباء",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "مركز رينو EIM المعتمد - مدينة العبور القليوبية مصر",
+    "mapsQuery": "مركز رينو EIM المعتمد - مدينة العبور العبور القليوبية مصر",
     "lat": 30.226,
     "lng": 31.472,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.226,31.472",
+    "mapsUrl": "https://www.google.com/maps?q=30.226,31.472+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B1%D9%8A%D9%86%D9%88%20EIM%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.6
   },
   {
@@ -7244,8 +7244,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.352557,
     "lng": 31.202904,
-    "mapsQuery": "موزع تويوتا المعتمد: الاسراء القليوبية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.352557,31.202904"
+    "mapsQuery": "موزع تويوتا المعتمد: الاسراء القليوبية القليوبية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.352557,31.202904+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%A7%D8%B3%D8%B1%D8%A7%D8%A1%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_106_engineering_center",
@@ -7270,8 +7270,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.467655,
     "lng": 31.190453,
-    "mapsQuery": "موزع تويوتا المعتمد: المركز الهندسى القليوبية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.467655,31.190453"
+    "mapsQuery": "موزع تويوتا المعتمد: المركز الهندسى القليوبية القليوبية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.467655,31.190453+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D9%87%D9%86%D8%AF%D8%B3%D9%89%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_86_toyota_bahtim",
@@ -7296,8 +7296,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.146783,
     "lng": 31.283545,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة تويوتا بهتيم القليوبية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.146783,31.283545"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة تويوتا بهتيم القليوبية القليوبية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.146783,31.283545+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A8%D9%87%D8%AA%D9%8A%D9%85%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "eatc_obour",
@@ -7321,10 +7321,10 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان متطور",
       "قطع غيار أصلية"
     ],
-    "mapsQuery": "توكيل فولكس فاجن وأودي EATC - مدينة العبور (3S) القليوبية مصر",
+    "mapsQuery": "توكيل فولكس فاجن وأودي EATC - مدينة العبور (3S) العبور القليوبية مصر",
     "lat": 30.222,
     "lng": 31.465,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.222,31.465",
+    "mapsUrl": "https://www.google.com/maps?q=30.222,31.465+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%88%D9%84%D9%83%D8%B3%20%D9%81%D8%A7%D8%AC%D9%86%20%D9%88%D8%A3%D9%88%D8%AF%D9%8A%20EATC%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%20%283S%29%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)",
     "rating": 4.8
   },
   {
@@ -7349,11 +7349,11 @@ window.MOTORCARE_SERVICE_CENTERS = [
       "سمكرة ودهان وفرن معتمد دولياً",
       "قطع غيار فولكس فاجن وأودي أصلية بالضمان"
     ],
-    "mapsQuery": "توكيل فولكس فاجن وأودي مصر - الشركة المصرية التجارية وأوتوموتيف (EAC العبور 3S) القليوبية مصر",
+    "mapsQuery": "توكيل فولكس فاجن وأودي مصر - الشركة المصرية التجارية وأوتوموتيف (EAC العبور 3S) العبور القليوبية مصر",
     "lat": 30.2189,
     "lng": 31.4589,
     "rating": 4.9,
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.2189,31.4589"
+    "mapsUrl": "https://www.google.com/maps?q=30.2189,31.4589+(%D8%AA%D9%88%D9%83%D9%8A%D9%84%20%D9%81%D9%88%D9%84%D9%83%D8%B3%20%D9%81%D8%A7%D8%AC%D9%86%20%D9%88%D8%A3%D9%88%D8%AF%D9%8A%20%D9%85%D8%B5%D8%B1%20-%20%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D9%8A%D8%A9%20%D9%88%D8%A3%D9%88%D8%AA%D9%88%D9%85%D9%88%D8%AA%D9%8A%D9%81%20%28EAC%20%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%B1%203S%29%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_23_toyota_egypt_sadat",
@@ -7381,8 +7381,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.450349,
     "lng": 30.629594,
-    "mapsQuery": "تويوتا إيجيبت - السادات المنوفية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.450349,30.629594"
+    "mapsQuery": "تويوتا إيجيبت - السادات السادات المنوفية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.450349,30.629594+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%A7%D9%84%D8%B3%D8%A7%D8%AF%D8%A7%D8%AA%20-%20%D8%A7%D9%84%D9%85%D9%86%D9%88%D9%81%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_35_barakat_brothers_co",
@@ -7407,8 +7407,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.550952,
     "lng": 31.020753,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة اخوان بركات - محمد بركات عبد الحميد وشركاه المنوفية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.550952,31.020753"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة اخوان بركات - محمد بركات عبد الحميد وشركاه محمد بركات عبد الحميد وشركاه المنوفية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.550952,31.020753+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D8%AE%D9%88%D8%A7%D9%86%20%D8%A8%D8%B1%D9%83%D8%A7%D8%AA%20-%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%A8%D8%B1%D9%83%D8%A7%D8%AA%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF%20%D9%88%D8%B4%D8%B1%D9%83%D8%A7%D9%87%20-%20%D8%A7%D9%84%D9%85%D9%86%D9%88%D9%81%D9%8A%D8%A9)"
   },
   {
     "id": "toyota_loc_54_abou_heta_for_ie_t",
@@ -7433,8 +7433,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 28.104469,
     "lng": 30.754755,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة أبوحتة لتجارة السيارات والاستيرادو التصدير المنيا مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=28.104469,30.754755"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة أبوحتة لتجارة السيارات والاستيرادو التصدير المنيا المنيا مصر",
+    "mapsUrl": "https://www.google.com/maps?q=28.104469,30.754755+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A3%D8%A8%D9%88%D8%AD%D8%AA%D8%A9%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%D9%88%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AF%D9%8A%D8%B1%20-%20%D8%A7%D9%84%D9%85%D9%86%D9%8A%D8%A7)"
   },
   {
     "id": "mitsubishi_abuhatta_benisuef_service",
@@ -7462,8 +7462,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 28.9245,
     "lng": 30.9854,
-    "mapsQuery": "مركز صيانة أبو حتة - مركز صيانة ميتسوبيشي المعتمد (بني سويف) بني سويف مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=28.9245,30.9854"
+    "mapsQuery": "مركز صيانة أبو حتة - مركز صيانة ميتسوبيشي المعتمد (بني سويف) بني سويف بني سويف مصر",
+    "mapsUrl": "https://www.google.com/maps?q=28.9245,30.9854+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D8%A3%D8%A8%D9%88%20%D8%AD%D8%AA%D8%A9%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%A8%D9%86%D9%8A%20%D8%B3%D9%88%D9%8A%D9%81%29)"
   },
   {
     "id": "toyota_loc_62_om_elkora",
@@ -7488,8 +7488,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 28.930508,
     "lng": 30.927145,
-    "mapsQuery": "موزع تويوتا المعتمد: أم القرى بني سويف مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=28.930508,30.927145"
+    "mapsQuery": "موزع تويوتا المعتمد: أم القرى بني سويف بني سويف مصر",
+    "mapsUrl": "https://www.google.com/maps?q=28.930508,30.927145+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3%D9%85%20%D8%A7%D9%84%D9%82%D8%B1%D9%89%20-%20%D8%A8%D9%86%D9%8A%20%D8%B3%D9%88%D9%8A%D9%81)"
   },
   {
     "id": "toyota_loc_53_abou_heta_for_ie_t_cars",
@@ -7517,8 +7517,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 28.955113,
     "lng": 30.993245,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة أبوحتة لتجارة السيارات والاستيرادو التصدير بني سويف مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=28.955113,30.993245"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة أبوحتة لتجارة السيارات والاستيرادو التصدير بني سويف بني سويف مصر",
+    "mapsUrl": "https://www.google.com/maps?q=28.955113,30.993245+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A3%D8%A8%D9%88%D8%AD%D8%AA%D8%A9%20%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%D9%88%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AF%D9%8A%D8%B1%20-%20%D8%A8%D9%86%D9%8A%20%D8%B3%D9%88%D9%8A%D9%81)"
   },
   {
     "id": "kia_auth_service_13__d8_b3_d8_a7_d9",
@@ -7546,8 +7546,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.2452,
     "lng": 32.2852,
-    "mapsQuery": "مركز كيا المعتمد: سانو كار - بورسعيد بورسعيد مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.2452,32.2852"
+    "mapsQuery": "مركز كيا المعتمد: سانو كار - بورسعيد المنطقة الصناعية بورسعيد مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.2452,32.2852+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B3%D8%A7%D9%86%D9%88%20%D9%83%D8%A7%D8%B1%20-%20%D8%A8%D9%88%D8%B1%D8%B3%D8%B9%D9%8A%D8%AF)"
   },
   {
     "id": "kia_dealer_sales_5__d8_a8_d9_88_d8",
@@ -7574,8 +7574,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.2612,
     "lng": 32.2985,
-    "mapsQuery": "موزع كيا المعتمد: محمد الريس - بورسعيد بورسعيد مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.2612,32.2985"
+    "mapsQuery": "موزع كيا المعتمد: محمد الريس - بورسعيد حي الشرق بورسعيد مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.2612,32.2985+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%A7%D9%84%D8%B1%D9%8A%D8%B3%20-%20%D8%A8%D9%88%D8%B1%D8%B3%D8%B9%D9%8A%D8%AF)"
   },
   {
     "id": "kia_dealer_sales_11__d8_a7_d9_84_d9",
@@ -7602,8 +7602,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 29.9885,
     "lng": 31.3152,
-    "mapsQuery": "موزع كيا المعتمد: بي آوتو - القطامية القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=29.9885,31.3152"
+    "mapsQuery": "موزع كيا المعتمد: بي آوتو - القطامية القطامية القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=29.9885,31.3152+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A8%D9%8A%20%D8%A2%D9%88%D8%AA%D9%88%20-%20%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   },
   {
     "id": "toyota_loc_22_toyota_egypt_sharm_el_sheikh",
@@ -7632,8 +7632,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 27.892928,
     "lng": 34.301293,
-    "mapsQuery": "تويوتا إيجيبت - شرم الشيخ جنوب  سيناء مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.892928,34.301293"
+    "mapsQuery": "تويوتا إيجيبت - شرم الشيخ شرم الشيخ جنوب  سيناء مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.892928,34.301293+(%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A5%D9%8A%D8%AC%D9%8A%D8%A8%D8%AA%20-%20%D8%B4%D8%B1%D9%85%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%20-%20%D8%AC%D9%86%D9%88%D8%A8%20%20%D8%B3%D9%8A%D9%86%D8%A7%D8%A1)"
   },
   {
     "id": "mitsubishi_petrogroup_sharm_3s",
@@ -7662,8 +7662,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 27.9158,
     "lng": 34.3298,
-    "mapsQuery": "بترو جروب - مركز خدمة ومبيعات ميتسوبيشي المعتمد 3S (شرم الشيخ) جنوب سيناء مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.9158,34.3298"
+    "mapsQuery": "بترو جروب - مركز خدمة ومبيعات ميتسوبيشي المعتمد 3S (شرم الشيخ) شرم الشيخ جنوب سيناء مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.9158,34.3298+(%D8%A8%D8%AA%D8%B1%D9%88%20%D8%AC%D8%B1%D9%88%D8%A8%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%203S%20%28%D8%B4%D8%B1%D9%85%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%29%20-%20%D8%AC%D9%86%D9%88%D8%A8%20%D8%B3%D9%8A%D9%86%D8%A7%D8%A1)"
   },
   {
     "id": "mitsubishi_eladawy_damietta_service",
@@ -7691,8 +7691,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 31.4285,
     "lng": 31.5421,
-    "mapsQuery": "مركز خدمة العدوى - مركز صيانة ميتسوبيشي المعتمد (دمياط / جمصة) دمياط مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.4285,31.5421"
+    "mapsQuery": "مركز خدمة العدوى - مركز صيانة ميتسوبيشي المعتمد (دمياط / جمصة) دمياط دمياط مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.4285,31.5421+(%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%A7%D9%84%D8%B9%D8%AF%D9%88%D9%89%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%AF%D9%85%D9%8A%D8%A7%D8%B7%20/%20%D8%AC%D9%85%D8%B5%D8%A9%29)"
   },
   {
     "id": "mitsubishi_moderncar_damietta_sales",
@@ -7719,8 +7719,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.3325,
     "lng": 31.7145,
-    "mapsQuery": "مودرن كار (أشرف الأسمر وشريكه) - موزع ميتسوبيشي معتمد (دمياط) دمياط مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.3325,31.7145"
+    "mapsQuery": "مودرن كار (أشرف الأسمر وشريكه) - موزع ميتسوبيشي معتمد (دمياط) فارسكور دمياط مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.3325,31.7145+(%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%83%D8%A7%D8%B1%20%28%D8%A3%D8%B4%D8%B1%D9%81%20%D8%A7%D9%84%D8%A3%D8%B3%D9%85%D8%B1%20%D9%88%D8%B4%D8%B1%D9%8A%D9%83%D9%87%29%20-%20%D9%85%D9%88%D8%B2%D8%B9%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D9%85%D8%B9%D8%AA%D9%85%D8%AF%20%28%D8%AF%D9%85%D9%8A%D8%A7%D8%B7%29)"
   },
   {
     "id": "toyota_loc_39_modern_cars_show_room",
@@ -7745,8 +7745,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.330554,
     "lng": 31.711896,
-    "mapsQuery": "موزع تويوتا المعتمد: مودرن كار اشرف الاسمر دمياط مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.330554,31.711896"
+    "mapsQuery": "موزع تويوتا المعتمد: مودرن كار اشرف الاسمر دمياط دمياط مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.330554,31.711896+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%85%D9%88%D8%AF%D8%B1%D9%86%20%D9%83%D8%A7%D8%B1%20%D8%A7%D8%B4%D8%B1%D9%81%20%D8%A7%D9%84%D8%A7%D8%B3%D9%85%D8%B1%20-%20%D8%AF%D9%85%D9%8A%D8%A7%D8%B7)"
   },
   {
     "id": "toyota_loc_105_universal",
@@ -7771,8 +7771,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.41845,
     "lng": 31.816025,
-    "mapsQuery": "موزع تويوتا المعتمد: يونيفيرسال دمياط مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.41845,31.816025"
+    "mapsQuery": "موزع تويوتا المعتمد: يونيفيرسال رسال دمياط مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.41845,31.816025+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%8A%D9%88%D9%86%D9%8A%D9%81%D9%8A%D8%B1%D8%B3%D8%A7%D9%84%20-%20%D8%AF%D9%85%D9%8A%D8%A7%D8%B7)"
   },
   {
     "id": "toyota_loc_109_al_motawea_co",
@@ -7797,8 +7797,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 26.561567,
     "lng": 31.689354,
-    "mapsQuery": "موزع تويوتا المعتمد: شركة المطاوع للنقل و التجارة و التوزيع سوهاج مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=26.561567,31.689354"
+    "mapsQuery": "موزع تويوتا المعتمد: شركة المطاوع للنقل و التجارة و التوزيع سوهاج سوهاج مصر",
+    "mapsUrl": "https://www.google.com/maps?q=26.561567,31.689354+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D9%88%D8%B9%20%D9%84%D9%84%D9%86%D9%82%D9%84%20%D9%88%20%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9%20%D9%88%20%D8%A7%D9%84%D8%AA%D9%88%D8%B2%D9%8A%D8%B9%20-%20%D8%B3%D9%88%D9%87%D8%A7%D8%AC)"
   },
   {
     "id": "kia_auth_service_15__d8_a3_d9_89_20",
@@ -7826,8 +7826,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 27.9352,
     "lng": 34.3185,
-    "mapsQuery": "مركز كيا المعتمد: أي ميكس راغب - شرم الشيخ جنوب سيناء مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=27.9352,34.3185"
+    "mapsQuery": "مركز كيا المعتمد: أي ميكس راغب - شرم الشيخ شرم الشيخ جنوب سيناء مصر",
+    "mapsUrl": "https://www.google.com/maps?q=27.9352,34.3185+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3%D9%8A%20%D9%85%D9%8A%D9%83%D8%B3%20%D8%B1%D8%A7%D8%BA%D8%A8%20-%20%D8%B4%D8%B1%D9%85%20%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%20-%20%D8%AC%D9%86%D9%88%D8%A8%20%D8%B3%D9%8A%D9%86%D8%A7%D8%A1)"
   },
   {
     "id": "toyota_loc_25_abo_samra_for_cars",
@@ -7855,8 +7855,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 31.131199,
     "lng": 33.755042,
-    "mapsQuery": "موزع تويوتا المعتمد: أبو سمرة للسيارات شمال سيناء مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=31.131199,33.755042"
+    "mapsQuery": "موزع تويوتا المعتمد: أبو سمرة للسيارات شمال سيناء شمال سيناء مصر",
+    "mapsUrl": "https://www.google.com/maps?q=31.131199,33.755042+(%D9%85%D9%88%D8%B2%D8%B9%20%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A3%D8%A8%D9%88%20%D8%B3%D9%85%D8%B1%D8%A9%20%D9%84%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20-%20%D8%B4%D9%85%D8%A7%D9%84%20%D8%B3%D9%8A%D9%86%D8%A7%D8%A1)"
   },
   {
     "id": "kia_auth_service_17__d8_a8_d9_86_d9",
@@ -7884,8 +7884,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 30.4585,
     "lng": 31.1825,
-    "mapsQuery": "مركز كيا المعتمد: السنتر الكوري - بنها القليوبية مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.4585,31.1825"
+    "mapsQuery": "مركز كيا المعتمد: السنتر الكوري - بنها بنها القليوبية مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.4585,31.1825+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B3%D9%86%D8%AA%D8%B1%20%D8%A7%D9%84%D9%83%D9%88%D8%B1%D9%8A%20-%20%D8%A8%D9%86%D9%87%D8%A7%20-%20%D8%A7%D9%84%D9%82%D9%84%D9%8A%D9%88%D8%A8%D9%8A%D8%A9)"
   },
   {
     "id": "kia_auth_service_16__d9_82_d9_86_d8",
@@ -7913,8 +7913,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 26.1585,
     "lng": 32.7452,
-    "mapsQuery": "مركز كيا المعتمد: العمدة سيرفيس - قنا قنا مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=26.1585,32.7452"
+    "mapsQuery": "مركز كيا المعتمد: العمدة سيرفيس - قنا قنا قنا مصر",
+    "mapsUrl": "https://www.google.com/maps?q=26.1585,32.7452+(%D9%85%D8%B1%D9%83%D8%B2%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D8%A7%D9%84%D8%B9%D9%85%D8%AF%D8%A9%20%D8%B3%D9%8A%D8%B1%D9%81%D9%8A%D8%B3%20-%20%D9%82%D9%86%D8%A7)"
   },
   {
     "id": "mitsubishi_karnak_qena_3s",
@@ -7943,8 +7943,8 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.8,
     "lat": 26.1554,
     "lng": 32.7485,
-    "mapsQuery": "شركة الكرنك - مركز خدمة ومبيعات ميتسوبيشي المعتمد 3S (قنا) قنا مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=26.1554,32.7485"
+    "mapsQuery": "شركة الكرنك - مركز خدمة ومبيعات ميتسوبيشي المعتمد 3S (قنا) قنا قنا مصر",
+    "mapsUrl": "https://www.google.com/maps?q=26.1554,32.7485+(%D8%B4%D8%B1%D9%83%D8%A9%20%D8%A7%D9%84%D9%83%D8%B1%D9%86%D9%83%20-%20%D9%85%D8%B1%D9%83%D8%B2%20%D8%AE%D8%AF%D9%85%D8%A9%20%D9%88%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%203S%20%28%D9%82%D9%86%D8%A7%29)"
   },
   {
     "id": "kia_dealer_sales_9__d8_a7_d9_84_d9",
@@ -7971,7 +7971,7 @@ window.MOTORCARE_SERVICE_CENTERS = [
     "rating": 4.7,
     "lat": 30.1252,
     "lng": 31.3652,
-    "mapsQuery": "موزع كيا المعتمد: ياسين جروب - النزهة القاهرة مصر",
-    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=30.1252,31.3652"
+    "mapsQuery": "موزع كيا المعتمد: ياسين جروب - النزهة النزهة القاهرة مصر",
+    "mapsUrl": "https://www.google.com/maps?q=30.1252,31.3652+(%D9%85%D9%88%D8%B2%D8%B9%20%D9%83%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D8%AA%D9%85%D8%AF%3A%20%D9%8A%D8%A7%D8%B3%D9%8A%D9%86%20%D8%AC%D8%B1%D9%88%D8%A8%20-%20%D8%A7%D9%84%D9%86%D8%B2%D9%87%D8%A9%20-%20%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9)"
   }
 ];
