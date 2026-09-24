@@ -23,7 +23,58 @@
             -moz-appearance: number-input !important;
         }
 
-        .safe-area-pb { padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0.5rem)); }
+        /* ==========================================================================
+           SAFE AREA INSETS & MOBILE UX ESSENTIALS (Notch, Dynamic Island, Gesture Bar)
+           ========================================================================== */
+        :root {
+            --sat: env(safe-area-inset-top, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+            --sal: env(safe-area-inset-left, 0px);
+            --sar: env(safe-area-inset-right, 0px);
+        }
+
+        /* Native App Touch & Interaction Optimizations */
+        button, a, input, select, textarea {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Safe Area Padding Utilities */
+        .safe-area-pt {
+            padding-top: max(0.5rem, calc(0.25rem + env(safe-area-inset-top, 0px)));
+        }
+        .safe-area-pb {
+            padding-bottom: max(0.75rem, calc(0.35rem + env(safe-area-inset-bottom, 0px)));
+        }
+        .safe-area-px {
+            padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+            padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+        }
+
+        /* Sticky Top Header Notch Guard */
+        header.sticky.top-0,
+        #appHeaderSticky {
+            padding-top: max(0.5rem, calc(0.35rem + env(safe-area-inset-top, 0px)));
+        }
+
+        /* Landing Screen Notch Guard */
+        #landingScreen > div:first-child {
+            padding-top: max(0.5rem, calc(0.25rem + env(safe-area-inset-top, 0px)));
+            padding-bottom: max(0.5rem, calc(0.25rem + env(safe-area-inset-bottom, 0px)));
+        }
+
+        /* Mobile Bottom Nav Bar Gesture Bar Guard */
+        #mobileBottomNav {
+            padding-bottom: max(0.5rem, calc(0.35rem + env(safe-area-inset-bottom, 0px)));
+        }
+
+        /* Mobile Content Area Bottom Margin Guard to prevent overlap with Nav Bar */
+        @media (max-width: 767px) {
+            #mainAppContainer > div.max-w-7xl {
+                padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;
+            }
+        }
+
         @media print {
             body * { visibility: hidden !important; }
             #reportPrintSection.active-print-target,

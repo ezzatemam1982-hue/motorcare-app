@@ -2,11 +2,10 @@
   "appId": "com.motorcare.app",
   "appName": "MotorCare",
   "webDir": "dist",
-  "bundledWebRuntime": false,
   "server": {
     "androidScheme": "https",
     "hostname": "localhost",
-    "cleartext": true
+    "cleartext": false
   },
   "plugins": {
     "GoogleAuth": {

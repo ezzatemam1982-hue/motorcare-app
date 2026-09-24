@@ -31,7 +31,13 @@
         });
 
         function switchTab(tabId) {
+            try {
+                if (typeof MotorCareHaptics !== 'undefined' && MotorCareHaptics.triggerLight) {
+                    MotorCareHaptics.triggerLight();
+                }
+            } catch(e) {}
             currentActiveTab = tabId;
+            try { window.currentActiveTab = tabId; } catch(e) {}
             document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden-section'));
             document.getElementById(`tabContent-${tabId}`)?.classList.remove('hidden-section');
             
@@ -60,6 +66,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if (tabId === 'maintenance') renderCatalogItems();
+            if (tabId === 'fuel') renderFuelSection();
             if (tabId === 'hardware') renderHardwareCards();
             if (tabId === 'analytics') setTimeout(renderCharts, 100);
             if (tabId === 'inspection') renderInspectionTab();
@@ -84,6 +91,12 @@
                 if (heroLogo) heroLogo.innerHTML = '';
                 if (emptyState) emptyState.classList.remove('hidden');
                 if (activeContent) activeContent.classList.add('hidden');
+
+                // تحديث كافة التبويبات والجداول لتعرض الحالة الفارغة النظيفة (Empty States)
+                if (typeof renderCatalogItems === 'function') renderCatalogItems();
+                if (typeof renderFuelSection === 'function') renderFuelSection();
+                if (typeof renderHistoryList === 'function') renderHistoryList();
+                if (typeof renderUrgentAlerts === 'function') renderUrgentAlerts();
                 return;
             }
 
@@ -242,3 +255,4 @@ try { if (typeof openMobileMoreDrawer !== 'undefined') window.openMobileMoreDraw
 try { if (typeof closeMobileMoreDrawer !== 'undefined') window.closeMobileMoreDrawer = closeMobileMoreDrawer; } catch (e) {}
 try { if (typeof updateVehicleHealthStatus !== 'undefined') window.updateVehicleHealthStatus = updateVehicleHealthStatus; } catch (e) {}
 try { if (typeof toggleDarkMode !== 'undefined') window.toggleDarkMode = toggleDarkMode; } catch (e) {}
+try { if (typeof currentActiveTab !== 'undefined') window.currentActiveTab = currentActiveTab; } catch (e) {}

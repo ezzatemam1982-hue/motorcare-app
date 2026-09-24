@@ -31,7 +31,13 @@
         });
 
         function switchTab(tabId) {
+            try {
+                if (typeof MotorCareHaptics !== 'undefined' && MotorCareHaptics.triggerLight) {
+                    MotorCareHaptics.triggerLight();
+                }
+            } catch(e) {}
             currentActiveTab = tabId;
+            try { window.currentActiveTab = tabId; } catch(e) {}
             document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden-section'));
             document.getElementById(`tabContent-${tabId}`)?.classList.remove('hidden-section');
             
@@ -249,3 +255,4 @@ try { if (typeof openMobileMoreDrawer !== 'undefined') window.openMobileMoreDraw
 try { if (typeof closeMobileMoreDrawer !== 'undefined') window.closeMobileMoreDrawer = closeMobileMoreDrawer; } catch (e) {}
 try { if (typeof updateVehicleHealthStatus !== 'undefined') window.updateVehicleHealthStatus = updateVehicleHealthStatus; } catch (e) {}
 try { if (typeof toggleDarkMode !== 'undefined') window.toggleDarkMode = toggleDarkMode; } catch (e) {}
+try { if (typeof currentActiveTab !== 'undefined') window.currentActiveTab = currentActiveTab; } catch (e) {}

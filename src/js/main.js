@@ -1,31 +1,9 @@
         // تشغيل التطبيق وإعدادات بيئة الهاتف الأصلية (Capacitor & Mobile Handlers)
         function initMobilePlatform() {
-            if (typeof window.Capacitor !== 'undefined') {
-                const { App } = window.Capacitor.Plugins || {};
-                // دعم زر الرجوع الخاص بهواتف أندرويد (Hardware Back Button)
-                if (App && typeof App.addListener === 'function') {
-                    App.addListener('backButton', ({ canGoBack }) => {
-                        const openModals = [
-                            'maintWearExplainerModal', 'driverToolsModal', 'obdCodesModal',
-                            'accountCenterModal', 'editProfileModal', 'adminPinModal', 'changePinModal',
-                            'subscribersAdminModal', 'googleSheetsModal', 'forgotPasswordModal',
-                            'contactModal', 'notificationsHubModal', 'emergencyModal', 'maintenanceModal'
-                        ];
-                        for (const modalId of openModals) {
-                            const el = document.getElementById(modalId);
-                            if (el && !el.classList.contains('hidden') && el.style.display !== 'none') {
-                                el.classList.add('hidden');
-                                el.style.display = 'none';
-                                return;
-                            }
-                        }
-                        if (canGoBack) {
-                            window.history.back();
-                        } else {
-                            App.exitApp();
-                        }
-                    });
-                }
+            // التهيئة التلقائية الشاملة لبيئة الموبايل تتم عبر خدمة MotorCareMobile المخصصة (js/services/mobile.js)
+            // مع الحفاظ على الربط العام للدالة لضمان التوافق المطلق
+            if (typeof MotorCareMobile !== 'undefined') {
+                console.log('[MotorCare Main] Mobile platform verified via MotorCareMobile service.');
             }
         }
 

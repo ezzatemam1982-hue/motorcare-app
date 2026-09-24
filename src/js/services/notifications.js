@@ -62,6 +62,17 @@
                 <button type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs p-1 cursor-pointer" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
             `;
 
+            // تشغيل الاهتزازات التفاعلية اللطيفة للهواتف الذكية (Subtle Mobile Haptics)
+            try {
+                if (typeof MotorCareHaptics !== 'undefined') {
+                    if (type === 'success' || iconColor === 'text-emerald-500') {
+                        MotorCareHaptics.triggerSuccess();
+                    } else if (type === 'warning' || iconColor === 'text-amber-500') {
+                        MotorCareHaptics.triggerWarning();
+                    }
+                }
+            } catch(e) {}
+
             container.appendChild(toast);
             requestAnimationFrame(() => {
                 toast.classList.remove('translate-y-[-20px]', 'opacity-0');

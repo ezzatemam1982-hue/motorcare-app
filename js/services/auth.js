@@ -1448,10 +1448,7 @@ ${verifyUrl}
                         },
                         error_callback: (err) => {
                             console.warn('[MotorCare Auth] GIS TokenClient error/cancel:', err);
-                            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-                            if (typeof showNotification === 'function') {
-                                showNotification(isEn ? 'Google Sign-In was cancelled or dismissed.' : 'تم إلغاء نافذة تسجيل الدخول عبر Google.', 'info');
-                            }
+                            // تم إلغاء النافذة بدون إظهار رسالة مزعجة للعميل بناءً على التوجيهات
                         }
                     });
                 }

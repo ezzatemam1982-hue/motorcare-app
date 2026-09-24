@@ -2,6 +2,16 @@ import shutil
 import os
 
 files_to_sync = [
+    ('js/services/mobile.js', 'src/js/services/mobile.js'),
+    ('js/services/mobile.js', 'dist/js/services/mobile.js'),
+    ('css/style.css', 'src/css/style.css'),
+    ('css/style.css', 'dist/css/style.css'),
+    ('js/main.js', 'src/js/main.js'),
+    ('js/main.js', 'dist/js/main.js'),
+    ('js/features/dashboard.js', 'src/js/features/dashboard.js'),
+    ('js/features/dashboard.js', 'dist/js/features/dashboard.js'),
+    ('js/services/notifications.js', 'src/js/services/notifications.js'),
+    ('js/services/notifications.js', 'dist/js/services/notifications.js'),
     ('js/services/auth.js', 'src/js/services/auth.js'),
     ('js/services/auth.js', 'dist/js/services/auth.js'),
     ('js/services/firebase.js', 'src/js/services/firebase.js'),
