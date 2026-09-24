@@ -137,18 +137,12 @@
                 if (typeof renderDashboard === 'function') {
                     try { renderDashboard(); } catch(e) { console.warn(e); }
                 }
-                if (typeof checkFirstTimeOnboarding === 'function') {
-                    try { checkFirstTimeOnboarding(); } catch(e) { console.warn(e); }
-                }
             } catch(err) {
                 console.error('enterMainApp error:', err);
                 const l = document.getElementById('landingScreen');
                 const m = document.getElementById('mainAppContainer');
                 if (l) l.style.display = 'none';
                 if (m) m.style.display = 'flex';
-                if (typeof checkFirstTimeOnboarding === 'function') {
-                    try { checkFirstTimeOnboarding(); } catch(e) { console.warn(e); }
-                }
             }
         }
 
@@ -1733,7 +1727,20 @@ ${verifyUrl}
             SafeStorage.setItem('motorCare_LoggedIn', 'true');
 
             enterMainApp();
-            if (typeof initUserCloudSync === 'function') initUserCloudSync();
+            if (typeof initUserCloudSync === 'function') {
+                initUserCloudSync().then((restored) => {
+                    const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                    if (hasCar) {
+                        if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                        const addModal = document.getElementById('addNewCarModal');
+                        if (addModal) {
+                            addModal.classList.add('hidden');
+                            addModal.style.display = 'none';
+                        }
+                        if (typeof renderDashboard === 'function') renderDashboard();
+                    }
+                }).catch(() => {});
+            }
             if (typeof showNotification === 'function') {
                 showNotification(isEn ? `Welcome, ${name}! Signed in via Google ✨` : `أهلاً بك يا ${name}! تم الدخول بنجاح عبر حساب Google ✨`, 'success');
             }
@@ -1758,6 +1765,13 @@ ${verifyUrl}
 
             enterMainApp();
             if (typeof updateCloudSyncStatusUI === 'function') updateCloudSyncStatusUI('guest');
+
+            setTimeout(() => {
+                const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                if (!hasCar && typeof checkFirstTimeOnboarding === 'function') {
+                    checkFirstTimeOnboarding();
+                }
+            }, 500);
         }
 
                 let _isSubmittingAuth = false;
@@ -1860,7 +1874,20 @@ ${verifyUrl}
                 SafeStorage.setItem('motorCare_LoggedIn', 'true');
 
                 enterMainApp();
-                if (typeof initUserCloudSync === 'function') initUserCloudSync();
+                if (typeof initUserCloudSync === 'function') {
+                    initUserCloudSync().then((restored) => {
+                        const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                        if (hasCar) {
+                            if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                            const addModal = document.getElementById('addNewCarModal');
+                            if (addModal) {
+                                addModal.classList.add('hidden');
+                                addModal.style.display = 'none';
+                            }
+                            if (typeof renderDashboard === 'function') renderDashboard();
+                        }
+                    }).catch(() => {});
+                }
                 if (typeof showNotification === 'function') {
                     showNotification(isEn ? `Welcome back, ${profile.name}! 👋` : `أهلاً بعودتك يا ${profile.name}! 👋`, 'success');
                 }

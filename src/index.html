@@ -2364,12 +2364,15 @@
             </div>
 
             <!-- الفوتر الثابت دائماً في الأسفل مع زر إضافة السيارة ليكون ظاهراً ومتاحاً بنسبة 100% -->
-            <div class="p-4 bg-slate-50/90 dark:bg-slate-800/90 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2 shrink-0">
-                <button type="button" onclick="closeAddNewCarModal()" class="px-4 py-2.5 bg-slate-200/80 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold cursor-pointer transition-colors" data-i18n="btnCancel">إلغاء</button>
-                <button type="button" onclick="saveNewCar()" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 active:scale-95 text-white rounded-xl text-xs font-black shadow-md cursor-pointer transition-all flex items-center gap-1.5" data-i18n="btnSaveNewCar">
-                    <i class="fa-solid fa-circle-plus"></i>
-                    <span>إضافة السيارة للكراج</span>
-                </button>
+            <div class="p-4 bg-slate-50/90 dark:bg-slate-800/90 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 shrink-0">
+                <button type="button" id="skipOnboardingBtn" onclick="dismissOnboardingModal()" class="text-xs text-slate-500 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 font-bold underline transition-colors cursor-pointer px-2 py-1" style="display: none;">تخطي الآن واستكشاف التطبيق</button>
+                <div class="flex items-center gap-2 mr-auto rtl:mr-0 rtl:ml-auto">
+                    <button type="button" onclick="closeAddNewCarModal()" class="px-4 py-2.5 bg-slate-200/80 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold cursor-pointer transition-colors" data-i18n="btnCancel">إلغاء</button>
+                    <button type="button" onclick="saveNewCar()" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 active:scale-95 text-white rounded-xl text-xs font-black shadow-md cursor-pointer transition-all flex items-center gap-1.5" data-i18n="btnSaveNewCar">
+                        <i class="fa-solid fa-circle-plus"></i>
+                        <span>إضافة السيارة للكراج</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

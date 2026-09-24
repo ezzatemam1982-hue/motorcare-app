@@ -6,8 +6,13 @@
 
             const lastKm = Number(item.lastKm) || 0;
             const kmInterval = Number(item.kmInterval) || 10000;
-            const diffKm = currentOdo - lastKm;
-            const remainingKm = Math.max(0, kmInterval - diffKm);
+            const odo = Math.max(0, Number(currentOdo) || 0);
+
+            // Calculation Safeguards: diffKm cannot be negative if lastKm erroneously exceeded current odometer
+            const diffKm = Math.max(0, odo - lastKm);
+
+            // Calculation Safeguards: remainingKm can NEVER exceed intervalKm or fall below 0
+            const remainingKm = Math.max(0, Math.min(kmInterval, kmInterval - diffKm));
             const overdueKm = Math.max(0, diffKm - kmInterval);
             const now = Date.now();
 
@@ -110,7 +115,16 @@
             const car = getCurrentCar();
             const container = document.getElementById('urgentAlertsContainer');
             const list = document.getElementById('urgentAlertsList');
-            if (!container || !list || !car || !car.catalog) return;
+            if (!container || !list) return;
+
+            if (!car || !car.catalog) {
+                container.classList.add('hidden');
+                list.innerHTML = '';
+                if (typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.updateUI) {
+                    MotorCareNotifications.updateUI(0);
+                }
+                return;
+            }
 
             const isEn = appState.lang === 'en';
             const clickTxt = isEn ? 'Click here to log this service / repair' : 'اضغط هنا لتسجيل إنجاز هذا البند الآن';
@@ -156,7 +170,7 @@
 
             const isEn = appState.lang === 'en';
 
-            if (!car.fuelLogs || car.fuelLogs.length < 2) {
+            if (!car || !car.fuelLogs || car.fuelLogs.length < 2) {
                 rateDisplay.innerText = isEn ? "-- L/100km" : "-- لتر/100كم";
                 if (subDisplay) {
                     subDisplay.innerText = isEn ? "Requires 2 fill-ups to calculate" : "يتطلب تسجيل تفويلتين";

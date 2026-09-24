@@ -114,6 +114,17 @@
             list.innerHTML = '';
             const isEn = appState.lang === 'en';
             
+            if (!appState.cars || appState.cars.length === 0) {
+                list.innerHTML = `
+                    <div class="p-6 text-center text-xs text-slate-400 space-y-2">
+                        <i class="fa-solid fa-car text-slate-300 dark:text-slate-600 text-2xl block mb-1"></i>
+                        <p>${isEn ? 'Your garage is currently empty.' : 'الكراج فارغ حالياً. أضف سيارتك الأولى للبدء.'}</p>
+                    </div>
+                `;
+                document.getElementById('garageModal')?.classList.remove('hidden');
+                return;
+            }
+
             appState.cars.forEach((c, idx) => {
                 const isCurrent = idx === appState.currentCarIndex;
                 const activeBadgeTxt = isEn ? 'Active' : 'الحالية';
@@ -285,12 +296,16 @@
         }
 
 
-        function openAddNewCarModal() {
+        function openAddNewCarModal(options = {}) {
             closeGarageModal();
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+            const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+
             const searchInput = document.getElementById('brandSearchInput');
             if (searchInput) searchInput.value = '';
             
-            ['newCarOdoInput', 'newCarLicenseInput', 'newCarVinInput', 'newCarColorInput', 'newCarNotesInput'].forEach(id => {
+            // تصفير وتفريغ كافة حقول الإدخال تماماً بدون أي بيانات افتراضية أو قديمة
+            ['newCarOdoInput', 'newCarLicenseInput', 'newCarVinInput', 'newCarColorInput', 'newCarNotesInput', 'newCarYearInput', 'newCarEngineInput'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     el.value = '';
@@ -298,11 +313,114 @@
                 }
             });
 
+            // إعادة ضبط شارة عداد الشاسيه ومعاينة المواصفات الفنية والشعار
+            const vinBadge = document.getElementById('newCarVinBadge');
+            if (vinBadge) vinBadge.innerText = '0/17';
+            const specPreviewBox = document.getElementById('newCarSpecPreviewBox');
+            if (specPreviewBox) specPreviewBox.classList.add('hidden');
+
+            const brandPreview = document.getElementById('newCarBrandLogoPreview');
+            if (brandPreview) {
+                brandPreview.innerHTML = `
+                    <span class="w-5 h-5 flex items-center justify-center"><i class="fa-solid fa-car text-xs"></i></span>
+                    <span>${isEn ? 'Choose Brand' : 'اختر الماركة'}</span>
+                `;
+            }
+
+            // التحكم في إمكانية إغلاق النافذة وتوفير زر الإغلاق (✕) وزر التخطي الثانوي
+            const modal = document.getElementById('addNewCarModal');
+            if (modal) {
+                // زر الإغلاق (✕) دائماً ظاهر ومتاح لجميع المستخدمين بدون أي تقييد
+                const closeButtons = modal.querySelectorAll('button[onclick*="closeAddNewCarModal"]');
+                closeButtons.forEach(btn => {
+                    btn.style.display = '';
+                });
+
+                const titleEl = modal.querySelector('[data-i18n="modalAddCarTitle"]');
+                if (titleEl) {
+                    titleEl.innerText = (!hasCar) 
+                        ? (isEn ? 'Welcome! Add Your First Vehicle' : 'مرحباً بك! أضف سيارتك الأولى')
+                        : (isEn ? 'Add New Vehicle' : 'إضافة سيارة جديدة');
+                }
+
+                // إضافة/تفعيل زر التخطي الثانوي: "تخطي الآن واستكشاف التطبيق"
+                let skipBtn = document.getElementById('skipOnboardingBtn');
+                if (!skipBtn) {
+                    const footer = modal.querySelector('.border-t') || modal.querySelector('.p-4:last-child');
+                    if (footer) {
+                        skipBtn = document.createElement('button');
+                        skipBtn.id = 'skipOnboardingBtn';
+                        skipBtn.type = 'button';
+                        skipBtn.className = 'text-xs text-slate-500 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 font-bold underline transition-colors cursor-pointer px-2 py-1';
+                        footer.insertBefore(skipBtn, footer.firstChild);
+                    }
+                }
+                if (skipBtn) {
+                    skipBtn.onclick = () => dismissOnboardingModal();
+                    skipBtn.style.display = (!hasCar) ? 'inline-block' : 'none';
+                    skipBtn.innerText = isEn ? 'Skip for now & explore app' : 'تخطي الآن واستكشاف التطبيق';
+                }
+            }
+
             renderQuickBrandChips();
             populateBrandSelect();
-            document.getElementById('addNewCarModal')?.classList.remove('hidden');
+
+            // تفريغ قوائم الموديل والجيل حتى يحدد المستخدم الماركة
+            const modelSel = document.getElementById('newCarModelSelect');
+            if (modelSel) {
+                modelSel.innerHTML = `<option value="" disabled selected>${isEn ? '-- Select Model --' : '-- اختر الموديل --'}</option>`;
+            }
+            const genSel = document.getElementById('newCarGenerationSelect');
+            if (genSel) {
+                genSel.innerHTML = `<option value="" disabled selected>${isEn ? '-- Select Generation --' : '-- اختر الجيل والمواصفات --'}</option>`;
+            }
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            }
         }
-        function closeAddNewCarModal() { document.getElementById('addNewCarModal')?.classList.add('hidden'); }
+        window.openAddNewCarModal = openAddNewCarModal;
+
+        // إغلاق النافذة وتخطي الإعداد الأولي بسلاسة مع إمكانية استخدام التطبيق وتسجيل الدخول بحرية
+        function dismissOnboardingModal() {
+            try {
+                sessionStorage.setItem('motorCare_OnboardingDismissed', 'true');
+            } catch (e) {}
+            const modal = document.getElementById('addNewCarModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+        }
+        window.dismissOnboardingModal = dismissOnboardingModal;
+
+        function closeAddNewCarModal(force = true) { 
+            const modal = document.getElementById('addNewCarModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+            return true;
+        }
+        window.closeAddNewCarModal = closeAddNewCarModal;
+
+        // فحص مستخدم لأول مرة وإطلاق تدفق إضافة السيارة الأولى بطريقة واعية بالمزامنة
+        function checkFirstTimeOnboarding() {
+            try {
+                if (sessionStorage.getItem('motorCare_OnboardingDismissed') === 'true') {
+                    return;
+                }
+            } catch (e) {}
+
+            const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+            if (!hasCar) {
+                if (typeof openAddNewCarModal === 'function') {
+                    openAddNewCarModal({ isMandatoryOnboarding: false, isFirstTime: true });
+                }
+            }
+        }
+        window.checkFirstTimeOnboarding = checkFirstTimeOnboarding;
 
         // تعبئة القائمة مصنفة ومقسمة إلى فئات مع دعم الفلترة والبحث
         function populateBrandSelect(filterKeyword = '') {
@@ -310,9 +428,20 @@
             if (!brandSel) return;
             brandSel.innerHTML = '';
 
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
             const kw = filterKeyword.trim().toLowerCase();
             let totalAdded = 0;
-            const groups = appState.lang === 'en' ? BRAND_GROUPS_EN : BRAND_GROUPS;
+            const groups = isEn ? BRAND_GROUPS_EN : BRAND_GROUPS;
+
+            // خيار توجيهي افتراضي في البداية عندما لا يكون هناك بحث
+            if (!kw) {
+                const placeholderOpt = document.createElement('option');
+                placeholderOpt.value = '';
+                placeholderOpt.disabled = true;
+                placeholderOpt.selected = true;
+                placeholderOpt.innerText = isEn ? '-- Choose Your Car Brand --' : '-- اختر ماركة سيارتك --';
+                brandSel.appendChild(placeholderOpt);
+            }
 
             Object.entries(groups).forEach(([groupName, brands]) => {
                 const matchedBrands = brands.filter(b => b.toLowerCase().includes(kw));
@@ -331,7 +460,7 @@
                 }
             });
 
-            if (totalAdded > 0) {
+            if (kw && totalAdded > 0) {
                 onNewCarBrandChanged();
             }
         }
@@ -424,8 +553,10 @@
                     yearInput.max = max;
                     
                     let currentYear = parseInt(yearInput.value);
-                    if (!currentYear || currentYear < min) yearInput.value = min;
-                    if (currentYear > max) yearInput.value = max;
+                    if (currentYear) {
+                        if (currentYear < min) yearInput.value = min;
+                        if (currentYear > max) yearInput.value = max;
+                    }
                 }
 
                 // تحديث بطاقة المعاينة الفنية المعتمدة
@@ -441,6 +572,28 @@
                 document.getElementById('newCarSpecPreviewBox')?.classList.add('hidden');
             }
         }
+
+        // حماية نافذة إضافة السيارة الأولى من الإغلاق بالنقر على الخلفية المعتمة أثناء التهيئة
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('addNewCarModal');
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                        if (!hasCar) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                            if (typeof showNotification === 'function') {
+                                showNotification(isEn ? 'Please add your first vehicle to proceed.' : 'يرجى إكمال بيانات سيارتك الأولى للمتابعة والاستفادة من خدمات التطبيق.', 'warning');
+                            }
+                        } else {
+                            closeAddNewCarModal();
+                        }
+                    }
+                });
+            }
+        });
 
         // دالة تنقية أسماء الموديلات والأجيال لعرض عصري وأنيق على الموبايل بدون نصوص فنية طويلة
         function getCleanCarDisplayName(text) {
@@ -478,3 +631,5 @@ try { if (typeof closeGarageModal !== 'undefined') window.closeGarageModal = clo
 try { if (typeof onNewCarBrandChanged !== 'undefined') window.onNewCarBrandChanged = onNewCarBrandChanged; } catch (e) {}
 try { if (typeof onNewCarModelChanged !== 'undefined') window.onNewCarModelChanged = onNewCarModelChanged; } catch (e) {}
 try { if (typeof onNewCarGenerationChanged !== 'undefined') window.onNewCarGenerationChanged = onNewCarGenerationChanged; } catch (e) {}
+try { if (typeof checkFirstTimeOnboarding !== 'undefined') window.checkFirstTimeOnboarding = checkFirstTimeOnboarding; } catch (e) {}
+try { if (typeof dismissOnboardingModal !== 'undefined') window.dismissOnboardingModal = dismissOnboardingModal; } catch (e) {}

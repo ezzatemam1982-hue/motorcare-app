@@ -84,6 +84,29 @@
             const dateVal = document.getElementById('fuelDateInput')?.value || new Date().toISOString().split('T')[0];
             const receiptImg = tempImages['fuel'] || '';
 
+            const currentOdometer = Number(car.odometer) || 0;
+
+            // 1. Universal Ceiling Validation: عند تعديل تفويلة بنزين سابقة، لا يمكن أن تتجاوز القراءة عداد السيارة الحالي
+            if (editingFuelId && odo > currentOdometer) {
+                const msg = isEn
+                    ? `Reading Error: Past fuel reading cannot be greater than the current vehicle odometer (${currentOdometer.toLocaleString()} km).`
+                    : `خطأ في القراءة: لا يمكن أن تكون قراءة تفويلة الوقود السابقة أكبر من قراءة عداد السيارة الحالي (${currentOdometer.toLocaleString()} كم).`;
+                if (typeof showNotification === 'function') {
+                    showNotification(msg, 'error', 5500);
+                } else {
+                    alert(msg);
+                }
+                document.getElementById('fuelOdometerInput')?.focus();
+                return;
+            }
+
+            // 2. Dynamic Auto-Update on New Operations: عند تسجيل تفويلة جديدة بقراءة أعلى، يتم تحديث عداد السيارة تلقائياً
+            let odometerAutoUpdated = false;
+            if (!editingFuelId && odo > currentOdometer) {
+                car.odometer = odo;
+                odometerAutoUpdated = true;
+            }
+
             if (editingFuelId) {
                 const index = car.fuelLogs.findIndex(f => f.id === editingFuelId);
                 if (index !== -1) {
@@ -95,7 +118,6 @@
                     if (receiptImg) car.fuelLogs[index].receiptImage = receiptImg;
                 }
             } else {
-                if (odo > car.odometer) car.odometer = odo;
                 car.fuelLogs.unshift({ 
                     id: 'f_' + Date.now(), 
                     odometer: odo, 
@@ -113,6 +135,14 @@
             syncUserDataToCloud('fuel_saved');
             closeFuelModal();
             renderDashboard();
+
+            if (odometerAutoUpdated && typeof showNotification === 'function') {
+                showNotification(isEn
+                    ? `Vehicle odometer automatically updated to ${odo.toLocaleString()} km for this new fuel entry ✓`
+                    : `تم تحديث قراءة عداد السيارة تلقائياً إلى (${odo.toLocaleString()} كم) لمواكبة تفويلة الوقود الجديدة ✓`,
+                    'info', 4500
+                );
+            }
         }
 
         function deleteFuelLog(id) {

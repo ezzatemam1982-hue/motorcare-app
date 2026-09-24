@@ -61,12 +61,8 @@
                             appState = validateAndSanitizeAppState(dbState);
                             SafeStorage.setJSON('motorCare_AppState_v140', appState);
                             if (typeof renderDashboard === 'function') renderDashboard();
-                        } else {
-                            checkFirstTimeOnboarding();
                         }
-                    }).catch(() => {
-                        checkFirstTimeOnboarding();
-                    });
+                    }).catch(() => {});
                 }
             } else {
                 // المستخدم ليس مسجلاً دخوله — ضمان خلو الذاكرة من أي بيانات سيارات سابقة
@@ -128,8 +124,16 @@
                 }
                 try { updateHeaderUserProfile(); } catch(e) { console.warn(e); }
                 try { renderDashboard(); } catch(e) { console.warn(e); }
-                try { checkFirstTimeOnboarding(); } catch(e) { console.warn(e); }
                 try { initUserCloudSync(); } catch(e) { console.warn(e); }
+
+                // حارس أمان احتياطي: فحص الإعداد الأولي فقط بعد إتاحة مهلة كافية للمزامنة السحابية إذا لم توجد أي سيارات
+                setTimeout(() => {
+                    const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                    if (!hasCar && typeof checkFirstTimeOnboarding === 'function') {
+                        checkFirstTimeOnboarding();
+                    }
+                }, 2500);
+
                 if (typeof checkUrlNotificationActions === 'function') {
                     try { checkUrlNotificationActions(); } catch(e) {}
                 }

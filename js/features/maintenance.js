@@ -108,6 +108,340 @@
             return '<i class="fa-solid fa-wrench text-emerald-500"></i>';
         }
 
+        /* ==========================================================================
+           [SMART MAINTENANCE CALIBRATION BANNER & WORKFLOW]
+           شريط تنبيه ذكي لمعايرة وضبط قراءات آخر صيانة
+           ========================================================================== */
+
+        function getVehicleCalibrationDismissedKey(car) {
+            if (!car) return 'maintenance_calibration_dismissed_default';
+            const identifier = car.id || car.license || (car.brand + '_' + car.model + '_' + (car.year || ''));
+            return 'maintenance_calibration_dismissed_' + String(identifier).replace(/[^a-zA-Z0-9_]/g, '_');
+        }
+
+        function isMaintenanceCalibrationDismissed(car) {
+            try {
+                const key = getVehicleCalibrationDismissedKey(car);
+                return localStorage.getItem(key) === 'true';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function dismissMaintenanceCalibrationBanner() {
+            try {
+                const car = getCurrentCar();
+                if (car) {
+                    const key = getVehicleCalibrationDismissedKey(car);
+                    localStorage.setItem(key, 'true');
+                }
+                localStorage.setItem('maintenance_calibration_dismissed', 'true');
+            } catch (e) {
+                console.warn('[MotorCare Maintenance] Dismiss save note:', e);
+            }
+
+            const banner = document.getElementById('smartMaintenanceCalibrationBanner');
+            if (banner) {
+                banner.style.transition = 'all 0.3s ease-out';
+                banner.style.opacity = '0';
+                banner.style.transform = 'translateY(-8px)';
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 300);
+            }
+        }
+        window.dismissMaintenanceCalibrationBanner = dismissMaintenanceCalibrationBanner;
+
+        function resetMaintenanceCalibrationBanner() {
+            try {
+                const car = getCurrentCar();
+                if (car) {
+                    const key = getVehicleCalibrationDismissedKey(car);
+                    localStorage.removeItem(key);
+                }
+                localStorage.removeItem('maintenance_calibration_dismissed');
+            } catch (e) {}
+            renderCatalogItems();
+        }
+        window.resetMaintenanceCalibrationBanner = resetMaintenanceCalibrationBanner;
+
+        function renderMaintenanceCalibrationBanner(car, isEn) {
+            const grid = document.getElementById('catalogGrid');
+            if (!grid || !grid.parentNode) return;
+
+            let banner = document.getElementById('smartMaintenanceCalibrationBanner');
+
+            // إذا تم استبعاد التنبيه لهذه السيارة
+            if (!car || isMaintenanceCalibrationDismissed(car)) {
+                if (banner) banner.style.display = 'none';
+                return;
+            }
+
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'smartMaintenanceCalibrationBanner';
+                grid.parentNode.insertBefore(banner, grid);
+            }
+
+            banner.className = 'mb-4 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-sky-500/10 dark:from-amber-950/40 dark:via-slate-900/60 dark:to-sky-950/30 border border-amber-500/30 dark:border-amber-500/30 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 shadow-xs transition-all duration-300';
+            banner.style.display = 'flex';
+            banner.style.opacity = '1';
+            banner.style.transform = 'none';
+
+            banner.innerHTML = `
+                <div class="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center text-sm shrink-0 shadow-2xs mt-0.5 sm:mt-0">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs sm:text-[13px] font-bold text-slate-800 dark:text-slate-100 leading-snug">
+                            ${isEn 
+                                ? '💡 To ensure precise alert schedules and wear rates: Please review and update the (Last Service) reading for each item according to your previous records.' 
+                                : '💡 لضمان دقة مواعيد التنبيهات ونسبة الاستهلاك: يُرجى مراجعة وتحديث قراءة (آخر صيانة) لكل بند حسب سجلاتك السابقة.'}
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 self-end sm:self-center mr-auto sm:mr-0 sm:ml-auto rtl:sm:mr-auto rtl:sm:ml-0">
+                    <button type="button" onclick="startQuickCalibration()" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white dark:text-slate-900 font-black rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer">
+                        <i class="fa-solid fa-sliders text-[11px]"></i>
+                        <span>${isEn ? 'Quick Edit' : 'تعديل سريع'}</span>
+                    </button>
+                    <button type="button" onclick="dismissMaintenanceCalibrationBanner()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800 flex items-center justify-center transition-all cursor-pointer" title="${isEn ? 'Dismiss' : 'إغلاق وعدم الإظهار مجدداً'}">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function highlightCalibrationTargets() {
+            const boxes = document.querySelectorAll('.maintenance-last-service-box');
+            if (!boxes || boxes.length === 0) return;
+
+            boxes.forEach(box => {
+                box.classList.add('ring-2', 'ring-amber-400', 'dark:ring-amber-500', 'bg-amber-500/15', 'dark:bg-amber-950/40');
+            });
+
+            setTimeout(() => {
+                boxes.forEach(box => {
+                    box.classList.remove('ring-2', 'ring-amber-400', 'dark:ring-amber-500', 'bg-amber-500/15', 'dark:bg-amber-950/40');
+                });
+            }, 3500);
+        }
+        window.highlightCalibrationTargets = highlightCalibrationTargets;
+
+        function openQuickCalibrationModal() {
+            const car = getCurrentCar();
+            if (!car || !car.catalog || !Array.isArray(car.catalog)) return;
+
+            highlightCalibrationTargets();
+
+            const isEn = appState.lang === 'en';
+            let modal = document.getElementById('quickCalibrationModal');
+
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'quickCalibrationModal';
+                modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm transition-all duration-200';
+                document.body.appendChild(modal);
+            }
+
+            const currentOdo = Number(car.odometer) || 0;
+            const pmItems = car.catalog.filter(i => i.type !== 'CM');
+
+            let itemsRowsHtml = '';
+            pmItems.forEach(item => {
+                const itemName = (typeof getLocalizedItemName === 'function') ? getLocalizedItemName(item) : item.name;
+                const iconHtml = getCategoryIconHtml(item);
+                const lastKm = Number(item.lastKm) || 0;
+                const lastDate = item.lastDate ? item.lastDate.split('T')[0] : '';
+                const unitStr = item.unit === 'hours' ? (isEn ? 'hrs' : 'ساعة') : (isEn ? 'km' : 'كم');
+                const intervalStr = `${(Number(item.kmInterval) || 10000).toLocaleString()} ${unitStr}`;
+
+                itemsRowsHtml += `
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-amber-400/50 transition-all">
+                        <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                            <div class="w-8 h-8 rounded-xl bg-white dark:bg-slate-700/80 flex items-center justify-center text-sm shadow-2xs shrink-0">
+                                ${iconHtml}
+                            </div>
+                            <div class="min-w-0">
+                                <div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${itemName}</div>
+                                <div class="text-[10px] text-slate-400 font-medium">${isEn ? 'Interval:' : 'الفاصل:'} ${intervalStr}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <div class="flex-1 sm:w-36">
+                                <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-bold mb-1">${isEn ? 'Last Service (km):' : 'آخر صيانة (كم):'}</label>
+                                <input type="number" id="calib_km_${item.id}" value="${lastKm}" min="0" step="100" class="w-full px-2.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-amber-400 focus:outline-none">
+                            </div>
+                            <div class="flex-1 sm:w-36">
+                                <label class="block text-[10px] text-slate-500 dark:text-slate-400 font-bold mb-1">${isEn ? 'Date:' : 'التاريخ:'}</label>
+                                <input type="date" id="calib_date_${item.id}" value="${lastDate}" class="w-full px-2 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-amber-400 focus:outline-none">
+                            </div>
+                            <div class="self-end pb-0.5">
+                                <button type="button" onclick="setCalibrationToCurrentOdo('${item.id}', ${currentOdo})" class="px-2 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/60 hover:bg-sky-100 dark:hover:bg-sky-900/60 text-sky-600 dark:text-sky-300 text-[10px] font-bold border border-sky-200 dark:border-sky-800/80 cursor-pointer transition-all active:scale-95" title="${isEn ? 'Set to current odometer' : 'ضبط على عداد السيارة الحالي'}">
+                                    ${isEn ? 'Current' : 'الحالي'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+                    <!-- Modal Header -->
+                    <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 bg-gradient-to-r from-amber-500/10 via-transparent to-transparent">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg shadow-2xs shrink-0">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                                    ${isEn ? 'Calibrate Maintenance History' : 'معايرة وضبط قراءات آخر صيانة ⚡'}
+                                </h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                    ${isEn ? 'Update the last service odometer and date for your maintenance items in one place.' : 'حدّث قراءات وتواريخ آخر صيانة لبنود جدول الصيانة لضبط نسب الاستهلاك والتنبيهات.'}
+                                </p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="closeQuickCalibrationModal()" class="w-8 h-8 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center cursor-pointer transition-all">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- Current Odo Info Bar -->
+                    <div class="px-4 sm:px-5 py-2.5 bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                        <span class="text-slate-500 dark:text-slate-400 font-medium">
+                            ${isEn ? 'Current Vehicle Odometer:' : 'عداد السيارة الحالي:'}
+                        </span>
+                        <span class="font-mono font-black text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/70 px-2 py-0.5 rounded-lg border border-sky-200 dark:border-sky-800/60">
+                            ${currentOdo.toLocaleString()} ${isEn ? 'km' : 'كم'}
+                        </span>
+                    </div>
+
+                    <!-- Scrollable Items List -->
+                    <div class="p-4 sm:p-5 overflow-y-auto max-h-[55vh] space-y-2.5">
+                        ${itemsRowsHtml}
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="p-4 sm:p-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-800/30">
+                        <button type="button" onclick="closeQuickCalibrationModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-all">
+                            ${isEn ? 'Cancel' : 'إلغاء'}
+                        </button>
+                        <button type="button" onclick="saveQuickCalibration()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white dark:text-slate-900 rounded-xl text-xs font-black shadow-md shadow-amber-500/20 cursor-pointer transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-check"></i>
+                            <span>${isEn ? 'Save & Apply Calibration' : 'حفظ وتطبيق المعايرة ✓'}</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+        window.openQuickCalibrationModal = openQuickCalibrationModal;
+
+        function setCalibrationToCurrentOdo(itemId, currentOdo) {
+            const kmInp = document.getElementById('calib_km_' + itemId);
+            const dateInp = document.getElementById('calib_date_' + itemId);
+            if (kmInp) kmInp.value = currentOdo;
+            if (dateInp) dateInp.value = new Date().toISOString().split('T')[0];
+        }
+        window.setCalibrationToCurrentOdo = setCalibrationToCurrentOdo;
+
+        function closeQuickCalibrationModal() {
+            const modal = document.getElementById('quickCalibrationModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+        }
+        window.closeQuickCalibrationModal = closeQuickCalibrationModal;
+
+        function saveQuickCalibration() {
+            const car = getCurrentCar();
+            if (!car || !car.catalog) return;
+
+            const isEn = appState.lang === 'en';
+            const currentOdometer = Number(car.odometer) || 0;
+
+            // 1. Universal Ceiling Validation: قراءة الصيانة السابقة لا يمكن أن تتجاوز عداد السيارة الحالي
+            for (const item of car.catalog) {
+                if (item.type === 'CM') continue;
+
+                const kmInp = document.getElementById('calib_km_' + item.id);
+                if (kmInp) {
+                    const val = parseInt(kmInp.value, 10);
+                    if (!isNaN(val) && val > currentOdometer) {
+                        const itemName = (typeof getLocalizedItemName === 'function') ? getLocalizedItemName(item) : item.name;
+                        const msg = isEn
+                            ? `Reading Error: Past maintenance reading for "${itemName}" cannot be greater than the current vehicle odometer (${currentOdometer.toLocaleString()} km).`
+                            : `خطأ في القراءة: لا يمكن أن تكون قراءة الصيانة السابقة لبند "${itemName}" أكبر من قراءة عداد السيارة الحالي (${currentOdometer.toLocaleString()} كم).`;
+
+                        if (typeof showNotification === 'function') {
+                            showNotification(msg, 'error', 5500);
+                        } else {
+                            alert(msg);
+                        }
+                        kmInp.focus();
+                        kmInp.classList.add('ring-2', 'ring-rose-500');
+                        setTimeout(() => kmInp.classList.remove('ring-2', 'ring-rose-500'), 4000);
+                        return; // منع الحفظ فوراً
+                    }
+                }
+            }
+
+            let updatedCount = 0;
+            car.catalog.forEach(item => {
+                if (item.type === 'CM') return;
+
+                const kmInp = document.getElementById('calib_km_' + item.id);
+                const dateInp = document.getElementById('calib_date_' + item.id);
+
+                if (kmInp) {
+                    const val = parseInt(kmInp.value, 10);
+                    if (!isNaN(val) && val >= 0) {
+                        const safeVal = Math.min(val, currentOdometer);
+                        if (item.lastKm !== safeVal) {
+                            item.lastKm = safeVal;
+                            updatedCount++;
+                        }
+                    }
+                }
+                if (dateInp && dateInp.value) {
+                    if (item.lastDate !== dateInp.value) {
+                        item.lastDate = dateInp.value;
+                        updatedCount++;
+                    }
+                }
+            });
+
+            if (typeof saveAppState === 'function') {
+                saveAppState('calibration_update');
+            }
+
+            dismissMaintenanceCalibrationBanner();
+            closeQuickCalibrationModal();
+            renderCatalogItems();
+
+            if (typeof showNotification === 'function') {
+                showNotification(
+                    isEn 
+                        ? 'Maintenance readings calibrated successfully! Wear levels updated.' 
+                        : 'تمت معايرة قراءات الصيانة بنجاح! تم تحديث نسب الاستهلاك والتنبيهات بدقة.',
+                    'success', 
+                    4000
+                );
+            }
+        }
+        window.saveQuickCalibration = saveQuickCalibration;
+
+        function startQuickCalibration() {
+            openQuickCalibrationModal();
+        }
+        window.startQuickCalibration = startQuickCalibration;
+
         // محرك رسم وعرض بطاقات جدول الصيانة الدوري والعاجل (PM / CM Grid)
         function renderCatalogItems() {
             const grid = document.getElementById('catalogGrid');
@@ -117,6 +451,8 @@
             const isEn = appState.lang === 'en';
 
             if (!car) {
+                const oldBanner = document.getElementById('smartMaintenanceCalibrationBanner');
+                if (oldBanner) oldBanner.style.display = 'none';
                 grid.innerHTML = `
                     <div class="col-span-full py-12 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-6 space-y-3">
                         <div class="w-14 h-14 rounded-2xl bg-sky-50 dark:bg-sky-950 text-sky-500 flex items-center justify-center text-2xl mx-auto">
@@ -138,6 +474,8 @@
             }
 
             if (!car.catalog || car.catalog.length === 0) {
+                const oldBanner = document.getElementById('smartMaintenanceCalibrationBanner');
+                if (oldBanner) oldBanner.style.display = 'none';
                 grid.innerHTML = `
                     <div class="col-span-full py-12 text-center bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-6 space-y-3">
                         <div class="w-14 h-14 rounded-2xl bg-sky-50 dark:bg-sky-950 text-sky-500 flex items-center justify-center text-2xl mx-auto">
@@ -156,6 +494,9 @@
 
             const currentOdo = Number(car.odometer) || 0;
             const activeFilter = appState.activeFilter || 'all';
+
+            // شريط التنبيه الذكي لمعايرة وضبط قراءات آخر صيانة (Smart Maintenance Calibration Banner)
+            renderMaintenanceCalibrationBanner(car, isEn);
 
             // تحديث بادج عداد الـ CM
             const cmItems = car.catalog.filter(i => i.type === 'CM' && !i.isResolved);
@@ -321,7 +662,7 @@
                             ` : ''}
 
                             <!-- تفاصيل الفواصل وآخر صيانة -->
-                            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2.5 grid grid-cols-2 gap-2 text-[11px] border border-slate-100 dark:border-slate-800/80">
+                            <div class="maintenance-last-service-box bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2.5 grid grid-cols-2 gap-2 text-[11px] border border-slate-100 dark:border-slate-800/80 transition-all duration-300">
                                 <div>
                                     <span class="text-slate-400 block text-[10px] font-medium">${isEn ? 'Last Service:' : 'آخر صيانة:'}</span>
                                     <strong class="text-slate-700 dark:text-slate-200 font-bold block truncate font-mono">${lastKm.toLocaleString()} ${unitStr}</strong>
@@ -1008,6 +1349,29 @@
 
             const odoInput = document.getElementById('recordOdometerInput');
             const odo = MotorCareSecurity.parsePositiveInt(odoInput?.value, car.odometer, 0, 5000000);
+            const isEn = appState.lang === 'en';
+            const currentOdometer = Number(car.odometer) || 0;
+
+            // 1. Universal Ceiling Validation: عند تعديل سجل صيانة سابق، لا يمكن أن تتجاوز القراءة عداد السيارة الحالي
+            if (editingRecordId && odo > currentOdometer) {
+                const msg = isEn
+                    ? `Reading Error: Past maintenance reading cannot be greater than the current vehicle odometer (${currentOdometer.toLocaleString()} km).`
+                    : `خطأ في القراءة: لا يمكن أن تكون قراءة الصيانة السابقة أكبر من قراءة عداد السيارة الحالي (${currentOdometer.toLocaleString()} كم).`;
+                if (typeof showNotification === 'function') {
+                    showNotification(msg, 'error', 5500);
+                } else {
+                    alert(msg);
+                }
+                odoInput?.focus();
+                return;
+            }
+
+            // 2. Dynamic Auto-Update on New Operations: عند تسجيل صيانة جديدة بقراءة أعلى، يتم تحديث عداد السيارة تلقائياً
+            let odometerAutoUpdated = false;
+            if (!editingRecordId && odo > currentOdometer) {
+                car.odometer = odo;
+                odometerAutoUpdated = true;
+            }
 
             const dateInput = document.getElementById('recordDateInput');
             const date = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
@@ -1168,6 +1532,17 @@
             editingRecordId = null;
             SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
             syncUserDataToCloud('maintenance_saved');
+
+            if (odometerAutoUpdated) {
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn
+                            ? `Vehicle odometer automatically updated to ${odo.toLocaleString()} km for this new service entry ✓`
+                            : `تم تحديث قراءة عداد السيارة تلقائياً إلى (${odo.toLocaleString()} كم) لمواكبة الصيانة الجديدة ✓`,
+                        'info', 4500
+                    );
+                }
+            }
             if (partId && typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.clearItemNotification) {
                 MotorCareNotifications.clearItemNotification(partId);
             }
@@ -1275,3 +1650,11 @@ try { if (typeof toggleMaintenanceType !== 'undefined') window.toggleMaintenance
 try { if (typeof saveMaintenanceRecord !== 'undefined') window.saveMaintenanceRecord = saveMaintenanceRecord; } catch (e) {}
 try { if (typeof deleteHistoryRecord !== 'undefined') window.deleteHistoryRecord = deleteHistoryRecord; } catch (e) {}
 try { if (typeof renderHistoryList !== 'undefined') window.renderHistoryList = renderHistoryList; } catch (e) {}
+try { if (typeof dismissMaintenanceCalibrationBanner !== 'undefined') window.dismissMaintenanceCalibrationBanner = dismissMaintenanceCalibrationBanner; } catch (e) {}
+try { if (typeof resetMaintenanceCalibrationBanner !== 'undefined') window.resetMaintenanceCalibrationBanner = resetMaintenanceCalibrationBanner; } catch (e) {}
+try { if (typeof openQuickCalibrationModal !== 'undefined') window.openQuickCalibrationModal = openQuickCalibrationModal; } catch (e) {}
+try { if (typeof closeQuickCalibrationModal !== 'undefined') window.closeQuickCalibrationModal = closeQuickCalibrationModal; } catch (e) {}
+try { if (typeof saveQuickCalibration !== 'undefined') window.saveQuickCalibration = saveQuickCalibration; } catch (e) {}
+try { if (typeof setCalibrationToCurrentOdo !== 'undefined') window.setCalibrationToCurrentOdo = setCalibrationToCurrentOdo; } catch (e) {}
+try { if (typeof startQuickCalibration !== 'undefined') window.startQuickCalibration = startQuickCalibration; } catch (e) {}
+try { if (typeof highlightCalibrationTargets !== 'undefined') window.highlightCalibrationTargets = highlightCalibrationTargets; } catch (e) {}

@@ -1,3 +1,123 @@
+        // ==========================================
+        // [USER SESSION ISOLATION]
+        // كشف تغيير المستخدم وعزل بيانات الجلسة بالكامل لضمان الخصوصية والنظافة
+        // ==========================================
+        function detectAndIsolateUserSession(newUserEmail, newProvider, isNewRegistration = false) {
+            try {
+                // إيقاف أي مستمع سحابي نشط فوراً
+                if (typeof stopCloudSyncListener === 'function') {
+                    stopCloudSyncListener();
+                }
+
+                const prevRaw = SafeStorage.getItem('motorCare_UserProfile');
+                let prevProfile = null;
+                if (prevRaw) {
+                    try { prevProfile = JSON.parse(prevRaw); } catch(e) {}
+                }
+
+                const prevEmail = (prevProfile && prevProfile.email || '').trim().toLowerCase();
+                const newEmail = (newUserEmail || '').trim().toLowerCase();
+
+                // 1. إذا كان إنشاء حساب جديد بالكامل (Registration Mode):
+                // يجب تصفير الحالة والبيانات حتماً وبشكل قطعي 100%
+                if (isNewRegistration) {
+                    console.log('[MotorCare Auth] New user registration. Resetting all garage state to clean slate for:', newEmail);
+                    
+                    // حفظ حساب المستخدم السابق إن وُجد في مساحته الخاصة
+                    if (prevEmail && typeof appState !== 'undefined' && appState.cars && appState.cars.length > 0) {
+                        try {
+                            const uKey = prevEmail.replace(/[^a-z0-9_]/g, '_');
+                            SafeStorage.setJSON('motorCare_AppState_' + uKey, appState);
+                        } catch(e) {}
+                    }
+
+                    // تصفير حالة التطبيق في الذاكرة
+                    if (typeof appState !== 'undefined') {
+                        appState.cars = [];
+                        appState.currentCarIndex = 0;
+                    }
+
+                    // مسح المفاتيح النشطة
+                    SafeStorage.removeItem('motorCare_AppState_v140');
+                    SafeStorage.removeItem('motorCare_PersonalEmergencyContacts');
+                    SafeStorage.removeItem('motorCare_LastCloudSyncTime');
+                    SafeStorage.removeItem('motorCare_OdometerVerificationLogs');
+                    SafeStorage.removeItem('motorCare_InspectionDraft');
+                    SafeStorage.removeItem('motorCare_DriverExpenses');
+                    SafeStorage.removeItem('motorCare_CustomReportSettings');
+                    SafeStorage.setItem('motorCare_CurrentActiveUser', newEmail || 'new_account');
+
+                    if (typeof MotorCareIndexedDB !== 'undefined' && MotorCareIndexedDB.removeItem) {
+                        try { MotorCareIndexedDB.removeItem('motorCare_AppState_v140'); } catch(e) {}
+                    }
+                    return;
+                }
+
+                // 2. إذا كان نفس المستخدم المسجل حالياً، لا داعي لتصفير البيانات
+                if (prevEmail && newEmail && prevEmail === newEmail) {
+                    SafeStorage.setItem('motorCare_CurrentActiveUser', newEmail);
+                    return;
+                }
+
+                // 3. إذا كان زائر يدخل كزائر مجدداً بدون بريد
+                if (!prevEmail && !newEmail && prevProfile && prevProfile.provider === 'guest' && newProvider === 'guest') {
+                    return;
+                }
+
+                // 4. مستخدم مختلف تماماً (User Switch):
+                console.log('[MotorCare Auth] User switch detected. Isolating session data.');
+                console.log(`  Previous: "${prevEmail}" (${prevProfile ? prevProfile.provider : 'none'})`);
+                console.log(`  New:      "${newEmail}" (${newProvider})`);
+
+                // حفظ بيانات المستخدم السابق في مساحته الخاصة
+                if (prevEmail && typeof appState !== 'undefined' && appState.cars && appState.cars.length > 0) {
+                    try {
+                        const uKey = prevEmail.replace(/[^a-z0-9_]/g, '_');
+                        SafeStorage.setJSON('motorCare_AppState_' + uKey, appState);
+                    } catch(e) {}
+                }
+
+                // تصفير الذاكرة أولاً
+                if (typeof appState !== 'undefined') {
+                    appState.cars = [];
+                    appState.currentCarIndex = 0;
+                }
+
+                // محاولة استرجاع البيانات المحفوظة محلياً لهذا المستخدم الجديد إذا كان قد استخدم التطبيق مسبقاً
+                let restoredLocal = false;
+                if (newEmail) {
+                    const newKey = newEmail.replace(/[^a-z0-9_]/g, '_');
+                    const cached = SafeStorage.getJSON('motorCare_AppState_' + newKey, null);
+                    if (cached && cached.cars && Array.isArray(cached.cars) && cached.cars.length > 0) {
+                        const sanitized = (typeof validateAndSanitizeAppState === 'function')
+                            ? validateAndSanitizeAppState(cached)
+                            : cached;
+                        if (typeof appState !== 'undefined') {
+                            appState.cars = sanitized.cars || [];
+                            appState.currentCarIndex = sanitized.currentCarIndex || 0;
+                            if (sanitized.currency) appState.currency = sanitized.currency;
+                            if (typeof window !== 'undefined') window.appState = appState;
+                        }
+                        SafeStorage.setJSON('motorCare_AppState_v140', appState);
+                        restoredLocal = true;
+                    }
+                }
+
+                if (!restoredLocal) {
+                    SafeStorage.removeItem('motorCare_AppState_v140');
+                    SafeStorage.removeItem('motorCare_PersonalEmergencyContacts');
+                    SafeStorage.removeItem('motorCare_LastCloudSyncTime');
+                    if (typeof MotorCareIndexedDB !== 'undefined' && MotorCareIndexedDB.removeItem) {
+                        try { MotorCareIndexedDB.removeItem('motorCare_AppState_v140'); } catch(e) {}
+                    }
+                }
+
+                SafeStorage.setItem('motorCare_CurrentActiveUser', newEmail || newProvider || 'guest');
+            } catch(e) {
+                console.warn('[MotorCare Auth] Session isolation warning:', e);
+            }
+        }
+
         function enterMainApp() {
             try {
                 SafeStorage.setItem('motorCare_LoggedIn', 'true');
@@ -16,9 +136,6 @@
                 }
                 if (typeof renderDashboard === 'function') {
                     try { renderDashboard(); } catch(e) { console.warn(e); }
-                }
-                if (typeof updateCloudSyncStatusUI === 'function') {
-                    try { updateCloudSyncStatusUI('guest'); } catch(e) { console.warn(e); }
                 }
             } catch(err) {
                 console.error('enterMainApp error:', err);
@@ -1592,6 +1709,9 @@ ${verifyUrl}
             const email = customEmail.trim();
             const avatar = customAvatar || ('https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(name));
 
+            // عزل الجلسة: مسح بيانات المستخدم السابق إذا تغيّر المستخدم
+            detectAndIsolateUserSession(email, 'google');
+
             let profile = {
                 name: name,
                 email: email,
@@ -1606,20 +1726,21 @@ ${verifyUrl}
             SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
             SafeStorage.setItem('motorCare_LoggedIn', 'true');
 
-            const landing = document.getElementById('landingScreen');
-            const mainApp = document.getElementById('mainAppContainer');
-            if (landing) {
-                landing.style.setProperty('display', 'none', 'important');
-                landing.classList.add('hidden');
+            enterMainApp();
+            if (typeof initUserCloudSync === 'function') {
+                initUserCloudSync().then((restored) => {
+                    const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                    if (hasCar) {
+                        if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                        const addModal = document.getElementById('addNewCarModal');
+                        if (addModal) {
+                            addModal.classList.add('hidden');
+                            addModal.style.display = 'none';
+                        }
+                        if (typeof renderDashboard === 'function') renderDashboard();
+                    }
+                }).catch(() => {});
             }
-            if (mainApp) {
-                mainApp.style.setProperty('display', 'flex', 'important');
-                mainApp.classList.remove('hidden');
-            }
-
-            if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
-            if (typeof renderDashboard === 'function') renderDashboard();
-            if (typeof initUserCloudSync === 'function') initUserCloudSync();
             if (typeof showNotification === 'function') {
                 showNotification(isEn ? `Welcome, ${name}! Signed in via Google ✨` : `أهلاً بك يا ${name}! تم الدخول بنجاح عبر حساب Google ✨`, 'success');
             }
@@ -1635,25 +1756,22 @@ ${verifyUrl}
                 isRegistered: false,
                 isVerified: true
             };
-            try {
-                const existing = SafeStorage.getItem('motorCare_UserProfile');
-                if (existing) {
-                    const parsed = JSON.parse(existing);
-                    if (parsed && parsed.email) profile = parsed;
-                }
-            } catch(e) {}
+
+            // عزل الجلسة: مسح بيانات المستخدم السابق إذا تغيّر المستخدم
+            detectAndIsolateUserSession('', 'guest', false);
 
             SafeStorage.setItem('motorCare_LoggedIn', 'true');
             SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
 
-            const landing = document.getElementById('landingScreen');
-            const mainApp = document.getElementById('mainAppContainer');
-            if (landing) landing.style.display = 'none';
-            if (mainApp) mainApp.style.display = 'flex';
-
-            if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
-            if (typeof renderDashboard === 'function') renderDashboard();
+            enterMainApp();
             if (typeof updateCloudSyncStatusUI === 'function') updateCloudSyncStatusUI('guest');
+
+            setTimeout(() => {
+                const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                if (!hasCar && typeof checkFirstTimeOnboarding === 'function') {
+                    checkFirstTimeOnboarding();
+                }
+            }, 500);
         }
 
                 let _isSubmittingAuth = false;
@@ -1745,6 +1863,9 @@ ${verifyUrl}
                 }
 
                 // اعتماد تسجيل الدخول بنجاح
+                // عزل الجلسة: مسح بيانات المستخدم السابق إذا تغيّر المستخدم
+                detectAndIsolateUserSession(email, 'email', false);
+
                 const profile = {
                     ...existingAccount,
                     lastLoginAt: new Date().toISOString()
@@ -1752,20 +1873,21 @@ ${verifyUrl}
                 SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
                 SafeStorage.setItem('motorCare_LoggedIn', 'true');
 
-                const landing = document.getElementById('landingScreen');
-                const mainApp = document.getElementById('mainAppContainer');
-                if (landing) {
-                    landing.style.setProperty('display', 'none', 'important');
-                    landing.classList.add('hidden');
+                enterMainApp();
+                if (typeof initUserCloudSync === 'function') {
+                    initUserCloudSync().then((restored) => {
+                        const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                        if (hasCar) {
+                            if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                            const addModal = document.getElementById('addNewCarModal');
+                            if (addModal) {
+                                addModal.classList.add('hidden');
+                                addModal.style.display = 'none';
+                            }
+                            if (typeof renderDashboard === 'function') renderDashboard();
+                        }
+                    }).catch(() => {});
                 }
-                if (mainApp) {
-                    mainApp.style.setProperty('display', 'flex', 'important');
-                    mainApp.classList.remove('hidden');
-                }
-
-                if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
-                if (typeof renderDashboard === 'function') renderDashboard();
-                if (typeof initUserCloudSync === 'function') initUserCloudSync();
                 if (typeof showNotification === 'function') {
                     showNotification(isEn ? `Welcome back, ${profile.name}! 👋` : `أهلاً بعودتك يا ${profile.name}! 👋`, 'success');
                 }
@@ -1806,6 +1928,9 @@ ${verifyUrl}
                 }
 
                 // إنشاء الحساب الجديد وحفظه فوراً
+                // عزل الجلسة: مسح بيانات المستخدم السابق وتصفير الجلسة تماماً لحساب جديد نظيف
+                detectAndIsolateUserSession(email, 'email', true);
+
                 const nowIso = new Date().toISOString();
                 const newAccount = {
                     id: 'acc_' + Date.now(),
@@ -1855,19 +1980,7 @@ ${verifyUrl}
                     );
                 }
 
-                const landing = document.getElementById('landingScreen');
-                const mainApp = document.getElementById('mainAppContainer');
-                if (landing) {
-                    landing.style.setProperty('display', 'none', 'important');
-                    landing.classList.add('hidden');
-                }
-                if (mainApp) {
-                    mainApp.style.setProperty('display', 'flex', 'important');
-                    mainApp.classList.remove('hidden');
-                }
-
-                if (typeof updateHeaderUserProfile === 'function') updateHeaderUserProfile();
-                if (typeof renderDashboard === 'function') renderDashboard();
+                enterMainApp();
                 if (typeof initUserCloudSync === 'function') initUserCloudSync();
 
                 // إرسال كود التفعيل وفتح نافذة إدخال الرمز مباشرة
@@ -2311,9 +2424,41 @@ ${verifyUrl}
                 if (typeof closeTopHeaderMenu === 'function') closeTopHeaderMenu();
                 if (typeof closeMobileMoreDrawer === 'function') closeMobileMoreDrawer();
 
-                SafeStorage.removeItem('motorCare_LoggedIn');
+                // 1. حفظ بيانات المستخدم الحالي في مساحته الخاصة قبل الخروج لضمان عدم ضياعها
+                const profRaw = SafeStorage.getItem('motorCare_UserProfile');
+                if (profRaw) {
+                    try {
+                        const prof = JSON.parse(profRaw);
+                        if (prof && prof.email && typeof appState !== 'undefined' && appState.cars && appState.cars.length > 0) {
+                            const uKey = prof.email.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+                            SafeStorage.setJSON('motorCare_AppState_' + uKey, appState);
+                        }
+                    } catch(e) {}
+                }
+
+                // 2. إيقاف أي مزامنة سحابية نشطة
+                if (typeof stopCloudSyncListener === 'function') {
+                    stopCloudSyncListener();
+                }
+
+                // 3. تصفير حالة التطبيق في الذاكرة ومسح التخزين المؤقت النشط
+                if (typeof appState !== 'undefined') {
+                    appState.cars = [];
+                    appState.currentCarIndex = 0;
+                }
+
+                SafeStorage.removeItem('motorCare_AppState_v140');
+                SafeStorage.removeItem('motorCare_UserProfile');
+                SafeStorage.removeItem('motorCare_PersonalEmergencyContacts');
+                SafeStorage.removeItem('motorCare_LastCloudSyncTime');
+                SafeStorage.removeItem('motorCare_CurrentActiveUser');
+                if (typeof MotorCareIndexedDB !== 'undefined' && MotorCareIndexedDB.removeItem) {
+                    try { MotorCareIndexedDB.removeItem('motorCare_AppState_v140'); } catch(e) {}
+                }
+
                 SafeStorage.setItem('motorCare_LoggedIn', 'false');
 
+                // 4. إظهار شاشة الدخول وإخفاء التطبيق الرئيسي
                 const landing = document.getElementById('landingScreen');
                 const mainApp = document.getElementById('mainAppContainer');
 
@@ -2333,6 +2478,11 @@ ${verifyUrl}
 
                 const pwdInput = document.getElementById('authPassword');
                 if (pwdInput) pwdInput.value = '';
+
+                // 5. إعادة رسم لوحة القيادة لتكون نظيفة تماماً بدون أي بيانات سيارة سابقة
+                if (typeof renderDashboard === 'function') {
+                    try { renderDashboard(); } catch(e) {}
+                }
 
                 if (typeof initGoogleIdentityServices === 'function') {
                     try { initGoogleIdentityServices(); } catch(e) {}

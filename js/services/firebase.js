@@ -278,6 +278,15 @@
                                         ? `Your garage data has been restored successfully (${cloudCarsCount} vehicle${cloudCarsCount > 1 ? 's' : ''})` 
                                         : `تم استرجاع بيانات سيارتك بنجاح (${cloudCarsCount} سيارة)`, 'success', 4000);
                                 }
+
+                                if (cloudCarsCount > 0) {
+                                    if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                                    const modal = document.getElementById('addNewCarModal');
+                                    if (modal) {
+                                        modal.classList.add('hidden');
+                                        modal.style.display = 'none';
+                                    }
+                                }
                             }
                         }
 
@@ -337,6 +346,15 @@
                                     if (typeof renderDashboard === 'function') renderDashboard();
                                     updateCloudSyncStatusUI('synced');
 
+                                    if (appState.cars && appState.cars.length > 0) {
+                                        if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                                        const modal = document.getElementById('addNewCarModal');
+                                        if (modal) {
+                                            modal.classList.add('hidden');
+                                            modal.style.display = 'none';
+                                        }
+                                    }
+
                                     if (cloudData && Array.isArray(cloudData.personalEmergencyContacts)) {
                                         try {
                                             SafeStorage.setItem('motorCare_PersonalEmergencyContacts', JSON.stringify(cloudData.personalEmergencyContacts));
@@ -366,20 +384,43 @@
             const userKey = getCloudSyncUserKey();
             if (!userKey) {
                 updateCloudSyncStatusUI('guest');
+                const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                if (!hasCar && typeof checkFirstTimeOnboarding === 'function') {
+                    setTimeout(() => checkFirstTimeOnboarding(), 400);
+                }
                 return Promise.resolve(false);
             }
             if (initFirestoreDatabase()) {
                 return autoRestoreFromCloud().then((restored) => {
                     startRealtimeCloudSyncListener();
-                    if (!restored && (!appState.cars || appState.cars.length === 0)) {
+                    const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                    // لا يتم إطلاق نافذة الإعداد الأولي إلا إذا لم يتم العثور على أي سيارة محلياً ولا في السحابة بعد انتهاء المزامنة
+                    if (!hasCar) {
                         if (typeof checkFirstTimeOnboarding === 'function') {
                             try { checkFirstTimeOnboarding(); } catch(e) {}
                         }
+                    } else {
+                        if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                        const modal = document.getElementById('addNewCarModal');
+                        if (modal) {
+                            modal.classList.add('hidden');
+                            modal.style.display = 'none';
+                        }
                     }
                     return restored;
+                }).catch((err) => {
+                    const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                    if (!hasCar && typeof checkFirstTimeOnboarding === 'function') {
+                        try { checkFirstTimeOnboarding(); } catch(e) {}
+                    }
+                    return false;
                 });
             } else {
                 updateCloudSyncStatusUI('offline');
+                const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                if (!hasCar && typeof checkFirstTimeOnboarding === 'function') {
+                    setTimeout(() => checkFirstTimeOnboarding(), 600);
+                }
                 return Promise.resolve(false);
             }
         }
