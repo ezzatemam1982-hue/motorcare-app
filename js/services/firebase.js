@@ -649,6 +649,251 @@
             }
         }
 
+        /* ==========================================================================
+           [FIREBASE CONFIG MANAGER & DIAGNOSTICS] إدارة وتشخيص ربط مشروع Firebase
+           ========================================================================== */
+        function openFirebaseConfigModal() {
+            const modal = document.getElementById('firebaseConfigModal');
+            if (!modal) return;
+            const cfg = getFirebaseConfig();
+            const projEl = document.getElementById('currentActiveFirebaseProjectId');
+            if (projEl) projEl.innerText = cfg.projectId || 'غير محدد';
+            
+            const badgeEl = document.getElementById('firebaseConnStatusBadge');
+            if (badgeEl) {
+                badgeEl.className = 'text-[10px] font-bold text-slate-500';
+                badgeEl.innerText = 'جاهز للفحص';
+            }
+            const detailsEl = document.getElementById('firebaseConnDetails');
+            if (detailsEl) {
+                detailsEl.classList.add('hidden');
+                detailsEl.innerHTML = '';
+            }
+
+            const textarea = document.getElementById('customFirebaseConfigTextarea');
+            if (textarea) {
+                const custom = SafeStorage.getItem('motorCare_FirebaseConfig');
+                if (custom) {
+                    try {
+                        textarea.value = JSON.stringify(JSON.parse(custom), null, 2);
+                    } catch(e) {
+                        textarea.value = custom;
+                    }
+                } else {
+                    textarea.value = '';
+                }
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeFirebaseConfigModal() {
+            const modal = document.getElementById('firebaseConfigModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function testCurrentFirebaseConnection() {
+            const btnIcon = document.getElementById('btnTestFirebaseConnIcon');
+            const badgeEl = document.getElementById('firebaseConnStatusBadge');
+            const detailsEl = document.getElementById('firebaseConnDetails');
+            const cfg = getFirebaseConfig();
+
+            if (btnIcon) btnIcon.className = 'fa-solid fa-rotate text-[10px] fa-spin';
+            if (badgeEl) {
+                badgeEl.className = 'text-[10px] font-bold text-sky-500 animate-pulse';
+                badgeEl.innerText = 'جاري فحص الاتصال...';
+            }
+            if (detailsEl) detailsEl.classList.add('hidden');
+
+            try {
+                const projectId = cfg.projectId;
+                const testUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/motorcare_users/_conn_test`;
+                
+                const resp = await fetch(testUrl);
+                const status = resp.status;
+                let data = {};
+                try { data = await resp.json(); } catch(e) {}
+
+                if (btnIcon) btnIcon.className = 'fa-solid fa-satellite-dish';
+
+                if (status === 200 || status === 404) {
+                    if (badgeEl) {
+                        badgeEl.className = 'text-[10px] font-bold text-emerald-600 dark:text-emerald-400';
+                        badgeEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> متصل بنجاح ☁️';
+                    }
+                    if (detailsEl) {
+                        detailsEl.classList.remove('hidden');
+                        detailsEl.innerHTML = `<span class="text-emerald-600 font-bold">✓ الاتصال بقاعدة بيانات ${projectId} يعمل بكفاءة كاملة.</span>`;
+                    }
+                } else if (status === 403) {
+                    if (badgeEl) {
+                        badgeEl.className = 'text-[10px] font-bold text-rose-600 dark:text-rose-400';
+                        badgeEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> الصلاحيات محظورة (403)';
+                    }
+                    if (detailsEl) {
+                        detailsEl.classList.remove('hidden');
+                        detailsEl.innerHTML = `
+                            <p class="font-bold text-rose-600 mb-1">خطأ في قواعد أمان Firestore (Permission Denied):</p>
+                            <p class="text-[9px] leading-relaxed text-slate-500 dark:text-slate-400">
+                                مشروعك (${projectId}) يرفض القراءة حالياً. يرجى الدخول إلى <b>Firebase Console &gt; Firestore Database &gt; Rules</b> ونشر القاعدة الموجودة بالأسفل.
+                            </p>
+                        `;
+                    }
+                } else {
+                    if (badgeEl) {
+                        badgeEl.className = 'text-[10px] font-bold text-amber-600 dark:text-amber-400';
+                        badgeEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> كود استجابة: ${status}`;
+                    }
+                    if (detailsEl) {
+                        detailsEl.classList.remove('hidden');
+                        detailsEl.innerHTML = `<span class="text-amber-600">رد الخادم: ${data?.error?.message || status}</span>`;
+                    }
+                }
+            } catch(netErr) {
+                if (btnIcon) btnIcon.className = 'fa-solid fa-satellite-dish';
+                if (badgeEl) {
+                    badgeEl.className = 'text-[10px] font-bold text-rose-600 dark:text-rose-400';
+                    badgeEl.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> تعذر الاتصال بالشبكة';
+                }
+                if (detailsEl) {
+                    detailsEl.classList.remove('hidden');
+                    detailsEl.innerHTML = `<span class="text-rose-600 font-bold">فشل طلب الشبكة: ${netErr.message}</span>`;
+                }
+            }
+        }
+
+        async function pasteFromClipboardToFirebaseInput() {
+            try {
+                const text = await navigator.clipboard.readText();
+                const textarea = document.getElementById('customFirebaseConfigTextarea');
+                if (textarea && text) {
+                    textarea.value = text;
+                    if (typeof showNotification === 'function') {
+                        showNotification('تم لصق البيانات من الحافظة ✓', 'info', 2000);
+                    }
+                }
+            } catch(e) {
+                if (typeof showNotification === 'function') {
+                    showNotification('تعذر الوصول للحافظة، يمكنك اللصق يدوياً عبر Ctrl+V', 'warning', 3000);
+                }
+            }
+        }
+
+        function extractFirebaseConfigFromInput(rawInput) {
+            let trimmed = (rawInput || '').trim();
+            if (!trimmed) throw new Error('يرجى لصق بيانات إعدادات Firebase.');
+
+            try {
+                const parsed = JSON.parse(trimmed);
+                if (parsed && typeof parsed === 'object') return parsed;
+            } catch(e) {}
+
+            let cleaned = trimmed
+                .replace(/^(const|let|var)\s+\w+\s*=\s*/, '')
+                .replace(/;?\s*$/, '');
+
+            try {
+                const parsed = JSON.parse(cleaned);
+                if (parsed && typeof parsed === 'object') return parsed;
+            } catch(e) {}
+
+            const extract = (key) => {
+                const match = trimmed.match(new RegExp(`${key}\\s*:\\s*["']([^"']+)["']`));
+                return match ? match[1] : null;
+            };
+
+            const apiKey = extract('apiKey');
+            const projectId = extract('projectId');
+            const authDomain = extract('authDomain');
+            const storageBucket = extract('storageBucket');
+            const messagingSenderId = extract('messagingSenderId');
+            const appId = extract('appId');
+            const measurementId = extract('measurementId');
+
+            if (apiKey && projectId) {
+                return {
+                    apiKey,
+                    projectId,
+                    authDomain: authDomain || `${projectId}.firebaseapp.com`,
+                    storageBucket: storageBucket || `${projectId}.firebasestorage.app`,
+                    messagingSenderId: messagingSenderId || '',
+                    appId: appId || '',
+                    measurementId: measurementId || ''
+                };
+            }
+
+            throw new Error('تعذر قراءة بيانات Firebase. تأكد من وجود apiKey و projectId على الأقل.');
+        }
+
+        async function handleSaveCustomFirebaseConfig(event) {
+            if (event) event.preventDefault();
+            const textarea = document.getElementById('customFirebaseConfigTextarea');
+            const rawVal = textarea ? textarea.value : '';
+
+            try {
+                const cfg = extractFirebaseConfigFromInput(rawVal);
+                SafeStorage.setItem('motorCare_FirebaseConfig', JSON.stringify(cfg));
+                window.firebaseConfig = cfg;
+
+                if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
+                    try {
+                        await Promise.all(firebase.apps.map(app => app.delete()));
+                    } catch(delErr) {}
+                }
+
+                isFirestoreReady = false;
+                firestoreDb = null;
+                initFirestoreDatabase();
+
+                const activeLabel = document.getElementById('currentActiveFirebaseProjectId');
+                if (activeLabel) activeLabel.innerText = cfg.projectId;
+                const modalLabel = document.getElementById('accountModalFirebaseProjectLabel');
+                if (modalLabel) modalLabel.innerText = cfg.projectId;
+
+                SafeStorage.setItem('motorCare_CloudSyncEnabled', 'true');
+                syncUserDataToCloud('custom_config_activated');
+
+                if (typeof showNotification === 'function') {
+                    showNotification(`تم ربط وتفعيل مشروع Firebase (${cfg.projectId}) بنجاح! 🚀`, 'success', 4500);
+                }
+
+                testCurrentFirebaseConnection();
+                setTimeout(() => {
+                    closeFirebaseConfigModal();
+                }, 1200);
+            } catch(err) {
+                if (typeof showNotification === 'function') {
+                    showNotification(err.message, 'warning', 4500);
+                }
+            }
+        }
+
+        async function handleResetDefaultFirebaseConfig() {
+            SafeStorage.removeItem('motorCare_FirebaseConfig');
+            window.firebaseConfig = DEFAULT_FIREBASE_CONFIG;
+
+            if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
+                try {
+                    await Promise.all(firebase.apps.map(app => app.delete()));
+                } catch(delErr) {}
+            }
+
+            isFirestoreReady = false;
+            firestoreDb = null;
+            initFirestoreDatabase();
+
+            const activeLabel = document.getElementById('currentActiveFirebaseProjectId');
+            if (activeLabel) activeLabel.innerText = DEFAULT_FIREBASE_CONFIG.projectId;
+            const modalLabel = document.getElementById('accountModalFirebaseProjectLabel');
+            if (modalLabel) modalLabel.innerText = DEFAULT_FIREBASE_CONFIG.projectId;
+            const textarea = document.getElementById('customFirebaseConfigTextarea');
+            if (textarea) textarea.value = '';
+
+            if (typeof showNotification === 'function') {
+                showNotification('تمت استعادة إعدادات Firebase الافتراضية بنجاح 🔄', 'info', 3000);
+            }
+            testCurrentFirebaseConnection();
+        }
+
 // ==========================================================================
 // [EXPLICIT GLOBAL SCOPE BINDINGS]
 // ==========================================================================
@@ -664,3 +909,10 @@ try { if (typeof autoRestoreFromCloud !== 'undefined') window.autoRestoreFromClo
 try { if (typeof getCloudSyncUserKey !== 'undefined') window.getCloudSyncUserKey = getCloudSyncUserKey; } catch (e) {}
 try { if (typeof startLiveVerificationWatcher !== 'undefined') window.startLiveVerificationWatcher = startLiveVerificationWatcher; } catch (e) {}
 try { if (typeof stopLiveVerificationWatcher !== 'undefined') window.stopLiveVerificationWatcher = stopLiveVerificationWatcher; } catch (e) {}
+try { if (typeof openFirebaseConfigModal !== 'undefined') window.openFirebaseConfigModal = openFirebaseConfigModal; } catch (e) {}
+try { if (typeof closeFirebaseConfigModal !== 'undefined') window.closeFirebaseConfigModal = closeFirebaseConfigModal; } catch (e) {}
+try { if (typeof testCurrentFirebaseConnection !== 'undefined') window.testCurrentFirebaseConnection = testCurrentFirebaseConnection; } catch (e) {}
+try { if (typeof pasteFromClipboardToFirebaseInput !== 'undefined') window.pasteFromClipboardToFirebaseInput = pasteFromClipboardToFirebaseInput; } catch (e) {}
+try { if (typeof extractFirebaseConfigFromInput !== 'undefined') window.extractFirebaseConfigFromInput = extractFirebaseConfigFromInput; } catch (e) {}
+try { if (typeof handleSaveCustomFirebaseConfig !== 'undefined') window.handleSaveCustomFirebaseConfig = handleSaveCustomFirebaseConfig; } catch (e) {}
+try { if (typeof handleResetDefaultFirebaseConfig !== 'undefined') window.handleResetDefaultFirebaseConfig = handleResetDefaultFirebaseConfig; } catch (e) {}

@@ -511,11 +511,22 @@ function doPost(e) {
             // تحديث حالة مفتاح وشارة المزامنة السحابية داخل مركز الحساب
             const syncToggle = document.getElementById('accountModalCloudSyncToggle');
             const isRegisteredUser = !!(profile.isRegistered && profile.provider !== 'guest');
+            
+            // إذا كان المستخدم مسجلاً ولم يسبق له تحديد خيار المزامنة يدوياً، نجعلها مفعلة افتراضياً
+            if (isRegisteredUser && SafeStorage.getItem('motorCare_CloudSyncEnabled') === null) {
+                SafeStorage.setItem('motorCare_CloudSyncEnabled', 'true');
+            }
+
             const isSyncActive = isRegisteredUser && (SafeStorage.getItem('motorCare_CloudSyncEnabled') !== 'false');
 
             if (syncToggle) {
                 syncToggle.disabled = !isRegisteredUser;
                 syncToggle.checked = isSyncActive;
+            }
+
+            const projLabel = document.getElementById('accountModalFirebaseProjectLabel');
+            if (projLabel && typeof getFirebaseConfig === 'function') {
+                projLabel.innerText = getFirebaseConfig().projectId || 'motorcare-1b6d2';
             }
 
             if (typeof updateCloudSyncStatusUI === 'function') {
