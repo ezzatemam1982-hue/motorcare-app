@@ -99,39 +99,48 @@
         }
 
         /**
-         * توليد رابط خرائط جوجل القياسي المعتمد مع اسم التوكيل / المركز المعتمد
-         * Standard Google Maps URL generation with verified Business Profile Name & Location
+         * توليد رابط خرائط جوجل المعتمد لملف النشاط التجاري (Verified Google Business Profile)
+         * Always uses official Google Maps query scheme or verified Place ID/Share URL (never a silent raw pin)
+         * Format: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(brand + ' ' + officialAgencyName + ' ' + branchName + ' ' + city)}
          */
         function getServiceCenterMapsUrl(center, userCorr) {
             if (!center) return 'https://www.google.com/maps';
 
-            if (userCorr && userCorr.newMapsUrl && userCorr.newMapsUrl.startsWith('http') && !userCorr.newMapsUrl.includes('query=undefined')) {
+            // 1. User/Community verified correction URL if provided
+            if (userCorr && userCorr.newMapsUrl && typeof userCorr.newMapsUrl === 'string' && userCorr.newMapsUrl.startsWith('http') && !userCorr.newMapsUrl.includes('query=undefined')) {
                 return userCorr.newMapsUrl;
             }
 
-            const name = (center.name || '').trim();
-            const agency = (center.agency || '').trim();
-            const area = (center.area || '').trim();
-            const gov = (center.gov || '').trim();
+            const brand = (center.brand || (center.brands && center.brands[0]) || (Array.isArray(center.brands) ? center.brands.join(' ') : '') || '').trim();
+            const officialAgencyName = (center.agency || '').trim();
+            const branchName = (center.name || '').trim();
+            const city = (center.city || center.gov || center.area || 'مصر').trim();
 
-            // Human-readable labeled location name: "اسم المركز - المحافظة"
-            const branchLabel = gov && !name.includes(gov) ? `${name} - ${gov}` : name;
-            const queryText = `${name} ${area} ${gov} مصر`.replace(/\s+/g, ' ').trim();
+            const queryParts = [brand, officialAgencyName, branchName, city].filter(Boolean);
+            const officialSearchQuery = queryParts.join(' ').replace(/\s+/g, ' ').trim();
 
-            const activeLat = (userCorr && userCorr.newLat) ? userCorr.newLat : center.lat;
-            const activeLng = (userCorr && userCorr.newLng) ? userCorr.newLng : center.lng;
-
-            if (activeLat !== undefined && activeLng !== undefined && activeLat !== null && activeLng !== null && !isNaN(activeLat) && !isNaN(activeLng)) {
-                // Standard labeled location format: https://www.google.com/maps?q=lat,lng+(Business Name)
-                return `https://www.google.com/maps?q=${activeLat},${activeLng}+(${encodeURIComponent(branchLabel)})`;
+            // 2. Verified Place ID if known
+            if (center.placeId) {
+                return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(officialSearchQuery)}&query_place_id=${encodeURIComponent(center.placeId)}`;
             }
 
-            // Standard business query search format
-            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryText)}`;
+            // 3. Known verified share URL or verified place URL
+            if (center.verifiedMapsUrl && typeof center.verifiedMapsUrl === 'string' && center.verifiedMapsUrl.startsWith('http')) {
+                return center.verifiedMapsUrl;
+            }
+            if (center.googleMapsUrl && typeof center.googleMapsUrl === 'string' && center.googleMapsUrl.startsWith('http')) {
+                return center.googleMapsUrl;
+            }
+            if (center.mapsUrl && typeof center.mapsUrl === 'string' && (center.mapsUrl.includes('maps.app.goo.gl') || center.mapsUrl.includes('/place/'))) {
+                return center.mapsUrl;
+            }
+
+            // 4. Official Google Business Profile Query Scheme (never drop a bare silent coordinate pin)
+            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(brand + ' ' + officialAgencyName + ' ' + branchName + ' ' + city)}`;
         }
 
         /**
-         * فتح موقع المركز في تطبيق خرائط جوجل الأصلي على الهاتف (geo URI intent) أو في المتصفح مع اسم المركز المعتمد
+         * فتح موقع المركز في تطبيق خرائط جوجل الأصلي على الهاتف (geo URI intent) أو في المتصفح مع اسم النشاط والفرع المعتمد
          */
         function openServiceCenterMap(centerId) {
             const centers = window.MOTORCARE_SERVICE_CENTERS || [];
@@ -145,14 +154,11 @@
             } catch(e) {}
 
             const webUrl = getServiceCenterMapsUrl(center, userCorr);
-            const name = (center.name || '').trim();
-            const area = (center.area || '').trim();
-            const gov = (center.gov || '').trim();
-            const agency = (center.agency || '').trim();
-            const branchLabel = gov && !name.includes(gov) ? `${name} - ${gov}` : name;
-
-            const activeLat = (userCorr && userCorr.newLat) ? userCorr.newLat : center.lat;
-            const activeLng = (userCorr && userCorr.newLng) ? userCorr.newLng : center.lng;
+            const brand = (center.brand || (center.brands && center.brands[0]) || (Array.isArray(center.brands) ? center.brands.join(' ') : '') || '').trim();
+            const officialAgencyName = (center.agency || '').trim();
+            const branchName = (center.name || '').trim();
+            const city = (center.city || center.gov || center.area || 'مصر').trim();
+            const fullLabel = [brand, officialAgencyName, branchName, city].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 
             // Detect native Capacitor / Android environment
             const isNative = typeof window !== 'undefined' &&
@@ -161,13 +167,8 @@
                              window.Capacitor.isNativePlatform();
 
             if (isNative) {
-                // Support geo: URI intent for native Google Maps app:
-                // Format: geo:0,0?q=lat,lng(label) or geo:0,0?q=encodeURIComponent(name + ' ' + branchName)
-                let geoUri = `geo:0,0?q=${encodeURIComponent(`${name} ${area} ${gov}`.trim())}`;
-                if (activeLat !== undefined && activeLng !== undefined && activeLat !== null && activeLng !== null && !isNaN(activeLat) && !isNaN(activeLng)) {
-                    geoUri = `geo:${activeLat},${activeLng}?q=${encodeURIComponent(branchLabel)}`;
-                }
-
+                // Support geo: URI intent with business metadata:
+                const geoUri = `geo:0,0?q=${encodeURIComponent(fullLabel)}`;
                 try {
                     window.location.href = geoUri;
                     setTimeout(() => {
@@ -326,7 +327,10 @@
                 const activeLat = (userCorr && userCorr.newLat) ? userCorr.newLat : c.lat;
                 const activeLng = (userCorr && userCorr.newLng) ? userCorr.newLng : c.lng;
 
-                // رابط الخريطة المعتمد: توليد الرابط القياسي المعياري مع اسم التوكيل/المركز المعتمد والمحافظة
+                // شارة الفرع الموثق والرسمي (Verified Official Branch Badge)
+                const isVerifiedBranch = c.type === 'official_dealership' || c.type === 'authorized_center' || c.isVerified !== false;
+
+                // رابط الخريطة المعتمد: توليد الرابط القياسي المعياري لملف النشاط التجاري
                 const verifiedMapsUrl = getServiceCenterMapsUrl(c, userCorr);
 
                 return `
@@ -334,7 +338,14 @@
                         <!-- الرأس واسم المركز والنوع والتقييم -->
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0 flex-1">
-                                <h4 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug">${c.name}</h4>
+                                <div class="flex items-center gap-1.5 flex-wrap mb-0.5">
+                                    <h4 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug">${c.name}</h4>
+                                    ${isVerifiedBranch ? `
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shadow-2xs shrink-0">
+                                        <i class="fa-solid fa-circle-check text-[10px] text-emerald-500"></i>
+                                        <span>${isEn ? '✓ Verified Official' : '✓ فرع موثّق ورسمي'}</span>
+                                    </span>` : ''}
+                                </div>
                                 <div class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-0.5 flex items-center gap-2 flex-wrap">
                                     <span class="flex items-center gap-1 text-sky-600 dark:text-sky-400"><i class="fa-solid fa-certificate text-[10px]"></i> <span class="truncate">${c.agency}</span></span>
                                     <span class="text-slate-300 dark:text-slate-600">•</span>
@@ -368,7 +379,7 @@
                             <div class="flex items-center gap-1.5 truncate">
                                 <i class="fa-solid fa-location-crosshairs text-amber-500 shrink-0"></i>
                                 <span class="font-bold">تم تصحيح الموقع محلياً:</span>
-                                <code class="font-mono text-[10px] font-bold text-amber-700 dark:text-amber-300 truncate">${Number(activeLat).toFixed(5)}, ${Number(activeLng).toFixed(5)}</code>
+                                <code class="font-mono text-[10px] font-bold text-amber-700 dark:text-amber-300 truncate">${activeLat ? Number(activeLat).toFixed(5) : '-'}, ${activeLng ? Number(activeLng).toFixed(5) : '-'}</code>
                             </div>
                             <span class="px-1.5 py-0.5 rounded-md bg-amber-200/60 dark:bg-amber-900/60 text-[9px] font-black text-amber-900 dark:text-amber-100 shrink-0">Offline-First ⚡</span>
                         </div>` : ''}
@@ -378,7 +389,7 @@
                             ${servicesHtml}
                         </div>
 
-                        <!-- أزرار الإجراءات (الاتصال، GPS، واقتراح تصحيح الإحداثيات) -->
+                        <!-- أزرار الإجراءات (الاتصال، GPS، ونظام التحقق والتصحيح المجتمعي) -->
                         <div class="flex items-center gap-1.5 pt-1 flex-wrap sm:flex-nowrap">
                             ${phoneToCall ? `
                             <a href="tel:${phoneToCall}" class="flex-1 min-w-[110px] py-2 px-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-emerald-200 dark:border-emerald-800 transition-all active:scale-95" title="اتصال مباشر بالمركز">
@@ -386,14 +397,14 @@
                                 <span class="truncate">${phoneDisplay}</span>
                             </a>` : ''}
 
-                            <a href="${verifiedMapsUrl}" onclick="event.preventDefault(); openServiceCenterMap('${c.id}');" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] py-2 px-2.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all cursor-pointer" title="فتح الموقع المعتمد في خرائط جوجل GPS مع اسم التوكيل">
+                            <a href="${verifiedMapsUrl}" onclick="event.preventDefault(); openServiceCenterMap('${c.id}');" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] py-2 px-2.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all cursor-pointer" title="فتح ملف الفرع المعتمد في خرائط جوجل GPS">
                                 <i class="fa-solid fa-diamond-turn-right text-xs"></i>
                                 <span>فتح في الخرائط GPS 📍</span>
                             </a>
 
-                            <button type="button" onclick="openLocationCorrectionModal('${c.id}')" class="py-2 px-2.5 ${isUserCorrected ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-amber-50 dark:bg-slate-800 dark:hover:bg-amber-950/40 text-slate-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-amber-300 border border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-700'} rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0" title="اقتراح تعديل اللوكيشن / تصحيح الإحداثيات">
-                                <i class="fa-solid fa-location-crosshairs ${isUserCorrected ? 'text-white' : 'text-amber-500'}"></i>
-                                <span>${isUserCorrected ? 'تعديل التصحيح' : 'تصحيح اللوكيشن'}</span>
+                            <button type="button" onclick="openBranchVerificationModal('${c.id}')" class="py-2 px-2.5 ${isUserCorrected ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-amber-50 dark:bg-slate-800 dark:hover:bg-amber-950/40 text-slate-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-amber-300 border border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-700'} rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0" title="${isEn ? 'Report Error or Verify Branch Location' : '🚩 الإبلاغ عن خطأ / تحديث اللوكيشن أو تأكيد دقة الفرع'}">
+                                <i class="fa-solid fa-flag ${isUserCorrected ? 'text-white' : 'text-amber-500'}"></i>
+                                <span>${isUserCorrected ? (isEn ? 'Edit Correction' : 'تعديل التصحيح') : (isEn ? '🚩 Report / Verify' : '🚩 الإبلاغ عن خطأ / تحديث اللوكيشن')}</span>
                             </button>
                         </div>
                     </div>
@@ -411,14 +422,14 @@
         }
 
         /* ==========================================================================
-           [FEATURE] التصحيح الجماعي لمواقع التوكيلات ومراكز الخدمة (Crowdsourced Location Correction)
-           Offline-First Storage, Cloud Firestore Sync, Webhook & EmailJS Alert Pipeline
+           [FEATURE] نظام التحقق وتصحيح الفروع والمراكز المعتمدة (Branch Verification & Feedback)
+           Crowdsourced Community Verification, Official Google Business Places, and Firestore Sync
            ========================================================================== */
-        function openLocationCorrectionModal(centerId) {
+        function openBranchVerificationModal(centerId) {
             const centers = window.MOTORCARE_SERVICE_CENTERS || [];
             const center = centers.find(c => String(c.id) === String(centerId));
             if (!center) {
-                console.warn('[Location Correction] Center not found for id:', centerId);
+                console.warn('[Branch Verification] Center not found for id:', centerId);
                 return;
             }
 
@@ -438,12 +449,30 @@
             const agencyEl = document.getElementById('scCorrectionAgencyBadge');
             const addrEl = document.getElementById('scCorrectionCurrentAddress');
             const coordsEl = document.getElementById('scCorrectionCurrentCoords');
+            const previewLinkEl = document.getElementById('scCorrectionMapsPreviewLink');
 
             if (hiddenIdEl) hiddenIdEl.value = centerId;
             if (nameEl) nameEl.textContent = center.name || '-';
             if (agencyEl) agencyEl.textContent = center.agency || (center.brands ? center.brands.join(', ') : 'توكيل رسمي');
             if (addrEl) addrEl.textContent = `${center.gov || ''} - ${center.area || ''} (${center.address || 'بدون تفاصيل إضافية'})`;
             if (coordsEl) coordsEl.textContent = `${center.lat || 'غير محدد'}, ${center.lng || 'غير محدد'}`;
+            if (previewLinkEl) {
+                previewLinkEl.href = getServiceCenterMapsUrl(center, existing);
+            }
+
+            // Reset Quick Confirmation UI
+            const quickBtn = document.getElementById('scQuickConfirmBtn');
+            const quickBtnText = document.getElementById('scQuickConfirmBtnText');
+            const quickFeedback = document.getElementById('scQuickConfirmFeedback');
+            if (quickBtn) {
+                quickBtn.disabled = false;
+                quickBtn.classList.remove('opacity-75', 'pointer-events-none');
+            }
+            if (quickBtnText) quickBtnText.innerHTML = 'نعم، دقيق ومطابق ✓';
+            if (quickFeedback) {
+                quickFeedback.classList.add('hidden');
+                quickFeedback.textContent = '';
+            }
 
             // Fill inputs with existing correction or center defaults
             const latInput = document.getElementById('scCorrectionLatInput');
@@ -454,13 +483,20 @@
             const accuracyBadge = document.getElementById('scGpsAccuracyBadge');
             const parseNotice = document.getElementById('scMapsUrlParseNotice');
             const statusBox = document.getElementById('scCorrectionStatus');
+            const coordsPreviewBox = document.getElementById('scManualCoordsPreview');
+            const coordsSummary = document.getElementById('scCorrectionCoordsSummary');
+            const submitBtn = document.getElementById('scSubmitCorrectionBtn');
+            const submitBtnText = document.getElementById('scSubmitCorrectionBtnText');
 
             if (accuracyBadge) accuracyBadge.classList.add('hidden');
             if (parseNotice) parseNotice.classList.add('hidden');
+            if (coordsPreviewBox) coordsPreviewBox.classList.add('hidden');
             if (statusBox) {
                 statusBox.classList.add('hidden');
                 statusBox.innerHTML = '';
             }
+            if (submitBtn) submitBtn.classList.remove('opacity-75', 'pointer-events-none');
+            if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> إرسال التصحيح للمراجعة';
 
             if (existing) {
                 if (latInput) latInput.value = existing.newLat || '';
@@ -468,17 +504,22 @@
                 if (mapsUrlInput) mapsUrlInput.value = existing.newMapsUrl || '';
                 if (notesInput) notesInput.value = existing.note || '';
                 if (emailInput) emailInput.value = existing.userEmail || '';
+                if (coordsSummary && existing.newLat && existing.newLng) {
+                    coordsSummary.textContent = `${existing.newLat}, ${existing.newLng}`;
+                    if (coordsPreviewBox) coordsPreviewBox.classList.remove('hidden');
+                }
             } else {
                 if (latInput) latInput.value = center.lat || '';
                 if (lngInput) lngInput.value = center.lng || '';
-                if (mapsUrlInput) mapsUrlInput.value = center.mapsUrl || '';
+                if (mapsUrlInput) mapsUrlInput.value = (center.mapsUrl && (center.mapsUrl.includes('maps.app.goo.gl') || center.mapsUrl.includes('/place/'))) ? center.mapsUrl : '';
                 if (notesInput) notesInput.value = '';
 
                 // Try pre-filling user email from profile or current app state
                 if (emailInput) {
                     let userEmail = '';
                     try {
-                        const profRaw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_user_profile') : localStorage.getItem('motorCare_user_profile'));
+                        const profRaw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_UserProfile') : localStorage.getItem('motorCare_UserProfile')) ||
+                                        (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_user_profile') : localStorage.getItem('motorCare_user_profile'));
                         if (profRaw) {
                             const p = JSON.parse(profRaw);
                             userEmail = p.email || '';
@@ -495,8 +536,93 @@
             document.getElementById('locationCorrectionModal')?.classList.remove('hidden');
         }
 
-        function closeLocationCorrectionModal() {
+        function closeBranchVerificationModal() {
             document.getElementById('locationCorrectionModal')?.classList.add('hidden');
+        }
+
+        // Backward-compatible aliases
+        function openLocationCorrectionModal(centerId) {
+            return openBranchVerificationModal(centerId);
+        }
+        function closeLocationCorrectionModal() {
+            return closeBranchVerificationModal();
+        }
+
+        /**
+         * تأكيد سريع لدقة الفرع وإرسال تصويت مجتمعي (Community Upvote)
+         * Sends upvote to Firestore collection: `dealership_reports` with voteType: 'confirm'
+         */
+        async function submitQuickBranchConfirmation() {
+            const centerId = document.getElementById('scCorrectionCenterId')?.value;
+            const centers = window.MOTORCARE_SERVICE_CENTERS || window.serviceCenters || [];
+            const center = centers.find(c => String(c.id) === String(centerId));
+            if (!center) {
+                if (typeof showNotification === 'function') {
+                    showNotification('لم يتم العثور على بيانات المركز المحدد.', 'warning');
+                } else if (typeof alert !== 'undefined') {
+                    alert('لم يتم العثور على بيانات المركز المحدد.');
+                }
+                return;
+            }
+
+            const btn = document.getElementById('scQuickConfirmBtn');
+            const btnText = document.getElementById('scQuickConfirmBtnText');
+            const feedback = document.getElementById('scQuickConfirmFeedback');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-80', 'pointer-events-none');
+            }
+            if (btnText) btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> جاري التأكيد...';
+
+            const userIdentifier = (typeof getCurrentUserIdentifier === 'function') 
+                ? getCurrentUserIdentifier() 
+                : ((typeof window.getCurrentUserIdentifier === 'function') ? window.getCurrentUserIdentifier() : 'guest_user');
+            const brandStr = (center.brands || []).join(', ') || center.brand || '';
+
+            const payload = {
+                branchId: center.id,
+                brand: brandStr,
+                agencyName: center.agency || '',
+                branchName: center.name || '',
+                reportedBy: userIdentifier,
+                suggestedUrl: '',
+                userLat: null,
+                userLng: null,
+                voteType: 'confirm'
+            };
+
+            // Save to Firestore collection dealership_reports
+            try {
+                if (typeof submitDealershipReport === 'function') {
+                    await submitDealershipReport(payload);
+                } else if (typeof window.submitDealershipReport === 'function') {
+                    await window.submitDealershipReport(payload);
+                }
+            } catch(e) {
+                console.warn('[Quick Confirmation] Error submitting vote:', e);
+            }
+
+            // Arabic Toast Notification
+            if (typeof showNotification === 'function') {
+                showNotification('شكراً لمساهمتك! سيتم مراجعة وتحديث اللوكيشن لدعم باقي المستخدمين.', 'success', 4500);
+            }
+
+            if (btnText) btnText.innerHTML = '<i class="fa-solid fa-circle-check"></i> تم تأكيد الدقة ✓';
+            if (feedback) {
+                feedback.classList.remove('hidden');
+                feedback.textContent = 'تم تسجيل تأكيدك بنجاح لدعم وتوثيق المركز لباقي السائقين ✨';
+            }
+
+            setTimeout(() => {
+                closeBranchVerificationModal();
+                if (btn) {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-80', 'pointer-events-none');
+                }
+                if (btnText) btnText.innerHTML = 'نعم، دقيق ومطابق ✓';
+                if (feedback) feedback.classList.add('hidden');
+            }, 1200);
         }
 
         function captureCurrentGpsForCorrection() {
@@ -506,6 +632,8 @@
             const latInput = document.getElementById('scCorrectionLatInput');
             const lngInput = document.getElementById('scCorrectionLngInput');
             const mapsUrlInput = document.getElementById('scCorrectionMapsUrlInput');
+            const coordsPreviewBox = document.getElementById('scManualCoordsPreview');
+            const coordsSummary = document.getElementById('scCorrectionCoordsSummary');
 
             if (!navigator.geolocation) {
                 if (badge) {
@@ -532,6 +660,8 @@
                     if (mapsUrlInput) {
                         mapsUrlInput.value = getServiceCenterMapsUrl({ ...(curCenter || {}), lat, lng });
                     }
+                    if (coordsSummary) coordsSummary.textContent = `${lat}, ${lng}`;
+                    if (coordsPreviewBox) coordsPreviewBox.classList.remove('hidden');
 
                     if (badge) {
                         badge.classList.remove('hidden');
@@ -539,11 +669,11 @@
                         badge.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> تم التقاط إحداثياتك بنجاح: <code>${lat}, ${lng}</code> (دقة: ±${acc} متر)`;
                     }
 
-                    if (btnText) btnText.textContent = 'التقاط موقعي الحالي بالـ GPS بدقة عالية 📍';
+                    if (btnText) btnText.textContent = 'استخدام موقعي الحالي إذا كنت تقف أمام الفرع الآن (GPS)';
                     if (btn) btn.classList.remove('opacity-75', 'pointer-events-none');
                 },
                 (err) => {
-                    console.warn('[Location Correction] Geolocation error:', err);
+                    console.warn('[Branch Verification] Geolocation error:', err);
                     let msg = 'تعذر الحصول على الموقع الجغرافي. يرجى التأكد من تفعيل خدمة الـ GPS وإعطاء الإذن للمتصفح.';
                     if (err.code === 1) msg = 'تم رفض إذن تحديد الموقع الجغرافي. يرجى تفعيله من إعدادات المتصفح.';
                     if (err.code === 3) msg = 'انتهت مهلة البحث عن إشارة GPS. يرجى المحاولة في مكان مفتوح أو إدخال الإحداثيات يدوياً.';
@@ -554,7 +684,7 @@
                         badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-1"></i> ${msg}`;
                     }
 
-                    if (btnText) btnText.textContent = 'التقاط موقعي الحالي بالـ GPS بدقة عالية 📍';
+                    if (btnText) btnText.textContent = 'استخدام موقعي الحالي إذا كنت تقف أمام الفرع الآن (GPS)';
                     if (btn) btn.classList.remove('opacity-75', 'pointer-events-none');
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
@@ -567,6 +697,9 @@
             const notice = document.getElementById('scMapsUrlParseNotice');
             const latInput = document.getElementById('scCorrectionLatInput');
             const lngInput = document.getElementById('scCorrectionLngInput');
+            const coordsPreviewBox = document.getElementById('scManualCoordsPreview');
+            const coordsSummary = document.getElementById('scCorrectionCoordsSummary');
+
             if (!val) {
                 if (notice) notice.classList.add('hidden');
                 return;
@@ -595,6 +728,9 @@
             if (lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng)) {
                 if (latInput) latInput.value = lat.toFixed(6);
                 if (lngInput) lngInput.value = lng.toFixed(6);
+                if (coordsSummary) coordsSummary.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                if (coordsPreviewBox) coordsPreviewBox.classList.remove('hidden');
+
                 if (notice) {
                     notice.classList.remove('hidden');
                     notice.className = 'text-[11px] font-bold text-emerald-600 dark:text-emerald-400 pt-0.5';
@@ -604,7 +740,7 @@
                 if (notice) {
                     notice.classList.remove('hidden');
                     notice.className = 'text-[10px] text-amber-600 dark:text-amber-400 pt-0.5';
-                    notice.innerHTML = `<i class="fa-solid fa-info-circle me-1"></i> إذا كان الرابط مختصراً (maps.app.goo.gl)، يرجى نسخه بعد فتحه في المتصفح أو كتابة الإحداثيات في الحقول أعلاه.`;
+                    notice.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> سيتم اعتماد واستخراج موقع الرابط المباشر أثناء المراجعة.`;
                 }
             }
         }
@@ -617,21 +753,25 @@
             let lat = latInput ? parseFloat(latInput.value) : NaN;
             let lng = lngInput ? parseFloat(lngInput.value) : NaN;
 
-            if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-                window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
-                return;
-            }
-
             const pasted = (mapsUrlInput?.value || '').trim();
             if (pasted.startsWith('http')) {
                 window.open(pasted, '_blank');
                 return;
             }
 
-            alert('يرجى التقاط موقعك أولاً أو إدخال خط العرض وخط الطول لاختبار الموقع على الخريطة.');
+            if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
+                return;
+            }
+
+            alert('يرجى لصق رابط خرائط Google أو التقاط موقعك أولاً لاختبار الرابط على الخريطة.');
         }
 
-        async function submitLocationCorrection() {
+        /**
+         * إرسال التصحيح للمراجعة السحابية وتطبيقه محلياً (Offline-First)
+         * Sends payload to Firestore collection: `dealership_reports` with voteType: 'correction'
+         */
+        async function submitBranchCorrectionReport() {
             const centerId = document.getElementById('scCorrectionCenterId')?.value;
             const latInput = document.getElementById('scCorrectionLatInput');
             const lngInput = document.getElementById('scCorrectionLngInput');
@@ -642,36 +782,51 @@
             const submitBtn = document.getElementById('scSubmitCorrectionBtn');
             const submitBtnText = document.getElementById('scSubmitCorrectionBtnText');
 
-            const lat = parseFloat(latInput?.value);
-            const lng = parseFloat(lngInput?.value);
-            const note = (notesInput?.value || '').trim();
-            const userEmail = (emailInput?.value || '').trim();
-            const pastedMapsUrl = (mapsUrlInput?.value || '').trim();
-
-            // Validate Coordinates
-            if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-                if (statusBox) {
-                    statusBox.classList.remove('hidden');
-                    statusBox.className = 'p-2.5 rounded-xl text-[11px] font-bold text-center bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800';
-                    statusBox.textContent = 'يرجى إدخال إحداثيات صحيحة (خط عرض بين -90 و 90، وخط طول بين -180 و 180) أو استخدام زر التقاط GPS.';
+            const centers = window.MOTORCARE_SERVICE_CENTERS || window.serviceCenters || [];
+            const center = centers.find(c => String(c.id) === String(centerId));
+            if (!center) {
+                if (typeof showNotification === 'function') {
+                    showNotification('لم يتم العثور على بيانات المركز المحدد.', 'warning');
+                } else if (typeof alert !== 'undefined') {
+                    alert('لم يتم العثور على بيانات المركز المحدد.');
                 }
                 return;
             }
 
-            const centers = window.MOTORCARE_SERVICE_CENTERS || [];
-            const center = centers.find(c => String(c.id) === String(centerId));
-            if (!center) {
-                alert('لم يتم العثور على بيانات المركز المحدد.');
+            let lat = latInput ? parseFloat(latInput.value) : NaN;
+            let lng = lngInput ? parseFloat(lngInput.value) : NaN;
+            const note = (notesInput?.value || '').trim();
+            const userEmail = (emailInput?.value || '').trim();
+            const pastedMapsUrl = (mapsUrlInput?.value || '').trim();
+
+            const hasValidCoords = (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180);
+            const hasValidUrl = (pastedMapsUrl.startsWith('http') && !pastedMapsUrl.includes('query=undefined'));
+
+            if (!hasValidCoords && !hasValidUrl && !note) {
+                if (statusBox) {
+                    statusBox.classList.remove('hidden');
+                    statusBox.className = 'p-2.5 rounded-xl text-[11px] font-bold text-center bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800';
+                    statusBox.textContent = 'يرجى لصق رابط خرائط Google الصحيح أو استخدام موقعك الفعلي (GPS) أو كتابة ملاحظة توضيحية.';
+                }
                 return;
             }
 
             const nowIso = new Date().toISOString();
             const nowFormatted = new Date().toLocaleString('ar-EG');
-            const newMapsUrl = (pastedMapsUrl.startsWith('http') && !pastedMapsUrl.includes('query=-') && !pastedMapsUrl.includes('query=undefined')) 
-                ? pastedMapsUrl 
-                : getServiceCenterMapsUrl({ ...center, lat, lng });
+            
+            let finalMapsUrl = '';
+            if (hasValidUrl) {
+                finalMapsUrl = pastedMapsUrl;
+            } else if (hasValidCoords) {
+                finalMapsUrl = getServiceCenterMapsUrl({ ...center, lat, lng });
+            } else {
+                finalMapsUrl = getServiceCenterMapsUrl(center);
+            }
 
-            // Build Correction Object
+            const activeLat = hasValidCoords ? lat : (center.lat || null);
+            const activeLng = hasValidCoords ? lng : (center.lng || null);
+
+            // 1. OFFLINE-FIRST: Save locally in SafeStorage / localStorage immediately
             const correctionData = {
                 centerId: center.id,
                 centerName: center.name,
@@ -683,17 +838,16 @@
                 oldLat: center.lat || null,
                 oldLng: center.lng || null,
                 oldMapsUrl: center.mapsUrl || '',
-                newLat: lat,
-                newLng: lng,
-                newMapsUrl: newMapsUrl,
+                newLat: activeLat,
+                newLng: activeLng,
+                newMapsUrl: finalMapsUrl,
                 note: note,
-                userEmail: userEmail || 'مستخدم تطبيق موتور كير',
+                userEmail: userEmail || ((typeof getCurrentUserIdentifier === 'function') ? getCurrentUserIdentifier() : 'guest_user'),
                 timestamp: nowIso,
                 updatedAtFormatted: nowFormatted,
                 status: 'pending_review'
             };
 
-            // 1. OFFLINE-FIRST: Save locally in SafeStorage / localStorage immediately
             let userCorrections = {};
             try {
                 const raw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_scUserCorrections') : localStorage.getItem('motorCare_scUserCorrections'));
@@ -711,25 +865,27 @@
                     localStorage.setItem('motorCare_scUserCorrections', serialized);
                 }
             } catch (e) {
-                console.warn('[Location Correction] Failed to save locally:', e);
+                console.warn('[Branch Verification] Failed to save locally:', e);
             }
 
             // Immediately update in-memory center object
-            center.lat = lat;
-            center.lng = lng;
-            center.mapsUrl = newMapsUrl;
+            if (activeLat !== null && activeLng !== null) {
+                center.lat = activeLat;
+                center.lng = activeLng;
+            }
+            center.mapsUrl = finalMapsUrl;
             center._userCorrected = true;
 
             // Re-render Service Centers UI immediately
             try {
                 renderServiceCenters();
             } catch (e) {
-                console.warn('[Location Correction] renderServiceCenters update error:', e);
+                console.warn('[Branch Verification] renderServiceCenters update error:', e);
             }
 
-            // 2. IMMEDIATE USER FEEDBACK (Super Fast UI Response)
-            if (submitBtn) submitBtn.classList.remove('opacity-75', 'pointer-events-none');
-            if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-circle-check text-xs"></i> تم الحفظ بنجاح ✨';
+            // 2. IMMEDIATE USER FEEDBACK
+            if (submitBtn) submitBtn.classList.add('opacity-80', 'pointer-events-none');
+            if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-circle-check text-xs"></i> تم الإرسال والحفظ بنجاح ✨';
 
             if (statusBox) {
                 statusBox.classList.remove('hidden');
@@ -737,177 +893,158 @@
                 statusBox.innerHTML = `
                     <div class="flex items-center justify-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-sm font-black">
                         <i class="fa-solid fa-circle-check"></i>
-                        <span>تم حفظ التعديل وتحديث بطاقة المركز فوراً!</span>
+                        <span>تم إرسال التصحيح وتحديث بيانات المركز محلياً!</span>
                     </div>
                     <p class="text-[11px] font-normal leading-relaxed text-slate-600 dark:text-slate-300">
-                        تم تفعيل الإحداثيات الجديدة على هاتفك بنجاح (Offline-First ⚡)، وجاري المزامنة مع خادم المطور في الخلفية. شكراً لمساهمتك! 🌟
+                        تم تفعيل اللوكيشن الجديد على جهازك فوراً (Offline-First ⚡)، وجاري اعتماده سحابياً لدعم كافة السائقين.
                     </p>
                 `;
             }
 
+            // 3. SHOW ARABIC TOAST REQUIRED BY OBJECTIVE 3:
             if (typeof showNotification === 'function') {
-                showNotification(`تم حفظ إحداثيات "${center.name}" وتحديث مسار GPS بنجاح ✨`, 'success');
+                showNotification('شكراً لمساهمتك! سيتم مراجعة وتحديث اللوكيشن لدعم باقي المستخدمين.', 'success', 4500);
             }
 
             // Close modal after 1.5 seconds
             setTimeout(() => {
-                closeLocationCorrectionModal();
-                if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> حفظ واعتماد التعديل سحابياً ومحلياً 🚀';
+                closeBranchVerificationModal();
+                if (submitBtn) submitBtn.classList.remove('opacity-80', 'pointer-events-none');
+                if (submitBtnText) submitBtnText.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> إرسال التصحيح للمراجعة';
             }, 1500);
 
-            // 3. BACKGROUND CLOUD SYNC & DEVELOPER NOTIFICATIONS (Non-blocking)
+            // 4. SUBMIT TO FIRESTORE COLLECTION: dealership_reports
+            const firestorePayload = {
+                branchId: center.id,
+                brand: (center.brands || []).join(', ') || center.brand || '',
+                agencyName: center.agency || '',
+                branchName: center.name || '',
+                reportedBy: userEmail || ((typeof getCurrentUserIdentifier === 'function') ? getCurrentUserIdentifier() : 'guest_user'),
+                suggestedUrl: finalMapsUrl,
+                userLat: activeLat,
+                userLng: activeLng,
+                voteType: 'correction',
+                note: note
+            };
+
             setTimeout(async () => {
-                // Channel A: Firestore Persistence
-                if (typeof firestoreDb !== 'undefined' && firestoreDb) {
-                    try {
-                        const docId = `${center.id}_${Date.now()}`;
-                        const firestorePayload = {
-                            ...correctionData,
-                            adminEmail: 'motorcare.auto@gmail.com',
-                            userAgent: navigator.userAgent || '',
-                            platform: 'MotorCare Web/PWA',
-                        };
-                        if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue) {
-                            firestorePayload.serverTimestamp = firebase.firestore.FieldValue.serverTimestamp();
-                        }
-                        const firestorePromise = firestoreDb.collection('service_center_corrections').doc(docId).set(firestorePayload);
-                        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('firestore timeout')), 4000));
-                        await Promise.race([firestorePromise, timeoutPromise]).catch(e => console.warn('[Location Correction] Firestore note:', e));
-                        console.log('[Location Correction] Background Firestore sync complete:', docId);
-                    } catch (err) {
-                        console.warn('[Location Correction] Firestore sync note:', err);
+                try {
+                    if (typeof submitDealershipReport === 'function') {
+                        await submitDealershipReport(firestorePayload);
+                    } else if (typeof window.submitDealershipReport === 'function') {
+                        await window.submitDealershipReport(firestorePayload);
                     }
+                } catch(err) {
+                    console.warn('[Branch Verification] Firestore submission note:', err);
                 }
 
-                // Channel B: Webhook & Email Notification
-                const webhookUrl = typeof getAppWebhookUrl === 'function' ? getAppWebhookUrl() : null;
-                const adminEmail = 'motorcare.auto@gmail.com';
-                const subject = `[MotorCare GPS Correction] تصحيح موقع: ${center.name} (${(center.brands || []).join(', ')})`;
-                
-                const jsonSnippet = JSON.stringify({
-                    id: center.id,
-                    name: center.name,
-                    gov: center.gov,
-                    area: center.area,
-                    lat: lat,
-                    lng: lng,
-                    mapsUrl: newMapsUrl
-                }, null, 2);
-
-                const emailHtml = `
-                <div dir="rtl" style="font-family: Arial, sans-serif; color: #1e293b; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px;">
-                    <div style="text-align: center; padding-bottom: 15px; border-bottom: 2px solid #38bdf8;">
-                        <h2 style="color: #0284c7; margin: 0;">🛰️ طلب تصحيح إحداثيات مركز خدمة في تطبيق MotorCare</h2>
-                        <p style="color: #64748b; font-size: 13px; margin: 5px 0 0;">مساهمة جديدة من التصحيح الجماعي (Crowdsourced Location)</p>
-                    </div>
-                    <div style="margin: 20px 0;">
-                        <h3 style="color: #0f172a; margin-bottom: 8px;">🏢 بيانات المركز:</h3>
-                        <ul style="line-height: 1.8; font-size: 14px;">
-                            <li><strong>الاسم:</strong> ${center.name}</li>
-                            <li><strong>الماركة / الوكالة:</strong> ${(center.brands || []).join(', ')} - ${center.agency || ''}</li>
-                            <li><strong>المحافظة والمنطقة:</strong> ${center.gov} - ${center.area}</li>
-                            <li><strong>العنوان الحالي:</strong> ${center.address || 'غير محدد'}</li>
-                        </ul>
-
-                        <h3 style="color: #0f172a; margin-top: 20px; margin-bottom: 8px;">📍 مقارنة الإحداثيات:</h3>
-                        <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 15px;">
-                            <thead>
-                                <tr style="background-color: #f1f5f9; text-align: right;">
-                                    <th style="padding: 8px; border: 1px solid #cbd5e1;">البيان</th>
-                                    <th style="padding: 8px; border: 1px solid #cbd5e1;">القديم</th>
-                                    <th style="padding: 8px; border: 1px solid #cbd5e1; background-color: #fef08a;">الجديد المقترح ✨</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">خط العرض (Lat)</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">${center.lat || '-'}</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold; color: #0369a1;">${lat}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold;">خط الطول (Lng)</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1;">${center.lng || '-'}</td>
-                                    <td style="padding: 8px; border: 1px solid #cbd5e1; font-weight: bold; color: #0369a1;">${lng}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <p style="font-size: 13px;"><strong>🗺️ رابط مقارنة الموقعين على خرائط جوجل:</strong><br>
-                        <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" style="color: #0284c7; word-break: break-all;">فتح الإحداثيات المقترحة في خرائط جوجل</a></p>
-
-                        ${note ? `<div style="background: #f8fafc; padding: 12px; border-radius: 8px; border-right: 4px solid #f59e0b; margin: 15px 0;">
-                            <strong>📝 ملاحظة وتوضيح المستخدم:</strong>
-                            <p style="margin: 5px 0 0; font-size: 13px; color: #334155;">${note}</p>
-                        </div>` : ''}
-
-                        <p style="font-size: 13px;"><strong>👤 بيانات المستخدم:</strong> ${userEmail}</p>
-                        <p style="font-size: 12px; color: #64748b;"><strong>⏰ التاريخ والوقت:</strong> ${nowFormatted} (${nowIso})</p>
-
-                        <h4 style="color: #0f172a; margin-top: 20px; margin-bottom: 5px;">💻 كود JSON الجاهز للاعتماد المباشر في قاعدة البيانات:</h4>
-                        <pre dir="ltr" style="background: #0f172a; color: #38bdf8; padding: 12px; border-radius: 8px; font-size: 12px; overflow-x: auto;">${jsonSnippet}</pre>
-                    </div>
-                    <div style="text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 10px;">
-                        تم إرسال هذا الإشعار تلقائياً عبر نظام التصحيح الجماعي الذكي في تطبيق MotorCare.
-                    </div>
-                </div>`;
-
-                const notificationPayload = {
-                    action: 'LOCATION_CORRECTION',
-                    centerId: center.id,
-                    centerName: center.name,
-                    brand: (center.brands || []).join(', '),
-                    agency: center.agency || '',
-                    oldCoords: { lat: center.lat, lng: center.lng, mapsUrl: center.mapsUrl },
-                    newCoords: { lat: lat, lng: lng, mapsUrl: newMapsUrl },
-                    googleMapsLink: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
-                    note: note,
-                    userEmail: userEmail,
-                    timestamp: nowIso,
-                    adminEmail: adminEmail,
-                    adminSubject: subject,
-                    adminHtmlBody: emailHtml,
-                    suggestedJsonSnippet: jsonSnippet
-                };
-
-                if (webhookUrl && webhookUrl.startsWith('http')) {
-                    try {
-                        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 6000));
-                        const fetchPromise = fetch(webhookUrl, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                            body: JSON.stringify(notificationPayload)
-                        });
-                        await Promise.race([fetchPromise, timeoutPromise]).catch(err => {
-                            console.warn('[Location Correction] Webhook note:', err);
-                        });
-                    } catch (err) {
-                        console.warn('[Location Correction] Webhook error:', err);
-                    }
-                }
-
-                if (typeof emailjs !== 'undefined' && emailjs) {
-                    try {
-                        const emailjsConfig = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_emailjs_config') : localStorage.getItem('motorCare_emailjs_config'));
-                        if (emailjsConfig) {
-                            const conf = JSON.parse(emailjsConfig);
-                            if (conf.serviceId && conf.templateId) {
-                                await emailjs.send(conf.serviceId, conf.templateId, {
-                                    to_email: adminEmail,
-                                    user_name: userEmail,
-                                    subject: subject,
-                                    message: `تم اقتراح تعديل موقع لمركز: ${center.name} (${lat}, ${lng}). ملاحظات: ${note}`,
-                                    ticket_id: `GPS_${center.id}`,
-                                    category: 'Location Correction',
-                                    car_details: `${center.name} - ${center.gov}`
-                                }).catch(e => console.warn('[Location Correction EmailJS] Error:', e));
-                            }
-                        }
-                    } catch (e) {
-                        console.warn('[Location Correction EmailJS] Note:', e);
-                    }
-                }
+                // Background notification pipeline
+                sendCorrectionAdminNotification(center, activeLat, activeLng, finalMapsUrl, note, userEmail, nowIso, nowFormatted);
             }, 50);
+        }
+
+        // Backward-compatible alias
+        function submitLocationCorrection() {
+            return submitBranchCorrectionReport();
+        }
+
+        /**
+         * خط إشعار المطورين عبر Webhook و EmailJS
+         */
+        function sendCorrectionAdminNotification(center, lat, lng, newMapsUrl, note, userEmail, nowIso, nowFormatted) {
+            const webhookUrl = typeof getAppWebhookUrl === 'function' ? getAppWebhookUrl() : null;
+            const adminEmail = 'motorcare.auto@gmail.com';
+            const subject = `[MotorCare GPS Correction] تصحيح موقع: ${center.name} (${(center.brands || []).join(', ')})`;
+            
+            const jsonSnippet = JSON.stringify({
+                id: center.id,
+                name: center.name,
+                gov: center.gov,
+                area: center.area,
+                lat: lat,
+                lng: lng,
+                mapsUrl: newMapsUrl
+            }, null, 2);
+
+            const emailHtml = `
+            <div dir="rtl" style="font-family: Arial, sans-serif; color: #1e293b; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px;">
+                <div style="text-align: center; padding-bottom: 15px; border-bottom: 2px solid #38bdf8;">
+                    <h2 style="color: #0284c7; margin: 0;">🛰️ طلب تصحيح إحداثيات مركز خدمة في تطبيق MotorCare</h2>
+                    <p style="color: #64748b; font-size: 13px; margin: 5px 0 0;">مساهمة جديدة من نظام التحقق المجتمعي (Dealership Verification)</p>
+                </div>
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #0f172a; margin-bottom: 8px;">🏢 بيانات المركز:</h3>
+                    <ul style="line-height: 1.8; font-size: 14px;">
+                        <li><strong>الاسم:</strong> ${center.name}</li>
+                        <li><strong>الماركة / الوكالة:</strong> ${(center.brands || []).join(', ')} - ${center.agency || ''}</li>
+                        <li><strong>المحافظة والمنطقة:</strong> ${center.gov} - ${center.area}</li>
+                        <li><strong>العنوان الحالي:</strong> ${center.address || 'غير محدد'}</li>
+                    </ul>
+
+                    <h3 style="color: #0f172a; margin-top: 20px; margin-bottom: 8px;">📍 الإحداثيات المقترحة:</h3>
+                    <p style="font-size: 13px;">Lat: ${lat || '-'} | Lng: ${lng || '-'}</p>
+                    <p style="font-size: 13px;"><strong>الرابط:</strong> <a href="${newMapsUrl}" target="_blank">${newMapsUrl}</a></p>
+
+                    ${note ? `<div style="background: #f8fafc; padding: 12px; border-radius: 8px; border-right: 4px solid #f59e0b; margin: 15px 0;">
+                        <strong>📝 ملاحظة وتوضيح المستخدم:</strong>
+                        <p style="margin: 5px 0 0; font-size: 13px; color: #334155;">${note}</p>
+                    </div>` : ''}
+
+                    <p style="font-size: 13px;"><strong>👤 بيانات المستخدم:</strong> ${userEmail}</p>
+                    <p style="font-size: 12px; color: #64748b;"><strong>⏰ التاريخ والوقت:</strong> ${nowFormatted} (${nowIso})</p>
+                </div>
+            </div>`;
+
+            const notificationPayload = {
+                action: 'LOCATION_CORRECTION',
+                centerId: center.id,
+                centerName: center.name,
+                brand: (center.brands || []).join(', '),
+                agency: center.agency || '',
+                oldCoords: { lat: center.lat, lng: center.lng, mapsUrl: center.mapsUrl },
+                newCoords: { lat: lat, lng: lng, mapsUrl: newMapsUrl },
+                googleMapsLink: newMapsUrl,
+                note: note,
+                userEmail: userEmail,
+                timestamp: nowIso,
+                adminEmail: adminEmail,
+                adminSubject: subject,
+                adminHtmlBody: emailHtml,
+                suggestedJsonSnippet: jsonSnippet
+            };
+
+            if (webhookUrl && webhookUrl.startsWith('http')) {
+                try {
+                    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 6000));
+                    const fetchPromise = fetch(webhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(notificationPayload)
+                    });
+                    Promise.race([fetchPromise, timeoutPromise]).catch(() => {});
+                } catch (err) {}
+            }
+
+            if (typeof emailjs !== 'undefined' && emailjs) {
+                try {
+                    const emailjsConfig = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_emailjs_config') : localStorage.getItem('motorCare_emailjs_config'));
+                    if (emailjsConfig) {
+                        const conf = JSON.parse(emailjsConfig);
+                        if (conf.serviceId && conf.templateId) {
+                            emailjs.send(conf.serviceId, conf.templateId, {
+                                to_email: adminEmail,
+                                user_name: userEmail,
+                                subject: subject,
+                                message: `تم اقتراح تعديل موقع لمركز: ${center.name} (${lat}, ${lng}). ملاحظات: ${note}`,
+                                ticket_id: `GPS_${center.id}`,
+                                category: 'Location Correction',
+                                car_details: `${center.name} - ${center.gov}`
+                            }).catch(() => {});
+                        }
+                    }
+                } catch (e) {}
+            }
         }
 
         /* ==========================================================================
@@ -1093,3 +1230,7 @@ try { if (typeof exportUserCorrectionsJSON !== 'undefined') window.exportUserCor
 try { if (typeof deleteUserCorrection !== 'undefined') window.deleteUserCorrection = deleteUserCorrection; } catch (e) {}
 try { if (typeof getServiceCenterMapsUrl !== 'undefined') window.getServiceCenterMapsUrl = getServiceCenterMapsUrl; } catch (e) {}
 try { if (typeof openServiceCenterMap !== 'undefined') window.openServiceCenterMap = openServiceCenterMap; } catch (e) {}
+try { if (typeof openBranchVerificationModal !== 'undefined') window.openBranchVerificationModal = openBranchVerificationModal; } catch (e) {}
+try { if (typeof closeBranchVerificationModal !== 'undefined') window.closeBranchVerificationModal = closeBranchVerificationModal; } catch (e) {}
+try { if (typeof submitQuickBranchConfirmation !== 'undefined') window.submitQuickBranchConfirmation = submitQuickBranchConfirmation; } catch (e) {}
+try { if (typeof submitBranchCorrectionReport !== 'undefined') window.submitBranchCorrectionReport = submitBranchCorrectionReport; } catch (e) {}

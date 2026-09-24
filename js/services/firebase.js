@@ -97,6 +97,9 @@
                     });
 
                 isFirestoreReady = true;
+                setTimeout(() => {
+                    if (typeof flushQueuedDealershipReports === 'function') flushQueuedDealershipReports();
+                }, 1000);
                 return true;
             } catch(e) {
                 console.warn('[MotorCare Cloud] Firebase init note:', e.message);
@@ -110,16 +113,183 @@
                 isFirestoreReady = true;
                 return firestoreDb;
             }
+            if (window.db) {
+                firestoreDb = window.db;
+                isFirestoreReady = true;
+                return firestoreDb;
+            }
             if (isFirestoreReady && firestoreDb) return firestoreDb;
             if (typeof initFirestoreDatabase === 'function' && initFirestoreDatabase()) return firestoreDb;
             const start = Date.now();
             while (Date.now() - start < maxWaitMs) {
+                if (window.firestoreDb || window.db) {
+                    firestoreDb = window.firestoreDb || window.db;
+                    isFirestoreReady = true;
+                    return firestoreDb;
+                }
                 if (typeof firebase !== 'undefined') {
                     if (initFirestoreDatabase()) return firestoreDb;
                 }
                 await new Promise(r => setTimeout(r, 100));
             }
             return firestoreDb;
+        }
+
+        function getCurrentUserIdentifier() {
+            try {
+                if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+                    const u = firebase.auth().currentUser;
+                    if (u.email) return u.email;
+                    if (u.uid) return u.uid;
+                }
+            } catch(e) {}
+
+            try {
+                if (typeof appState !== 'undefined' && appState.user) {
+                    if (appState.user.email) return appState.user.email;
+                    if (appState.user.uid) return appState.user.uid;
+                }
+            } catch(e) {}
+
+            try {
+                const raw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_UserProfile') : localStorage.getItem('motorCare_UserProfile')) ||
+                            (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem('motorCare_user_profile') : localStorage.getItem('motorCare_user_profile'));
+                if (raw) {
+                    const p = JSON.parse(raw);
+                    if (p.email) return p.email;
+                    if (p.uid) return p.uid;
+                    if (p.name) return p.name;
+                }
+            } catch(e) {}
+
+            return 'guest_user';
+        }
+
+        function queueDealershipReportLocally(payload) {
+            try {
+                const qKey = 'motorCare_queued_dealership_reports';
+                const raw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem(qKey) : localStorage.getItem(qKey)) || '[]';
+                const queue = JSON.parse(raw);
+                queue.push({
+                    ...payload,
+                    timestamp: new Date().toISOString(),
+                    queuedAt: new Date().toISOString()
+                });
+                const serialized = JSON.stringify(queue);
+                if (typeof SafeStorage !== 'undefined') SafeStorage.setItem(qKey, serialized);
+                else localStorage.setItem(qKey, serialized);
+            } catch(e) {
+                console.warn('[Dealership Reports Queue] Error saving offline report:', e);
+            }
+        }
+
+        async function flushQueuedDealershipReports() {
+            try {
+                const qKey = 'motorCare_queued_dealership_reports';
+                const raw = (typeof SafeStorage !== 'undefined' ? SafeStorage.getItem(qKey) : localStorage.getItem(qKey));
+                if (!raw) return;
+                const queue = JSON.parse(raw);
+                if (!Array.isArray(queue) || queue.length === 0) return;
+
+                const db = firestoreDb || window.firestoreDb || window.db;
+                if (!db) return;
+
+                for (const item of queue) {
+                    const docId = `${item.branchId}_${item.voteType}_${Date.now()}`;
+                    const col = db.collection('dealership_reports');
+                    const ts = (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue)
+                        ? firebase.firestore.FieldValue.serverTimestamp()
+                        : item.timestamp;
+                    const finalItem = { ...item, timestamp: ts };
+                    if (typeof col.doc === 'function') {
+                        await col.doc(docId).set(finalItem).catch(() => {});
+                    } else if (typeof col.add === 'function') {
+                        await col.add(finalItem).catch(() => {});
+                    }
+                }
+
+                if (typeof SafeStorage !== 'undefined') SafeStorage.removeItem(qKey);
+                else localStorage.removeItem(qKey);
+                console.log('[Dealership Reports] Flushed queued reports to Firestore.');
+            } catch(e) {}
+        }
+
+        /**
+         * حفظ تقارير تصحيح وتأكيد دقة الفروع والتوكيلات في Firestore
+         * Dedicated Collection: dealership_reports
+         * Payload: { branchId, brand, agencyName, branchName, reportedBy, suggestedUrl, userLat, userLng, voteType: 'confirm' | 'correction', timestamp: serverTimestamp() }
+         */
+        async function submitDealershipReport(report) {
+            if (!report || !report.branchId) {
+                throw new Error('branchId is required for dealership report');
+            }
+
+            if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+                let offTs = new Date().toISOString();
+                const offlinePayload = {
+                    branchId: String(report.branchId || '').trim(),
+                    brand: String(report.brand || '').trim(),
+                    agencyName: String(report.agencyName || '').trim(),
+                    branchName: String(report.branchName || '').trim(),
+                    reportedBy: String(report.reportedBy || getCurrentUserIdentifier() || 'guest_user'),
+                    suggestedUrl: String(report.suggestedUrl || '').trim(),
+                    userLat: (report.userLat !== null && report.userLat !== undefined && !isNaN(report.userLat)) ? Number(report.userLat) : null,
+                    userLng: (report.userLng !== null && report.userLng !== undefined && !isNaN(report.userLng)) ? Number(report.userLng) : null,
+                    voteType: report.voteType === 'confirm' ? 'confirm' : 'correction',
+                    timestamp: offTs,
+                    note: report.note ? String(report.note).trim() : undefined
+                };
+                queueDealershipReportLocally(offlinePayload);
+                return Promise.resolve({ success: true, queued: true });
+            }
+
+            try {
+                await ensureFirestoreReady(2500);
+            } catch(e) {}
+
+            let serverTs = new Date();
+            if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue) {
+                serverTs = firebase.firestore.FieldValue.serverTimestamp();
+            }
+
+            const payload = {
+                branchId: String(report.branchId || '').trim(),
+                brand: String(report.brand || '').trim(),
+                agencyName: String(report.agencyName || '').trim(),
+                branchName: String(report.branchName || '').trim(),
+                reportedBy: String(report.reportedBy || getCurrentUserIdentifier() || 'guest_user'),
+                suggestedUrl: String(report.suggestedUrl || '').trim(),
+                userLat: (report.userLat !== null && report.userLat !== undefined && !isNaN(report.userLat)) ? Number(report.userLat) : null,
+                userLng: (report.userLng !== null && report.userLng !== undefined && !isNaN(report.userLng)) ? Number(report.userLng) : null,
+                voteType: report.voteType === 'confirm' ? 'confirm' : 'correction',
+                timestamp: serverTs
+            };
+
+            if (report.note) {
+                payload.note = String(report.note).trim();
+            }
+
+            const db = firestoreDb || window.firestoreDb || window.db;
+            if (db) {
+                const docId = `${payload.branchId}_${payload.voteType}_${Date.now()}`;
+                const col = db.collection('dealership_reports');
+                const writePromise = (typeof col.doc === 'function')
+                    ? col.doc(docId).set(payload)
+                    : col.add(payload);
+
+                return writePromise.then((res) => {
+                    const finalId = (res && res.id) ? res.id : docId;
+                    console.log('[Dealership Reports] Report submitted successfully to Firestore:', finalId);
+                    return { success: true, docId: finalId };
+                }).catch((err) => {
+                    console.warn('[Dealership Reports] Firestore write error, falling back to local queue:', err);
+                    queueDealershipReportLocally(payload);
+                    return { success: true, queued: true };
+                });
+            } else {
+                queueDealershipReportLocally(payload);
+                return Promise.resolve({ success: true, queued: true });
+            }
         }
 
         function getCloudSyncUserKey() {
@@ -655,3 +825,6 @@ try { if (typeof autoRestoreFromCloud !== 'undefined') window.autoRestoreFromClo
 try { if (typeof getCloudSyncUserKey !== 'undefined') window.getCloudSyncUserKey = getCloudSyncUserKey; } catch (e) {}
 try { if (typeof startLiveVerificationWatcher !== 'undefined') window.startLiveVerificationWatcher = startLiveVerificationWatcher; } catch (e) {}
 try { if (typeof stopLiveVerificationWatcher !== 'undefined') window.stopLiveVerificationWatcher = stopLiveVerificationWatcher; } catch (e) {}
+try { if (typeof submitDealershipReport !== 'undefined') window.submitDealershipReport = submitDealershipReport; } catch (e) {}
+try { if (typeof getCurrentUserIdentifier !== 'undefined') window.getCurrentUserIdentifier = getCurrentUserIdentifier; } catch (e) {}
+try { if (typeof flushQueuedDealershipReports !== 'undefined') window.flushQueuedDealershipReports = flushQueuedDealershipReports; } catch (e) {}

@@ -3027,22 +3027,22 @@
     </div>
 
     <!-- ==========================================================================
-         [MODAL] التصحيح الجماعي لمواقع مراكز الخدمة والتوكيلات (Crowdsourced Location Correction)
+         [MODAL] نظام التحقق وتصحيح الفروع والتوكيلات (Branch Verification & Feedback)
          ========================================================================== -->
     <div id="locationCorrectionModal" style="z-index: 9999;" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-2 sm:p-4 backdrop-blur-xs transition-all">
         <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92vh] flex flex-col safe-area-pb">
             <!-- Header -->
             <div class="px-5 py-3.5 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-base shadow-sm">
-                        <i class="fa-solid fa-location-crosshairs"></i>
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center text-base shadow-sm">
+                        <i class="fa-solid fa-shield-halved"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">تصحيح وتعديل موقع المركز</h3>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400">التصحيح الجماعي الذكي بدقة الـ GPS الفضائية 🛰️</p>
+                        <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">نظام التحقق وتصحيح الفروع</h3>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400">التوثيق المجتمعي لمراكز الخدمة والتوكيلات المعتمدة 🛰️</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeLocationCorrectionModal()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer transition-colors">
+                <button type="button" onclick="closeBranchVerificationModal()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer transition-colors">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
@@ -3052,98 +3052,125 @@
                 <input type="hidden" id="scCorrectionCenterId" value="">
 
                 <!-- Center Info Box -->
-                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-1.5">
-                    <div class="flex items-center justify-between gap-2">
-                        <h4 id="scCorrectionCenterName" class="font-black text-slate-900 dark:text-white text-sm truncate">-</h4>
+                <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h4 id="scCorrectionCenterName" class="font-black text-slate-900 dark:text-white text-sm truncate">-</h4>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                <i class="fa-solid fa-circle-check text-[10px] text-emerald-500"></i>
+                                <span>✓ فرع موثّق ورسمي</span>
+                            </span>
+                        </div>
                         <span id="scCorrectionAgencyBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 shrink-0">-</span>
                     </div>
                     <div class="text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-1.5">
-                        <i class="fa-solid fa-map-pin text-rose-500 mt-0.5 shrink-0"></i>
+                        <i class="fa-solid fa-location-dot text-rose-500 mt-0.5 shrink-0"></i>
                         <span id="scCorrectionCurrentAddress" class="leading-relaxed">-</span>
                     </div>
-                    <div class="pt-1 flex items-center gap-2 text-[10px] text-slate-400 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <span>الإحداثيات الحالية:</span>
-                        <code id="scCorrectionCurrentCoords" class="font-mono font-bold text-slate-600 dark:text-slate-300">-</code>
-                    </div>
-                </div>
-
-                <!-- GPS Capture Button -->
-                <div class="space-y-1.5">
-                    <label class="font-black text-slate-900 dark:text-slate-100 flex items-center justify-between">
-                        <span>1. التقاط إحداثيات موقعك الفعلي:</span>
-                        <span class="text-[10px] font-normal text-slate-400">إذا كنت متواجداً في المركز</span>
-                    </label>
-                    <button type="button" id="scGpsCaptureBtn" onclick="captureCurrentGpsForCorrection()" class="w-full py-2.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all cursor-pointer">
-                        <i class="fa-solid fa-crosshairs text-sm"></i>
-                        <span id="scGpsCaptureBtnText">التقاط موقعي الحالي بالـ GPS بدقة عالية 📍</span>
-                    </button>
-                    <div id="scGpsAccuracyBadge" class="hidden text-[10px] font-bold text-emerald-600 dark:text-emerald-400 text-center"></div>
-                </div>
-
-                <!-- Manual Lat / Lng inputs -->
-                <div class="space-y-1.5">
-                    <label class="font-black text-slate-900 dark:text-slate-100">
-                        <span>2. الإحداثيات الجغرافية المقترحة (خط العرض وخط الطول):</span>
-                    </label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[10px] text-slate-400 font-bold block mb-0.5">خط العرض (Latitude):</span>
-                            <input type="number" step="any" id="scCorrectionLatInput" placeholder="مثال: 30.071234" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden">
+                    <div class="pt-1.5 flex items-center justify-between gap-2 text-[10px] text-slate-400 border-t border-slate-200/60 dark:border-slate-700/60 flex-wrap">
+                        <div class="flex items-center gap-1.5">
+                            <span>الإحداثيات الحالية:</span>
+                            <code id="scCorrectionCurrentCoords" class="font-mono font-bold text-slate-600 dark:text-slate-300">-</code>
                         </div>
-                        <div>
-                            <span class="text-[10px] text-slate-400 font-bold block mb-0.5">خط الطول (Longitude):</span>
-                            <input type="number" step="any" id="scCorrectionLngInput" placeholder="مثال: 31.042123" class="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden">
+                        <a id="scCorrectionMapsPreviewLink" href="#" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                            <span>معاينة الرابط الرسمي على الخريطة</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 1. Quick Confirmation (قسم التأكيد السريع) -->
+                <div class="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 border border-emerald-200 dark:border-emerald-800/60 space-y-2">
+                    <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-sm shadow-xs shrink-0">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </span>
+                            <div>
+                                <h5 class="text-xs font-black text-emerald-950 dark:text-emerald-100">تأكيد دقة الفرع (Quick Confirmation)</h5>
+                                <p class="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">هل زرت هذا الفرع والموقع دقيق؟</p>
+                            </div>
                         </div>
+                        <button type="button" id="scQuickConfirmBtn" onclick="submitQuickBranchConfirmation()" class="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all cursor-pointer shrink-0">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            <span id="scQuickConfirmBtnText">نعم، دقيق ومطابق ✓</span>
+                        </button>
                     </div>
+                    <div id="scQuickConfirmFeedback" class="hidden text-[10px] font-bold text-emerald-700 dark:text-emerald-300 text-center pt-0.5"></div>
                 </div>
 
-                <!-- Google Maps Link Paste -->
-                <div class="space-y-1">
-                    <label class="font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between text-[11px]">
-                        <span>أو الصق رابط خرائط جوجل مباشرة (Google Maps URL):</span>
-                        <span class="text-[9px] text-sky-500 font-semibold">استخراج تلقائي</span>
-                    </label>
-                    <div class="relative">
-                        <i class="fa-brands fa-google absolute start-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" id="scCorrectionMapsUrlInput" oninput="handlePasteMapsUrl(this)" placeholder="https://maps.app.goo.gl/... أو https://www.google.com/maps/..." class="w-full ps-8 pe-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden font-mono text-[11px]">
+                <!-- 2. Suggest Correction (قسم اقتراح التصحيح) -->
+                <div class="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </span>
+                        <h5 class="text-xs font-black text-slate-800 dark:text-slate-200">اقتراح تصحيح اللوكيشن (Suggest Correction)</h5>
                     </div>
-                    <p id="scMapsUrlParseNotice" class="hidden text-[10px] font-bold text-emerald-600 dark:text-emerald-400 pt-0.5"></p>
-                </div>
 
-                <!-- Test button -->
-                <div class="flex justify-end">
-                    <button type="button" onclick="testCorrectionOnMap()" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                        <span>تجربة فتح الإحداثيات على الخريطة أولاً 🗺️</span>
-                    </button>
-                </div>
+                    <!-- Input 1: Google Maps Share Link -->
+                    <div class="space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                            الصق رابط الفرع الصحيح من خرائط Google (Share Link)
+                        </label>
+                        <div class="relative">
+                            <i class="fa-solid fa-link absolute start-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="scCorrectionMapsUrlInput" oninput="handlePasteMapsUrl(this)" placeholder="https://maps.app.goo.gl/... أو https://www.google.com/maps/..." class="w-full ps-8 pe-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden font-mono text-[11px]">
+                        </div>
+                        <p id="scMapsUrlParseNotice" class="hidden text-[10px] font-bold text-emerald-600 dark:text-emerald-400 pt-0.5"></p>
+                    </div>
 
-                <!-- Notes / Clarification -->
-                <div class="space-y-1">
-                    <label class="font-black text-slate-900 dark:text-slate-100 flex items-center justify-between">
-                        <span>3. ملاحظات وتوضيح سبب التعديل (اختياري):</span>
-                    </label>
-                    <textarea id="scCorrectionNotesInput" rows="2" placeholder="مثال: الفرع انتقل إلى الشارع المقابل بجوار البنك، أو البوابة الرئيسية على المحور مباشرة..." class="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden resize-none"></textarea>
-                </div>
+                    <!-- Optional GPS button -->
+                    <div>
+                        <button type="button" id="scGpsCaptureBtn" onclick="captureCurrentGpsForCorrection()" class="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer">
+                            <i class="fa-solid fa-location-crosshairs text-sky-500"></i>
+                            <span id="scGpsCaptureBtnText">استخدام موقعي الحالي إذا كنت تقف أمام الفرع الآن (GPS)</span>
+                        </button>
+                        <div id="scGpsAccuracyBadge" class="hidden text-[10px] font-bold text-emerald-600 dark:text-emerald-400 text-center mt-1"></div>
+                    </div>
 
-                <!-- Submitter Email -->
-                <div class="space-y-1">
-                    <label class="font-bold text-slate-700 dark:text-slate-300 text-[11px]">بريدك الإلكتروني (للمتابعة وإشعارك بالاعتماد):</label>
-                    <input type="email" id="scCorrectionEmailInput" placeholder="name@example.com" class="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden">
-                </div>
+                    <!-- Hidden Lat/Lng for backward-compat and testing -->
+                    <input type="hidden" id="scCorrectionLatInput" value="">
+                    <input type="hidden" id="scCorrectionLngInput" value="">
+                    <div id="scManualCoordsPreview" class="hidden text-[10px] text-slate-500 dark:text-slate-400 font-mono text-center">
+                        الإحداثيات المسجلة: <code id="scCorrectionCoordsSummary" class="text-sky-600 dark:text-sky-400 font-bold">-</code>
+                    </div>
 
-                <!-- Live Status Banner -->
-                <div id="scCorrectionStatus" class="hidden p-2.5 rounded-xl text-[11px] font-bold text-center"></div>
+                    <!-- Input 2: Notes Field -->
+                    <div class="space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                            ملاحظات إضافية (اختياري)
+                        </label>
+                        <textarea id="scCorrectionNotesInput" rows="2" placeholder="اكتب أي ملاحظة عن العنوان الجديد، المعالم المميزة، أو أوقات العمل..." class="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden resize-none"></textarea>
+                    </div>
+
+                    <!-- Test Button -->
+                    <div class="flex justify-end">
+                        <button type="button" onclick="testCorrectionOnMap()" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            <span>تجربة فتح الإحداثيات على الخريطة أولاً 🗺️</span>
+                        </button>
+                    </div>
+
+                    <!-- Optional Email -->
+                    <div class="space-y-1">
+                        <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">بريدك الإلكتروني (اختياري):</label>
+                        <input type="email" id="scCorrectionEmailInput" placeholder="name@example.com" class="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-1 focus:ring-sky-500 focus:outline-hidden">
+                    </div>
+
+                    <!-- Status message box -->
+                    <div id="scCorrectionStatus" class="hidden p-2.5 rounded-xl text-[11px] font-bold text-center"></div>
+                </div>
             </div>
 
             <!-- Footer -->
             <div class="px-5 py-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 shrink-0">
-                <button type="button" onclick="closeLocationCorrectionModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold cursor-pointer transition-colors">
+                <button type="button" onclick="closeBranchVerificationModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold cursor-pointer transition-colors">
                     إلغاء
                 </button>
-                <button type="button" id="scSubmitCorrectionBtn" onclick="submitLocationCorrection()" class="flex-1 py-2 px-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer">
+                <button type="button" id="scSubmitCorrectionBtn" onclick="submitBranchCorrectionReport()" class="flex-1 py-2 px-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
-                    <span id="scSubmitCorrectionBtnText">حفظ واعتماد التعديل سحابياً ومحلياً 🚀</span>
+                    <span id="scSubmitCorrectionBtnText">إرسال التصحيح للمراجعة</span>
                 </button>
             </div>
         </div>

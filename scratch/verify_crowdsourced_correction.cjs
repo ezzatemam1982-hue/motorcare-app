@@ -77,7 +77,7 @@ async function run() {
         const firstCard = document.querySelector('#scCardsContainer > div');
         if (!firstCard) return null;
         const gpsLink = firstCard.querySelector('a[href*="google.com/maps"]');
-        const correctBtn = firstCard.querySelector('button[onclick*="openLocationCorrectionModal"]');
+        const correctBtn = firstCard.querySelector('button[onclick*="openBranchVerificationModal"], button[onclick*="openLocationCorrectionModal"]');
         return {
             hasGpsLink: !!gpsLink,
             gpsHref: gpsLink ? gpsLink.href : null,
@@ -91,12 +91,12 @@ async function run() {
     }
 
     // 4. Open Location Correction Modal for the first center
-    console.log('[Test] Triggering openLocationCorrectionModal for first center...');
+    console.log('[Test] Triggering openBranchVerificationModal for first center...');
     const targetCenterId = await page.evaluate(() => {
         const firstCard = document.querySelector('#scCardsContainer > div');
-        const correctBtn = firstCard.querySelector('button[onclick*="openLocationCorrectionModal"]');
+        const correctBtn = firstCard.querySelector('button[onclick*="openBranchVerificationModal"], button[onclick*="openLocationCorrectionModal"]');
         const onclickAttr = correctBtn.getAttribute('onclick');
-        const match = onclickAttr.match(/openLocationCorrectionModal\(['"]([^'"]+)['"]\)/);
+        const match = onclickAttr.match(/(?:openBranchVerificationModal|openLocationCorrectionModal)\(['"]([^'"]+)['"]\)/);
         return match ? match[1] : null;
     });
     console.log('[Test] Target Center ID:', targetCenterId);
@@ -193,11 +193,11 @@ async function run() {
     // 7. Verify the center card in the list now displays the correction badge & updated GPS link
     const updatedCardInfo = await page.evaluate((id) => {
         const card = Array.from(document.querySelectorAll('#scCardsContainer > div')).find(el => {
-            return el.innerHTML.includes(id) || (el.querySelector('button[onclick*="openLocationCorrectionModal"]') && el.innerHTML.includes('توكيل كيا إيجيبت (EIT) - فرع أسيوط'));
+            return el.innerHTML.includes(id) || ((el.querySelector('button[onclick*="openBranchVerificationModal"]') || el.querySelector('button[onclick*="openLocationCorrectionModal"]')) && el.innerHTML.includes('توكيل كيا إيجيبت (EIT) - فرع أسيوط'));
         });
         if (!card) return null;
         const gpsLink = card.querySelector('a[href*="google.com/maps"]');
-        const correctBtn = card.querySelector('button[onclick*="openLocationCorrectionModal"]');
+        const correctBtn = card.querySelector('button[onclick*="openBranchVerificationModal"], button[onclick*="openLocationCorrectionModal"]');
         return {
             hasCorrectionBadge: card.innerHTML.includes('تم تصحيح الموقع محلياً'),
             gpsHref: gpsLink ? gpsLink.href : null,
