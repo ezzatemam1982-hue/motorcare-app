@@ -3,12 +3,13 @@
 // نظام إشعارات الموبايل لمواعيد الصيانة الدورية والطارئة (Mobile Push & Local Notifications)
 // استراتيجية التخزين: Cache First, then Network لملفات الواجهة الثابتة لضمان الفتح الفوري بدون إنترنت
 
-const CACHE_NAME = 'motorcare-cache-v2.0.26';
+const CACHE_NAME = 'motorcare-cache-v2.0.27';
 
 // 1. قائمة الأصول الثابتة الأساسية للتطبيق (Core Static Assets)
 const PRECACHE_ASSETS = [
   './',
   './index.html',
+  './css/style.css',
   './app_config.js',
   './obd_codes.json',
   './obd_codes.js',
@@ -29,6 +30,38 @@ const PRECACHE_ASSETS = [
   './icon-maskable-512.png',
   './ss-1.png',
   './ss-2.png',
+  './js/config/tailwind.config.js',
+  './js/storage/storage.js',
+  './js/security/security.js',
+  './js/services/pwa.js',
+  './js/services/network.js',
+  './js/services/notifications.js',
+  './js/services/firebase.js',
+  './js/data/dictionary.js',
+  './js/data/brandLogos.js',
+  './js/data/batteryMarket.js',
+  './js/core/appState.js',
+  './js/core/i18n.js',
+  './js/core/catalogBuilder.js',
+  './js/core/maintenanceEngine.js',
+  './js/services/auth.js',
+  './js/services/emergency.js',
+  './js/services/feedback.js',
+  './js/features/dashboard.js',
+  './js/features/maintenance.js',
+  './js/features/fuel.js',
+  './js/features/analytics.js',
+  './js/features/garage.js',
+  './js/features/documents.js',
+  './js/features/battery.js',
+  './js/features/serviceCenters.js',
+  './js/features/odometer.js',
+  './js/features/inspection.js',
+  './js/features/obd.js',
+  './js/features/driverTools.js',
+  './js/features/reports.js',
+  './js/features/admin.js',
+  './js/main.js',
   'https://cdn.tailwindcss.com',
   'https://cdn.jsdelivr.net/npm/chart.js',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
