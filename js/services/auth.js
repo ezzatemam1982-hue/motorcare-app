@@ -1295,12 +1295,17 @@ ${verifyUrl}
                 }
             } catch (e) { }
 
-            // 6. فحص سحابي سريع وغير معطل للواجهة في Firestore (مهلة 1.5 ثانية فقط)
+            // 6. فحص سحابي سريع وغير معطل للواجهة في Firestore (مهلة 2 ثانية فقط)
             try {
-                if (typeof isFirestoreReady !== 'undefined' && isFirestoreReady && firestoreDb) {
+                let db = (typeof firestoreDb !== 'undefined' && firestoreDb) ? firestoreDb : null;
+                if (!db && typeof initFirestoreDatabase === 'function') {
+                    initFirestoreDatabase();
+                    db = (typeof firestoreDb !== 'undefined' && firestoreDb) ? firestoreDb : null;
+                }
+                if (db) {
                     const snap = await Promise.race([
-                        firestoreDb.collection('motorcare_users').doc(userKey).get(),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+                        db.collection('motorcare_users').doc(userKey).get(),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
                     ]);
                     if (snap && (typeof snap.exists === 'function' ? snap.exists() : snap.exists)) {
                         const d = snap.data() || {};
@@ -1871,8 +1876,26 @@ ${verifyUrl}
                     }
                 }
 
-                // خطأ كلمة المرور من Firebase
-                if (fbAuthError && (fbAuthError.code === 'auth/wrong-password' || fbAuthError.code === 'auth/invalid-credential')) {
+                // التحقق الموحد من كلمة المرور (يدعم تسجيل الدخول عبر Firebase Auth أو كلمة المرور المعتمدة محلياً وسحابياً بعد استعادة OTP)
+                const isPasswordValidLocally = existingAccount && existingAccount.password && (existingAccount.password === password);
+
+                if (!firebaseUser && !isPasswordValidLocally) {
+                    _isSubmittingAuth = false;
+                    // إذا كان الحساب غير مسجل إطلاقاً
+                    if (!existingAccount) {
+                        if (typeof showNotification === 'function') {
+                            showNotification(
+                                isEn
+                                    ? 'No account found with this email. Please check your email or click "New Account" tab above to register.'
+                                    : 'البريد الإلكتروني غير مسجل. يرجى التأكد من كتابة البريد بشكل صحيح أو النقر على تبويب "حساب جديد" بالأعلى لإنشاء حساب.',
+                                'error', 6000
+                            );
+                        }
+                        document.getElementById('authEmail')?.focus();
+                        return;
+                    }
+
+                    // كلمة المرور غير صحيحة
                     if (typeof showNotification === 'function') {
                         showNotification(
                             isEn ? 'Incorrect password. Please try again or click "Forgot password?".' : 'كلمة المرور غير صحيحة. يرجى المحاولة مجدداً أو النقر على "نسيت كلمة المرور؟".',
@@ -1883,31 +1906,7 @@ ${verifyUrl}
                     return;
                 }
 
-                // الحساب غير موجود في Firebase ولا في القاعدة المحلية
-                if (!firebaseUser && !existingAccount) {
-                    if (typeof showNotification === 'function') {
-                        showNotification(
-                            isEn
-                                ? 'No account found with this email. Please check your email or click "New Account" tab above to register.'
-                                : 'البريد الإلكتروني غير مسجل. يرجى التأكد من كتابة البريد بشكل صحيح أو النقر على تبويب "حساب جديد" بالأعلى لإنشاء حساب.',
-                            'error', 6000
-                        );
-                    }
-                    document.getElementById('authEmail')?.focus();
-                    return;
-                }
-
-                // التحقق من صحة كلمة المرور محلياً في حالة الأوفلاين
-                if (!firebaseUser && existingAccount && existingAccount.password && existingAccount.password !== password) {
-                    if (typeof showNotification === 'function') {
-                        showNotification(
-                            isEn ? 'Incorrect password. Please try again or click "Forgot password?".' : 'كلمة المرور غير صحيحة. يرجى المحاولة مجدداً أو النقر على "نسيت كلمة المرور؟".',
-                            'error', 5000
-                        );
-                    }
-                    document.getElementById('authPassword')?.focus();
-                    return;
-                }
+                _isSubmittingAuth = false;
 
                 // تحديد المعرف الموحد UID لربط المزامنة السحابية
                 const uniformUid = (firebaseUser && firebaseUser.uid) || existingAccount?.uid || existingAccount?.firebaseUid || ('mc_' + Date.now());
@@ -2441,56 +2440,89 @@ ${verifyUrl}
             // تحديث كلمة المرور في قاعدة الحسابات المحلية والسحابية
             const targetEmail = storedReset.email.toLowerCase().trim();
 
-            // 1. تحديث motorCare_AccountsDB و motorCare_RegisteredSubscribers
-            saveAccountToLocalDB({
-                name: storedReset.name || 'عضو MotorCare',
+            // 1. استخراج الحساب المسجل إن وجد
+            let existingAccount = null;
+            try {
+                let accounts = [];
+                const raw = SafeStorage.getItem('motorCare_AccountsDB');
+                if (raw) accounts = JSON.parse(raw);
+                if (Array.isArray(accounts)) {
+                    existingAccount = accounts.find(a => a && a.email && a.email.toLowerCase() === targetEmail);
+                }
+            } catch(e) {}
+
+            const uniformUid = existingAccount?.uid || existingAccount?.firebaseUid || ('mc_' + Date.now());
+            const clientName = storedReset.name || existingAccount?.name || targetEmail.split('@')[0];
+
+            const profile = {
+                ...(existingAccount || {}),
+                id: existingAccount?.id || ('acc_' + Date.now()),
+                uid: uniformUid,
+                firebaseUid: uniformUid,
+                name: clientName,
                 email: targetEmail,
                 password: newPass,
-                isVerified: true
-            });
+                provider: 'email',
+                isRegistered: true,
+                isVerified: true,
+                emailVerified: true,
+                lastLoginAt: new Date().toISOString()
+            };
 
-            // 2. تحديث البروفايل motorCare_UserProfile إذا كان نفس الحساب
-            try {
-                const rawProf = SafeStorage.getItem('motorCare_UserProfile');
-                if (rawProf) {
-                    const prof = JSON.parse(rawProf);
-                    if (prof.email && prof.email.toLowerCase() === targetEmail) {
-                        prof.password = newPass;
-                        SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(prof));
-                    }
-                }
-            } catch (e) { }
+            // 2. تحديث الحساب محلياً في motorCare_AccountsDB و motorCare_RegisteredSubscribers
+            saveAccountToLocalDB(profile);
 
-            // 3. تحديث في Firestore
+            // 3. تحديث كلمة المرور في Firestore
             if (typeof firestoreDb !== 'undefined' && firestoreDb) {
                 try {
                     const userKey = targetEmail.replace(/[^a-z0-9_]/g, '_');
                     firestoreDb.collection('motorcare_users').doc(userKey).set({
+                        name: clientName,
+                        email: targetEmail,
                         password: newPass,
+                        isRegistered: true,
+                        isVerified: true,
+                        emailVerified: true,
                         passwordUpdatedAt: new Date().toISOString()
                     }, { merge: true }).catch(() => { });
                 } catch (e) { }
             }
 
+            // 4. عزل الجلسة وضبط الجلسة النشطة
+            detectAndIsolateUserSession(targetEmail, 'email', false);
+            SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
+            SafeStorage.setItem('motorCare_LoggedIn', 'true');
+            SafeStorage.setItem('motorCare_CloudSyncEnabled', 'true');
             SafeStorage.removeItem('motorCare_ForgotPasswordOtp');
 
-            // إغلاق النافذة وتعبئة بيانات الدخول والانتقال لتبويب تسجيل الدخول
+            // 5. إغلاق النافذة وتعبئة حقول الدخول كإجراء وقائي
             closeForgotPasswordModal();
-            if (typeof switchAuthTab === 'function') {
-                switchAuthTab('login');
-            }
             const authEmail = document.getElementById('authEmail');
             const authPassword = document.getElementById('authPassword');
             if (authEmail) authEmail.value = targetEmail;
-            if (authPassword) {
-                authPassword.value = newPass;
-                authPassword.focus();
+            if (authPassword) authPassword.value = newPass;
+
+            // 6. الدخول التلقائي المباشر للواجهة الرئيسية للتطبيق وتشغيل المزامنة
+            enterMainApp();
+            if (typeof initUserCloudSync === 'function') {
+                initUserCloudSync().then(() => {
+                    const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+                    if (hasCar) {
+                        if (typeof closeAddNewCarModal === 'function') closeAddNewCarModal(true);
+                        const addModal = document.getElementById('addNewCarModal');
+                        if (addModal) {
+                            addModal.classList.add('hidden');
+                            addModal.style.display = 'none';
+                        }
+                        if (typeof renderDashboard === 'function') renderDashboard();
+                    }
+                }).catch(() => {});
             }
 
             if (typeof showNotification === 'function') {
                 showNotification(isEn
-                    ? 'Password updated successfully! You can now sign in. ✅'
-                    : 'تم تحديث كلمة المرور بنجاح! تم تجهيز بياناتك للدخول الآن. ✅', 'success', 5000);
+                    ? `Password reset successful! Welcome back, ${clientName}! 🎉`
+                    : `تم تعيين كلمة المرور الجديدة وتأكيد دخولك بنجاح يا ${clientName}! 🎉`, 'success', 5000);
             }
         }
 

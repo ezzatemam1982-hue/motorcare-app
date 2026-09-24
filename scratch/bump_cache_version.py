@@ -10,7 +10,7 @@ sw_files = [
 ]
 
 pattern = re.compile(r"const CACHE_NAME = 'motorcare-cache-v[^']+';")
-new_str = "const CACHE_NAME = 'motorcare-cache-v2.0.30';"
+new_str = "const CACHE_NAME = 'motorcare-cache-v2.0.31';"
 
 for path in sw_files:
     with open(path, 'r', encoding='utf-8') as f:

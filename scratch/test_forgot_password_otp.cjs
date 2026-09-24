@@ -69,20 +69,25 @@ const playwright = require('C:/Users/Ezzat Emam/AppData/Local/ms-playwright-go/1
     }, step2State.storedOtpObj.otp);
     await page.waitForTimeout(800);
 
-    // 5. Verify modal closed and login inputs filled
+    // 5. Verify modal closed and user is logged in
     const loginFilledState = await page.evaluate(() => {
         const modal = document.getElementById('forgotPasswordModal');
         const authEmail = document.getElementById('authEmail');
         const authPass = document.getElementById('authPassword');
+        const loggedIn = SafeStorage.getItem('motorCare_LoggedIn');
         return {
-            modalClosed: modal?.classList.contains('hidden'),
-            emailVal: authEmail?.value,
-            passVal: authPass?.value
+            modalClosed: modal ? modal.classList.contains('hidden') : true,
+            emailVal: authEmail ? authEmail.value : '',
+            passVal: authPass ? authPass.value : '',
+            loggedIn: loggedIn === 'true'
         };
     });
-    console.log('5. Password Reset Completed & Ready for Login:', loginFilledState);
-    if (!loginFilledState.modalClosed || loginFilledState.passVal !== 'newPass123') {
-        throw new Error('Password reset failed to update and close modal!');
+    console.log('5. Password Reset Completed & Logged In:', loginFilledState);
+    if (!loginFilledState.modalClosed) {
+        throw new Error('Forgot password modal should be closed!');
+    }
+    if (!loginFilledState.loggedIn) {
+        throw new Error('User MUST be logged in automatically after reset!');
     }
 
     // 6. Verify Account Center modal has NO Firebase mention or settings button
