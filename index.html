@@ -15,8 +15,9 @@
     <!-- Google Identity Services & Facebook SDK for Real 1-Tap OAuth -->
     <script src="https://accounts.google.com/gsi/client" async defer onload="if(typeof initGoogleIdentityServices==='function')initGoogleIdentityServices()"></script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ar_AR/sdk.js"></script>
-    <!-- Firebase App, Firestore & Analytics Compat SDK for Realtime Auto Cloud Sync -->
+    <!-- Firebase App, Auth, Firestore & Analytics Compat SDK for Realtime Auto Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js" defer></script>
     <!-- EmailJS Browser SDK for Direct Client-Side Email Delivery -->
@@ -155,6 +156,18 @@
                                 <i class="fa-solid fa-lock absolute inset-y-0 start-0 flex items-center ps-2.5 text-slate-400 text-[11px]"></i>
                                 <button type="button" onclick="togglePasswordVisibility('authPassword', 'passwordEyeIcon')" class="absolute inset-y-0 end-0 flex items-center pe-2.5 text-slate-400 hover:text-sky-500 cursor-pointer transition-colors" title="إظهار / إخفاء كلمة المرور">
                                     <i class="fa-solid fa-eye text-xs" id="passwordEyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- حقل تأكيد كلمة المرور (يظهر عند التسجيل فقط) -->
+                        <div id="authConfirmPasswordContainer" class="hidden">
+                            <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-0.5">تأكيد كلمة المرور (6 خانات على الأقل)</label>
+                            <div class="relative">
+                                <input type="password" id="authConfirmPassword" name="confirmPassword" autocomplete="new-password" placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 ps-8 pe-8 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-sky-500 transition-colors">
+                                <i class="fa-solid fa-shield-halved absolute inset-y-0 start-0 flex items-center ps-2.5 text-slate-400 text-[11px]"></i>
+                                <button type="button" onclick="togglePasswordVisibility('authConfirmPassword', 'confirmPasswordEyeIcon')" class="absolute inset-y-0 end-0 flex items-center pe-2.5 text-slate-400 hover:text-sky-500 cursor-pointer transition-colors" title="إظهار / إخفاء كلمة المرور">
+                                    <i class="fa-solid fa-eye text-xs" id="confirmPasswordEyeIcon"></i>
                                 </button>
                             </div>
                         </div>
@@ -331,13 +344,22 @@
                             </button>
                         </div>
                     </div>
-                    <!-- شارة حالة المزامنة السحابية داخل مركز الحساب -->
-                    <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px]">
-                        <span class="text-slate-400 font-bold flex items-center gap-1"><i class="fa-solid fa-cloud text-sky-500"></i> المزامنة السحابية:</span>
-                        <div class="flex items-center gap-1.5">
-                            <span id="accountModalCloudSyncBadge" class="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full border bg-slate-100 dark:bg-slate-800 text-slate-500">فحص السحابة...</span>
-                            <button type="button" onclick="syncUserDataToCloud('manual_account_modal')" class="text-sky-600 dark:text-sky-400 hover:underline font-bold text-[9px] cursor-pointer" title="مزامنة فورية الآن">
-                                <i class="fa-solid fa-rotate text-[8px]"></i> مزامنة
+                    <!-- إعداد وحالة المزامنة السحابية داخل مركز الحساب -->
+                    <div class="mt-2.5 pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between text-[11px]">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-cloud text-sky-500 text-xs"></i>
+                                <span class="font-bold text-slate-700 dark:text-slate-200">المزامنة السحابية الذكية:</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer select-none">
+                                <input type="checkbox" id="accountModalCloudSyncToggle" onchange="toggleCloudSyncSetting(this.checked)" class="sr-only peer">
+                                <div class="w-8 h-4.5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all dark:border-slate-600 peer-checked:bg-sky-600"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between text-[10px] bg-slate-50 dark:bg-slate-800/60 p-2 rounded-xl border border-slate-100 dark:border-slate-800">
+                            <span id="accountModalCloudSyncBadge" class="inline-flex items-center gap-1.5 text-[9px] font-bold px-2 py-0.5 rounded-full border bg-slate-100 dark:bg-slate-800 text-slate-500">فحص السحابة...</span>
+                            <button type="button" id="accountModalManualSyncBtn" onclick="syncUserDataToCloud('manual_account_modal')" class="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 hover:bg-sky-100 dark:hover:bg-sky-900/60 rounded-lg font-bold text-[9px] cursor-pointer transition-all border border-sky-200 dark:border-sky-800/60" title="مزامنة فورية الآن">
+                                <i class="fa-solid fa-rotate text-[8px]" id="accountModalSyncBtnIcon"></i> <span id="accountModalSyncBtnText">مزامنة الآن</span>
                             </button>
                         </div>
                     </div>

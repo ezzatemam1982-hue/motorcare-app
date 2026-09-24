@@ -508,6 +508,26 @@ function doPost(e) {
                 }
             }
 
+            // تحديث حالة مفتاح وشارة المزامنة السحابية داخل مركز الحساب
+            const syncToggle = document.getElementById('accountModalCloudSyncToggle');
+            const isRegisteredUser = !!(profile.isRegistered && profile.provider !== 'guest');
+            const isSyncActive = isRegisteredUser && (SafeStorage.getItem('motorCare_CloudSyncEnabled') !== 'false');
+
+            if (syncToggle) {
+                syncToggle.disabled = !isRegisteredUser;
+                syncToggle.checked = isSyncActive;
+            }
+
+            if (typeof updateCloudSyncStatusUI === 'function') {
+                if (!isRegisteredUser) {
+                    updateCloudSyncStatusUI('guest');
+                } else if (!isSyncActive) {
+                    updateCloudSyncStatusUI('offline');
+                } else {
+                    updateCloudSyncStatusUI('synced');
+                }
+            }
+
             // تحديث عداد المشتركين للمسؤول (يظهر فقط إذا كان المسؤول مفعل وضع الإدارة)
             let subscribers = [];
             try {

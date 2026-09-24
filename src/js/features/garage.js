@@ -11,7 +11,19 @@
         function saveNewCar() {
             const isEn = appState.lang === 'en';
             const brand = MotorCareSecurity.sanitizeText(document.getElementById('newCarBrandSelect')?.value || '', 60);
+            if (!brand) {
+                alert(isEn ? 'Please select your car brand.' : 'يرجى اختيار ماركة السيارة للمتابعة.');
+                document.getElementById('newCarBrandSelect')?.focus();
+                return;
+            }
+
             const model = MotorCareSecurity.sanitizeText(document.getElementById('newCarModelSelect')?.value || '', 60);
+            if (!model) {
+                alert(isEn ? 'Please select your car model.' : 'يرجى اختيار موديل السيارة للمتابعة.');
+                document.getElementById('newCarModelSelect')?.focus();
+                return;
+            }
+
             const genIdx = MotorCareSecurity.parsePositiveInt(document.getElementById('newCarGenerationSelect')?.value, 0, 0, 50);
             const yearInput = document.getElementById('newCarYearInput');
             
@@ -20,8 +32,8 @@
             const rawYear = yearInput ? yearInput.value.trim() : '';
             const year = MotorCareSecurity.parsePositiveInt(rawYear, 0, min, max);
 
-            if (year < min || year > max) {
-                alert(isEn ? `Production year must be between ${min} and ${max}` : `سنة الصنع غير صحيحة لهذا الجيل. يجب أن تكون بين ${min} و ${max}`);
+            if (!rawYear || year < min || year > max) {
+                alert(isEn ? `Please enter a valid production year between ${min} and ${max}` : `يرجى إدخال سنة صنع صحيحة لهذا الجيل (بين ${min} و ${max})`);
                 if (yearInput) {
                     MotorCareSecurity.shakeElement(yearInput);
                     yearInput.focus();
@@ -33,8 +45,8 @@
             const odoInput = document.getElementById('newCarOdoInput');
             const odoVal = odoInput ? odoInput.value.trim() : '';
             const odoClean = MotorCareSecurity.parsePositiveInt(odoVal, -1, 0, 2000000);
-            if (odoClean < 0 || odoClean > 2000000) {
-                alert(isEn ? 'Please enter a valid positive odometer reading (0 - 2,000,000 km)!' : 'يرجى إدخال قراءة عداد موجبة وصحيحة لسيارتك (بين 0 و 2,000,000 كم)!');
+            if (!odoVal || odoClean < 0 || odoClean > 2000000) {
+                alert(isEn ? 'Please enter a valid positive odometer reading (0 - 2,000,000 km)!' : 'يرجى إدخال قراءة عداد الكيلومترات الحالية لسيارتك (بين 0 و 2,000,000 كم)!');
                 if (odoInput) {
                     MotorCareSecurity.shakeElement(odoInput);
                     odoInput.focus();
@@ -78,6 +90,8 @@
 
             const newCatalog = buildSpecificCatalog(brand, model, genIdx, odo);
 
+            if (!Array.isArray(appState.cars)) appState.cars = [];
+
             appState.cars.push({
                 brand,
                 model,
@@ -101,8 +115,21 @@
 
             appState.currentCarIndex = appState.cars.length - 1;
             saveAppState('car_added');
-            closeAddNewCarModal();
+
+            // إعادة تفعيل أزرار إغلاق النافذة للمستقبل
+            const modal = document.getElementById('addNewCarModal');
+            if (modal) {
+                modal.querySelectorAll('button[onclick*="closeAddNewCarModal"]').forEach(btn => {
+                    btn.style.display = '';
+                });
+            }
+
+            closeAddNewCarModal(true);
             renderDashboard();
+
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? 'Vehicle added successfully! Welcome to MotorCare 🎉' : 'تمت إضافة سيارتك بنجاح! أهلاً بك في موتور كير 🎉', 'success');
+            }
         }
 
         const APP_DEFAULT_SENDER_EMAIL = 'motorcare.auto@gmail.com';
@@ -478,6 +505,26 @@ function doPost(e) {
                     badgeEl.innerText = isEn ? 'Guest Mode (Private & Local)' : 'وضع الزائر (محلي بخصوصية 100%)';
                     if (upgradeBtn) upgradeBtn.classList.remove('hidden');
                     if (verifyNoticeEl) verifyNoticeEl.classList.add('hidden');
+                }
+            }
+
+            // تحديث حالة مفتاح وشارة المزامنة السحابية داخل مركز الحساب
+            const syncToggle = document.getElementById('accountModalCloudSyncToggle');
+            const isRegisteredUser = !!(profile.isRegistered && profile.provider !== 'guest');
+            const isSyncActive = isRegisteredUser && (SafeStorage.getItem('motorCare_CloudSyncEnabled') !== 'false');
+
+            if (syncToggle) {
+                syncToggle.disabled = !isRegisteredUser;
+                syncToggle.checked = isSyncActive;
+            }
+
+            if (typeof updateCloudSyncStatusUI === 'function') {
+                if (!isRegisteredUser) {
+                    updateCloudSyncStatusUI('guest');
+                } else if (!isSyncActive) {
+                    updateCloudSyncStatusUI('offline');
+                } else {
+                    updateCloudSyncStatusUI('synced');
                 }
             }
 

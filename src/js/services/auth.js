@@ -1090,6 +1090,13 @@ ${verifyUrl}
             const nameContainer = document.getElementById('nameFieldContainer');
             if (nameContainer) nameContainer.classList.toggle('hidden', !isReg);
 
+            const confirmContainer = document.getElementById('authConfirmPasswordContainer');
+            if (confirmContainer) {
+                confirmContainer.classList.toggle('hidden', !isReg);
+                const confirmInput = document.getElementById('authConfirmPassword');
+                if (confirmInput && !isReg) confirmInput.value = '';
+            }
+
             if (isReg && typeof checkAuthEmailExistingLive === 'function') {
                 checkAuthEmailExistingLive();
             }
@@ -1685,7 +1692,7 @@ ${verifyUrl}
         }
         window.triggerRealSocialLogin = handleSocialLogin;
 
-        function loginAsGoogleProfile(customName, customEmail, customAvatar) {
+        function loginAsGoogleProfile(customName, customEmail, customAvatar, customUid) {
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
 
             // حظر أي حساب وهمي منعاً باتاً
@@ -1712,7 +1719,14 @@ ${verifyUrl}
             // عزل الجلسة: مسح بيانات المستخدم السابق إذا تغيّر المستخدم
             detectAndIsolateUserSession(email, 'google');
 
+            // تحديد المعرف الموحد UID لخدمة المزامنة السحابية
+            const uniformUid = customUid || 
+                (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser && firebase.auth().currentUser.uid) || 
+                ('google_' + email.replace(/[^a-z0-9_]/g, '_'));
+
             let profile = {
+                uid: uniformUid,
+                firebaseUid: uniformUid,
                 name: name,
                 email: email,
                 provider: 'google',
@@ -1725,6 +1739,7 @@ ${verifyUrl}
 
             SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
             SafeStorage.setItem('motorCare_LoggedIn', 'true');
+            SafeStorage.setItem('motorCare_CloudSyncEnabled', 'true');
 
             enterMainApp();
             if (typeof initUserCloudSync === 'function') {
@@ -1787,6 +1802,7 @@ ${verifyUrl}
             const fullName = (document.getElementById('authFullName')?.value || '').trim();
 
             if (!email || !password) {
+                _isSubmittingAuth = false;
                 if (typeof showNotification === 'function') {
                     showNotification(isEn ? 'Please enter your email and password, or tap "Guest Explorer" below!' : 'يرجى إدخال البريد وكلمة المرور، أو اضغط "الدخول كزائر" بالأسفل!', 'info');
                 }
@@ -1795,6 +1811,7 @@ ${verifyUrl}
             }
 
             if (!email.includes('@') || !email.includes('.')) {
+                _isSubmittingAuth = false;
                 if (typeof showNotification === 'function') {
                     showNotification(isEn ? 'Please enter a valid email address.' : 'يرجى إدخال بريد إلكتروني صحيح.', 'error');
                 }
@@ -1802,21 +1819,34 @@ ${verifyUrl}
                 return;
             }
 
-            if (password.length < 4) {
+            if (password.length < 6) {
+                _isSubmittingAuth = false;
                 if (typeof showNotification === 'function') {
-                    showNotification(isEn ? 'Password must be at least 4 characters.' : 'يجب أن تكون كلمة المرور 4 أحرف على الأقل.', 'error');
+                    showNotification(isEn ? 'Password must be at least 6 characters.' : 'يجب أن تكون كلمة المرور 6 خانات على الأقل لضمان أمان حسابك.', 'error');
                 }
                 document.getElementById('authPassword')?.focus();
                 return;
+            }
+
+            const isRegisterMode = (window.currentAuthMode === 'register' || currentAuthMode === 'register');
+
+            if (isRegisterMode) {
+                const confirmPassword = (document.getElementById('authConfirmPassword')?.value || '');
+                if (password !== confirmPassword) {
+                    _isSubmittingAuth = false;
+                    if (typeof showNotification === 'function') {
+                        showNotification(isEn ? 'Passwords do not match. Please verify your password.' : 'كلمتا المرور غير متطابقتين. يرجى التأكد من تطابق كلمة المرور.', 'error');
+                    }
+                    document.getElementById('authConfirmPassword')?.focus();
+                    return;
+                }
             }
 
             const submitBtnText = document.getElementById('authSubmitBtnText');
             const originalText = submitBtnText ? submitBtnText.innerText : '';
             if (submitBtnText) submitBtnText.innerText = isEn ? 'Verifying...' : 'جاري التحقق...';
 
-            const isRegisterMode = (window.currentAuthMode === 'register' || currentAuthMode === 'register');
-
-            // فحص شامل ومؤكد للحساب في كافة قواعد البيانات
+            // فحص الحساب في قاعدة البيانات المحلية
             const existingAccount = await findAccountByEmail(email);
 
             if (submitBtnText) submitBtnText.innerText = originalText;
@@ -1825,7 +1855,35 @@ ${verifyUrl}
                 // ==========================================
                 // وضع تسجيل الدخول (Sign In Mode)
                 // ==========================================
-                if (!existingAccount) {
+                let firebaseUser = null;
+                let fbAuthError = null;
+
+                // 1. محاولة تسجيل الدخول عبر Firebase Auth أولاً
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    try {
+                        const userCred = await firebase.auth().signInWithEmailAndPassword(email, password);
+                        firebaseUser = userCred.user;
+                        console.log('[MotorCare Auth] Firebase Email/Password Sign-In success! UID:', firebaseUser.uid);
+                    } catch(authErr) {
+                        fbAuthError = authErr;
+                        console.warn('[MotorCare Auth] Firebase signIn note:', authErr.code, authErr.message);
+                    }
+                }
+
+                // خطأ كلمة المرور من Firebase
+                if (fbAuthError && (fbAuthError.code === 'auth/wrong-password' || fbAuthError.code === 'auth/invalid-credential')) {
+                    if (typeof showNotification === 'function') {
+                        showNotification(
+                            isEn ? 'Incorrect password. Please try again or click "Forgot password?".' : 'كلمة المرور غير صحيحة. يرجى المحاولة مجدداً أو النقر على "نسيت كلمة المرور؟".',
+                            'error', 5000
+                        );
+                    }
+                    document.getElementById('authPassword')?.focus();
+                    return;
+                }
+
+                // الحساب غير موجود في Firebase ولا في القاعدة المحلية
+                if (!firebaseUser && !existingAccount) {
                     if (typeof showNotification === 'function') {
                         showNotification(
                             isEn
@@ -1838,8 +1896,8 @@ ${verifyUrl}
                     return;
                 }
 
-                // التحقق من صحة كلمة المرور
-                if (existingAccount.password && existingAccount.password !== password) {
+                // التحقق من صحة كلمة المرور محلياً في حالة الأوفلاين
+                if (!firebaseUser && existingAccount && existingAccount.password && existingAccount.password !== password) {
                     if (typeof showNotification === 'function') {
                         showNotification(
                             isEn ? 'Incorrect password. Please try again or click "Forgot password?".' : 'كلمة المرور غير صحيحة. يرجى المحاولة مجدداً أو النقر على "نسيت كلمة المرور؟".',
@@ -1850,28 +1908,28 @@ ${verifyUrl}
                     return;
                 }
 
-                // إذا كان الحساب مسجلاً بدون كلمة مرور محفوظة، نحفظ كلمة المرور المدخلة فوراً
-                if (!existingAccount.password) {
-                    existingAccount.password = password;
-                    saveAccountToLocalDB(existingAccount);
-                    if (typeof firestoreDb !== 'undefined' && firestoreDb) {
-                        try {
-                            const userKey = email.replace(/[^a-z0-9_]/g, '_');
-                            firestoreDb.collection('motorcare_users').doc(userKey).set({ password: password }, { merge: true }).catch(() => { });
-                        } catch (e) { }
-                    }
-                }
+                // تحديد المعرف الموحد UID لربط المزامنة السحابية
+                const uniformUid = (firebaseUser && firebaseUser.uid) || existingAccount?.uid || existingAccount?.firebaseUid || ('mc_' + Date.now());
 
-                // اعتماد تسجيل الدخول بنجاح
                 // عزل الجلسة: مسح بيانات المستخدم السابق إذا تغيّر المستخدم
                 detectAndIsolateUserSession(email, 'email', false);
 
                 const profile = {
-                    ...existingAccount,
+                    ...(existingAccount || {}),
+                    uid: uniformUid,
+                    firebaseUid: uniformUid,
+                    name: (firebaseUser && firebaseUser.displayName) || existingAccount?.name || fullName || email.split('@')[0],
+                    email: email,
+                    password: password,
+                    provider: 'email',
+                    isRegistered: true,
                     lastLoginAt: new Date().toISOString()
                 };
+
+                saveAccountToLocalDB(profile);
                 SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
                 SafeStorage.setItem('motorCare_LoggedIn', 'true');
+                SafeStorage.setItem('motorCare_CloudSyncEnabled', 'true');
 
                 enterMainApp();
                 if (typeof initUserCloudSync === 'function') {
@@ -1906,7 +1964,6 @@ ${verifyUrl}
                 // وضع إنشاء حساب جديد (Registration Mode)
                 // ==========================================
                 if (existingAccount) {
-                    // الحساب مسجل مسبقاً! يُمنع التسجيل المكرر تماماً ويُمنع إرسال أي رمز OTP
                     _isSubmittingAuth = false;
                     if (typeof showNotification === 'function') {
                         showNotification(
@@ -1927,13 +1984,54 @@ ${verifyUrl}
                     return;
                 }
 
-                // إنشاء الحساب الجديد وحفظه فوراً
+                let firebaseUser = null;
+                // محاولة تسجيل الحساب عبر Firebase Auth
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    try {
+                        const userCred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                        firebaseUser = userCred.user;
+                        if (fullName && firebaseUser.updateProfile) {
+                            await firebaseUser.updateProfile({ displayName: fullName }).catch(() => {});
+                        }
+                        console.log('[MotorCare Auth] Firebase Email/Password Registration success! UID:', firebaseUser.uid);
+                    } catch(authErr) {
+                        console.warn('[MotorCare Auth] Firebase createUser note:', authErr.code, authErr.message);
+                        if (authErr.code === 'auth/email-already-in-use') {
+                            _isSubmittingAuth = false;
+                            if (typeof showNotification === 'function') {
+                                showNotification(
+                                    isEn
+                                        ? '⚠️ This email is already registered in Firebase! Switched to "Sign In" tab.'
+                                        : '⚠️ هذا البريد الإلكتروني مسجل مسبقاً في السحابة! تم تحويلك لتبويب "تسجيل الدخول".',
+                                    'warning', 7000
+                                );
+                            }
+                            if (typeof switchAuthTab === 'function') switchAuthTab('login');
+                            const authEmailInp = document.getElementById('authEmail');
+                            if (authEmailInp) authEmailInp.value = email;
+                            const pwdInp = document.getElementById('authPassword');
+                            if (pwdInp) { pwdInp.value = ''; pwdInp.focus(); }
+                            return;
+                        } else if (authErr.code === 'auth/weak-password') {
+                            _isSubmittingAuth = false;
+                            if (typeof showNotification === 'function') {
+                                showNotification(isEn ? 'Password must be at least 6 characters.' : 'يجب أن تكون كلمة المرور 6 خانات على الأقل.', 'error');
+                            }
+                            return;
+                        }
+                    }
+                }
+
                 // عزل الجلسة: مسح بيانات المستخدم السابق وتصفير الجلسة تماماً لحساب جديد نظيف
                 detectAndIsolateUserSession(email, 'email', true);
 
                 const nowIso = new Date().toISOString();
+                const uniformUid = (firebaseUser && firebaseUser.uid) || ('mc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
+
                 const newAccount = {
                     id: 'acc_' + Date.now(),
+                    uid: uniformUid,
+                    firebaseUid: uniformUid,
                     name: fullName || email.split('@')[0],
                     email: email,
                     password: password,
@@ -1952,12 +2050,11 @@ ${verifyUrl}
                 }
                 if (typeof firestoreDb !== 'undefined' && firestoreDb) {
                     try {
-                        const userKey = email.replace(/[^a-z0-9_]/g, '_');
-                        firestoreDb.collection('motorcare_users').doc(userKey).set({
+                        firestoreDb.collection('motorcare_users').doc(uniformUid).set({
+                            uid: uniformUid,
                             id: newAccount.id,
                             name: newAccount.name,
                             email: email,
-                            password: password,
                             provider: 'email',
                             isRegistered: true,
                             isVerified: false,
@@ -1970,12 +2067,13 @@ ${verifyUrl}
                 const profile = { ...newAccount };
                 SafeStorage.setItem('motorCare_UserProfile', JSON.stringify(profile));
                 SafeStorage.setItem('motorCare_LoggedIn', 'true');
+                SafeStorage.setItem('motorCare_CloudSyncEnabled', 'true');
 
                 if (typeof showNotification === 'function') {
                     showNotification(
                         isEn
-                            ? `Account created! 🎉 Sending verification code to ${email}...`
-                            : `تم إنشاء حسابك بنجاح! 🎉 جاري إرسال رمز التحقق إلى ${email}...`,
+                            ? `Account created! 🎉 Welcome to MotorCare, ${profile.name}!`
+                            : `تم إنشاء حسابك بنجاح! 🎉 أهلاً بك في MotorCare يا ${profile.name}!`,
                         'success', 5000
                     );
                 }
@@ -1983,7 +2081,7 @@ ${verifyUrl}
                 enterMainApp();
                 if (typeof initUserCloudSync === 'function') initUserCloudSync();
 
-                // إرسال كود التفعيل وفتح نافذة إدخال الرمز مباشرة
+                // إرسال كود التفعيل وفتح نافذة إدخال الرمز
                 setTimeout(() => {
                     if (typeof sendRealVerificationOtpEmail === 'function') {
                         sendRealVerificationOtpEmail(false);
@@ -2219,7 +2317,35 @@ ${verifyUrl}
             if (btnText) btnText.innerText = isEn ? 'Checking...' : 'جاري التحقق...';
             if (btnIcon) btnIcon.className = 'fa-solid fa-spinner fa-spin text-xs';
 
-            // التحقق الشامل من وجود الحساب محلياً وسحابياً
+            // 1. محاولة إرسال رابط إعادة التعيين الرسمي مباشرة عبر Firebase Auth
+            let fbResetSent = false;
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                try {
+                    await firebase.auth().sendPasswordResetEmail(email);
+                    fbResetSent = true;
+                    console.log('[MotorCare Auth] Firebase sendPasswordResetEmail success for:', email);
+                } catch(fbErr) {
+                    console.warn('[MotorCare Auth] Firebase reset email note:', fbErr.code, fbErr.message);
+                }
+            }
+
+            if (fbResetSent) {
+                if (btn) btn.disabled = false;
+                if (btnText) btnText.innerText = isEn ? 'Send Reset Link' : 'إرسال رابط الاستعادة';
+                if (btnIcon) btnIcon.className = 'fa-solid fa-arrow-left rtl:rotate-0 ltr:rotate-180 text-xs';
+                if (typeof showNotification === 'function') {
+                    showNotification(
+                        isEn 
+                            ? 'Password reset link sent to your email via Firebase ✉️. Please check your inbox or spam folder.' 
+                            : 'تم إرسال رابط إعادة ضبط كلمة المرور إلى بريدك الإلكتروني بنجاح عبر Firebase ✉️. يرجى مراجعة صندوق الوارد أو الرسائل غير المرغوب فيها (Spam).',
+                        'success', 8000
+                    );
+                }
+                closeForgotPasswordModal();
+                return;
+            }
+
+            // 2. إذا لم يكن الحساب في Firebase أو تعذر الاتصال: الرجوع للتحقق المحلي والـ OTP (Offline Fallback)
             const account = await findAccountByEmail(email);
             if (!account) {
                 if (btn) btn.disabled = false;
@@ -2436,9 +2562,12 @@ ${verifyUrl}
                     } catch(e) {}
                 }
 
-                // 2. إيقاف أي مزامنة سحابية نشطة
+                // 2. إيقاف أي مزامنة سحابية نشطة وتسجيل الخروج من Firebase Auth
                 if (typeof stopCloudSyncListener === 'function') {
                     stopCloudSyncListener();
+                }
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    try { firebase.auth().signOut().catch(() => {}); } catch(e) {}
                 }
 
                 // 3. تصفير حالة التطبيق في الذاكرة ومسح التخزين المؤقت النشط
