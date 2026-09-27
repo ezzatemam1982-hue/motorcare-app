@@ -334,13 +334,37 @@
         }
 
         async function openObdEncyclopediaModal(initialSearch = '') {
-            const modal = document.getElementById('obdEncyclopediaModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.style.display = 'flex';
+            console.log("Clicked: OBD Encyclopedia");
+            if (typeof closeMobileMoreDrawer === 'function') {
+                try { closeMobileMoreDrawer(); } catch (e) {}
+            }
+            if (typeof closeTopHeaderMenu === 'function') {
+                try { closeTopHeaderMenu(); } catch (e) {}
             }
 
-            updateObdModalLanguage();
+            const modal = document.getElementById('obdEncyclopediaModal');
+            if (modal) {
+                if (modal.parentElement !== document.body) {
+                    document.body.appendChild(modal);
+                }
+                modal.classList.remove('hidden');
+                modal.classList.add('active');
+                modal.style.setProperty('display', 'flex', 'important');
+                modal.style.setProperty('position', 'fixed', 'important');
+                modal.style.setProperty('top', '0px', 'important');
+                modal.style.setProperty('left', '0px', 'important');
+                modal.style.setProperty('width', '100vw', 'important');
+                modal.style.setProperty('height', '100vh', 'important');
+                modal.style.setProperty('z-index', '99999', 'important');
+                modal.style.setProperty('opacity', '1', 'important');
+                modal.style.setProperty('visibility', 'visible', 'important');
+            }
+
+            try {
+                updateObdModalLanguage();
+            } catch (e) {
+                console.warn('[MotorCare] OBD lang update note:', e);
+            }
 
             const input = document.getElementById('obdSearchInput');
             if (input) {
@@ -349,15 +373,20 @@
                 if (clearBtn) clearBtn.classList.toggle('hidden', !initialSearch);
             }
 
-            await loadObdDatabase();
-            renderObdCodesList();
+            try {
+                await loadObdDatabase();
+                renderObdCodesList();
+            } catch (e) {
+                console.warn('[MotorCare] OBD render note:', e);
+            }
         }
 
         function closeObdEncyclopediaModal() {
             const modal = document.getElementById('obdEncyclopediaModal');
             if (modal) {
                 modal.classList.add('hidden');
-                modal.style.display = 'none';
+                modal.classList.remove('active');
+                modal.style.setProperty('display', 'none', 'important');
             }
         }
 
@@ -626,7 +655,7 @@ try { if (typeof toggleObdDetails !== 'undefined') window.toggleObdDetails = tog
 try { if (typeof preIndexObdDatabase !== 'undefined') window.preIndexObdDatabase = preIndexObdDatabase; } catch (e) {}
 try { if (typeof closeObdEncyclopediaModal !== 'undefined') window.closeObdEncyclopediaModal = closeObdEncyclopediaModal; } catch (e) {}
 try { if (typeof setObdCategoryFilter !== 'undefined') window.setObdCategoryFilter = setObdCategoryFilter; } catch (e) {}
-try { if (typeof openObdEncyclopediaModal !== 'undefined') window.openObdEncyclopediaModal = openObdEncyclopediaModal; } catch (e) {}
+try { if (typeof openObdEncyclopediaModal !== 'undefined') { window.openObdEncyclopediaModal = openObdEncyclopediaModal; window.openObdModal = openObdEncyclopediaModal; } } catch (e) {}
 try { if (typeof onObdSearchInput !== 'undefined') window.onObdSearchInput = onObdSearchInput; } catch (e) {}
 try { if (typeof clearObdSearch !== 'undefined') window.clearObdSearch = clearObdSearch; } catch (e) {}
 try { if (typeof copyObdCode !== 'undefined') window.copyObdCode = copyObdCode; } catch (e) {}

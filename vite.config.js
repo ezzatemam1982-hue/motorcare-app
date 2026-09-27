@@ -22,7 +22,8 @@ function copyClassicScripts() {
         'service_centers.json',
         'manifest.json',
         'sw.js',
-        'service-worker.js'
+        'service-worker.js',
+        'privacy.html'
       ];
 
       for (const item of itemsToCopy) {
@@ -38,7 +39,18 @@ function copyClassicScripts() {
           }
         }
       }
-      console.log('[MotorCare Build] All modular scripts and data libraries mirrored to dist successfully.');
+
+      // Automatically copy root image assets (logos, icons, headers) to dist
+      const rootFiles = fs.readdirSync(__dirname);
+      for (const file of rootFiles) {
+        if (/\.(png|jpe?g|svg|webp|ico)$/i.test(file)) {
+          const srcFile = path.resolve(__dirname, file);
+          const destFile = path.resolve(__dirname, 'dist', file);
+          fs.copyFileSync(srcFile, destFile);
+        }
+      }
+
+      console.log('[MotorCare Build] All modular scripts, data libraries and images mirrored to dist successfully.');
     }
   };
 }

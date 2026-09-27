@@ -36,7 +36,10 @@
             }
         }
 
-        function openExternalTrafficPortal(url, event) {
+        async function openExternalTrafficPortal(url, event) {
+            if (event && event.preventDefault) event.preventDefault();
+            if (event && event.stopPropagation) event.stopPropagation();
+
             let targetUrl = url || 'https://ppo.gov.eg/ppo/r/ppoportal/ppoportal/traffic';
             
             // تنظيف أي session ID قديم من الرابط لتفادي حلقة إعادة التوجيه اللانهائية (302 Redirect Loop) على الهواتف
@@ -46,21 +49,36 @@
                 }
             } catch(e) {}
 
-            // دعم بيئة تطبيقات الهواتف الأصلية Capacitor
-            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
-                if (event && event.preventDefault) event.preventDefault();
-                window.Capacitor.Plugins.Browser.open({ url: targetUrl });
-                return false;
+            // دعم بيئة تطبيقات الهواتف الأصلية Capacitor عبر المتصفح الخارجي للنظام
+            const isNative = (typeof window !== 'undefined' && window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+            const browserPlugin = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) || (typeof Browser !== 'undefined' ? Browser : null);
+
+            if (browserPlugin && typeof browserPlugin.open === 'function') {
+                try {
+                    await browserPlugin.open({ url: targetUrl, windowName: '_system' });
+                    return false;
+                } catch (err) {
+                    console.warn('[MotorCare] Browser plugin open failed:', err);
+                }
             }
 
-            // في المتصفح العادي أو الـ PWA، السماح للرابط بفتح تبويب خارجي مستقل
-            if (!event) {
+            if (isNative) {
+                try {
+                    window.open(targetUrl, '_system');
+                    return false;
+                } catch(e) {}
+            }
+
+            // في المتصفح العادي أو الـ PWA، فتح تبويب خارجي مستقل
+            try {
                 const win = window.open(targetUrl, '_blank', 'noopener,noreferrer');
                 if (!win || win.closed || typeof win.closed === 'undefined') {
                     window.location.href = targetUrl;
                 }
+            } catch(e) {
+                window.location.href = targetUrl;
             }
-            return true;
+            return false;
         }
 
         function copyTrafficPortalUrl() {
@@ -90,29 +108,59 @@
         let editingNoteId = null;
 
         function openDriverToolsModal(initialTab = 'expenses') {
-            const car = getCurrentCar();
+            console.log("Clicked: Driver Tools");
+            if (typeof closeMobileMoreDrawer === 'function') {
+                try { closeMobileMoreDrawer(); } catch (e) {}
+            }
+            if (typeof closeTopHeaderMenu === 'function') {
+                try { closeTopHeaderMenu(); } catch (e) {}
+            }
+
+            const modal = document.getElementById('driverToolsModal');
+            if (modal) {
+                if (modal.parentElement !== document.body) {
+                    document.body.appendChild(modal);
+                }
+                modal.classList.remove('hidden');
+                modal.classList.add('active');
+                modal.style.setProperty('display', 'flex', 'important');
+                modal.style.setProperty('position', 'fixed', 'important');
+                modal.style.setProperty('top', '0px', 'important');
+                modal.style.setProperty('left', '0px', 'important');
+                modal.style.setProperty('width', '100vw', 'important');
+                modal.style.setProperty('height', '100vh', 'important');
+                modal.style.setProperty('z-index', '99999', 'important');
+                modal.style.setProperty('opacity', '1', 'important');
+                modal.style.setProperty('visibility', 'visible', 'important');
+            }
+
+            let car = (typeof getCurrentCar === 'function') ? getCurrentCar() : null;
             if (!car) {
-                if (typeof openAddNewCarModal === 'function') openAddNewCarModal();
-                return;
+                if (typeof appState !== 'undefined' && appState.cars && appState.cars.length > 0) {
+                    car = appState.cars[0];
+                } else {
+                    car = { otherExpenses: [], driverNotes: [], trips: [] };
+                    if (typeof appState !== 'undefined' && !appState.cars) {
+                        appState.cars = [];
+                    }
+                }
             }
 
             if (!car.otherExpenses || !Array.isArray(car.otherExpenses)) car.otherExpenses = [];
             if (!car.driverNotes || !Array.isArray(car.driverNotes)) car.driverNotes = [];
 
-            const modal = document.getElementById('driverToolsModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.style.display = 'flex';
-            }
+            try {
+                const catSelect = document.getElementById('dtExpenseCategorySelect');
+                if (catSelect && !catSelect._hasChangeAttached) {
+                    catSelect._hasChangeAttached = true;
+                    catSelect.addEventListener('change', updateExpenseFormDynamicContext);
+                }
 
-            const catSelect = document.getElementById('dtExpenseCategorySelect');
-            if (catSelect && !catSelect._hasChangeAttached) {
-                catSelect._hasChangeAttached = true;
-                catSelect.addEventListener('change', updateExpenseFormDynamicContext);
+                updateDriverToolsLanguage();
+                switchDriverToolsTab(initialTab);
+            } catch (err) {
+                console.warn('[MotorCare] Driver tools init note:', err);
             }
-
-            updateDriverToolsLanguage();
-            switchDriverToolsTab(initialTab);
         }
 
         function closeDriverToolsModal() {
@@ -121,7 +169,8 @@
             const modal = document.getElementById('driverToolsModal');
             if (modal) {
                 modal.classList.add('hidden');
-                modal.style.display = 'none';
+                modal.classList.remove('active');
+                modal.style.setProperty('display', 'none', 'important');
             }
         }
 
@@ -1369,5 +1418,5 @@ try { if (typeof showMaintWearExplainer !== 'undefined') window.showMaintWearExp
 try { if (typeof syncOdometerFields !== 'undefined') window.syncOdometerFields = syncOdometerFields; } catch (e) {}
 try { if (typeof resetDriverExpenseForm !== 'undefined') window.resetDriverExpenseForm = resetDriverExpenseForm; } catch (e) {}
 try { if (typeof copyTrafficPortalUrl !== 'undefined') window.copyTrafficPortalUrl = copyTrafficPortalUrl; } catch (e) {}
-try { if (typeof openDriverToolsModal !== 'undefined') window.openDriverToolsModal = openDriverToolsModal; } catch (e) {}
+try { if (typeof openDriverToolsModal !== 'undefined') { window.openDriverToolsModal = openDriverToolsModal; window.openDriverTools = openDriverToolsModal; } } catch (e) {}
 try { if (typeof copyTrafficPlateNumber !== 'undefined') window.copyTrafficPlateNumber = copyTrafficPlateNumber; } catch (e) {}

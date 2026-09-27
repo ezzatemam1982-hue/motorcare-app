@@ -15,6 +15,25 @@
             
             const notesInput = document.getElementById('inputInspectionNotes');
             if (notesInput) notesInput.value = d.inspectionNotes || '';
+
+            if (typeof tempImages === 'undefined') tempImages = {};
+            if (typeof window.tempImages === 'undefined') window.tempImages = {};
+
+            tempImages['doc_vehicle'] = d.doc_vehicle || '';
+            tempImages['doc_driver'] = d.doc_driver || '';
+            tempImages['doc_insp'] = d.doc_insp || '';
+            tempImages['doc_insurance'] = d.doc_insurance || '';
+            window.tempImages['doc_vehicle'] = tempImages['doc_vehicle'];
+            window.tempImages['doc_driver'] = tempImages['doc_driver'];
+            window.tempImages['doc_insp'] = tempImages['doc_insp'];
+            window.tempImages['doc_insurance'] = tempImages['doc_insurance'];
+
+            if (typeof updateAttachmentUI === 'function') {
+                updateAttachmentUI('doc_vehicle', tempImages['doc_vehicle']);
+                updateAttachmentUI('doc_driver', tempImages['doc_driver']);
+                updateAttachmentUI('doc_insp', tempImages['doc_insp']);
+                updateAttachmentUI('doc_insurance', tempImages['doc_insurance']);
+            }
             
             document.getElementById('documentsModal').classList.remove('hidden');
             document.getElementById('documentsModal').style.display = 'flex';
@@ -38,10 +57,10 @@
                 insuranceCompany: document.getElementById('inputInsuranceCompany').value.trim(),
                 insuranceType: document.getElementById('inputInsuranceType').value,
                 inspectionNotes: document.getElementById('inputInspectionNotes').value.trim(),
-                doc_vehicle: tempImages['doc_vehicle'] || (car.documents ? car.documents.doc_vehicle : ''),
-                doc_driver: tempImages['doc_driver'] || (car.documents ? car.documents.doc_driver : ''),
-                doc_insp: tempImages['doc_insp'] || (car.documents ? car.documents.doc_insp : ''),
-                doc_insurance: tempImages['doc_insurance'] || (car.documents ? car.documents.doc_insurance : '')
+                doc_vehicle: (typeof tempImages !== 'undefined' && tempImages['doc_vehicle'] !== undefined) ? tempImages['doc_vehicle'] : (car.documents ? car.documents.doc_vehicle : ''),
+                doc_driver: (typeof tempImages !== 'undefined' && tempImages['doc_driver'] !== undefined) ? tempImages['doc_driver'] : (car.documents ? car.documents.doc_driver : ''),
+                doc_insp: (typeof tempImages !== 'undefined' && tempImages['doc_insp'] !== undefined) ? tempImages['doc_insp'] : (car.documents ? car.documents.doc_insp : ''),
+                doc_insurance: (typeof tempImages !== 'undefined' && tempImages['doc_insurance'] !== undefined) ? tempImages['doc_insurance'] : (car.documents ? car.documents.doc_insurance : '')
             };
             SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
             closeDocumentsModal();

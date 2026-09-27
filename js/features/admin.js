@@ -361,15 +361,25 @@
                 csv += `"${idx + 1}","${safeName}","${safeEmail}","${safeProv}","${safeDate}"\n`;
             });
 
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `MotorCare_Subscribers_${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            const filename = `MotorCare_Subscribers_${new Date().toISOString().split('T')[0]}.csv`;
+            if (typeof window.exportDataFile === 'function') {
+                window.exportDataFile({
+                    filename,
+                    data: csv,
+                    mimeType: 'text/csv;charset=utf-8;',
+                    title: 'قائمة مشتركي تطبيق MotorCare'
+                });
+            } else {
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
         }
 
         function copySubscribersEmails() {

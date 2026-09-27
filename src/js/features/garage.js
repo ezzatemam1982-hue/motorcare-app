@@ -102,6 +102,7 @@
                 vin,
                 color,
                 notes,
+                photo: (typeof tempImages !== 'undefined' ? tempImages['car_photo'] : '') || '',
                 createdAt: new Date().toISOString(),
                 odometer: odo,
                 dailyKm: 40,
@@ -112,6 +113,10 @@
                 history: [],
                 fuelLogs: []
             });
+
+            if (typeof tempImages !== 'undefined') tempImages['car_photo'] = '';
+            if (typeof window.tempImages !== 'undefined') window.tempImages['car_photo'] = '';
+            if (typeof updateAttachmentUI === 'function') updateAttachmentUI('car_photo', null);
 
             appState.currentCarIndex = appState.cars.length - 1;
             saveAppState('car_added');
@@ -391,13 +396,28 @@ function doPost(e) {
         }
 
         function exportJsonBackup() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
-            const dl = document.createElement('a');
-            dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", `MotorCare_Backup_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(dl);
-            dl.click();
-            dl.remove();
+            const jsonStr = JSON.stringify(appState, null, 2);
+            const filename = `MotorCare_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            const isEn = appState.lang === 'en';
+
+            if (typeof window.exportDataFile === 'function') {
+                window.exportDataFile({
+                    filename,
+                    data: jsonStr,
+                    mimeType: 'application/json;charset=utf-8;',
+                    title: isEn ? 'MotorCare JSON Backup' : 'نسخة احتياطية لكراج MotorCare'
+                });
+            } else {
+                const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const dl = document.createElement('a');
+                dl.setAttribute("href", url);
+                dl.setAttribute("download", filename);
+                document.body.appendChild(dl);
+                dl.click();
+                document.body.removeChild(dl);
+                URL.revokeObjectURL(url);
+            }
         }
 
         function exportCsvReport() {
@@ -440,26 +460,38 @@ function doPost(e) {
                 rows.push([escapeCell(new Date().toISOString().split('T')[0]), escapeCell(emptyMsg), '""', '""', '""', '""', '""', '""', '""'].join(','));
             }
 
-            const csvString = rows.join('\r\n');
-            // Adding UTF-8 BOM (\uFEFF) ensures Microsoft Excel and Google Sheets open Unicode Arabic flawlessly without column misalignment
-            const blob = new Blob(["\uFEFF" + csvString], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const dl = document.createElement('a');
-            dl.setAttribute('href', url);
+            const csvString = "\uFEFF" + rows.join('\r\n');
             const safeBrand = (car.brand || 'Vehicle').replace(/[^a-zA-Z0-9_\u0600-\u06FF-]/g, '_');
             const safeModel = (car.model || 'Model').replace(/[^a-zA-Z0-9_\u0600-\u06FF-]/g, '_');
-            dl.setAttribute('download', `MotorCare_${safeBrand}_${safeModel}_ServiceHistory_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(dl);
-            dl.click();
-            document.body.removeChild(dl);
-            URL.revokeObjectURL(url);
+            const filename = `MotorCare_${safeBrand}_${safeModel}_ServiceHistory_${new Date().toISOString().split('T')[0]}.csv`;
+
+            if (typeof window.exportDataFile === 'function') {
+                window.exportDataFile({
+                    filename,
+                    data: csvString,
+                    mimeType: 'text/csv;charset=utf-8;',
+                    title: `سجل صيانة ${car.brand} ${car.model}`
+                });
+            } else {
+                const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const dl = document.createElement('a');
+                dl.setAttribute('href', url);
+                dl.setAttribute('download', filename);
+                document.body.appendChild(dl);
+                dl.click();
+                document.body.removeChild(dl);
+                URL.revokeObjectURL(url);
+            }
         }
 
         function openAccountCenter() {
             const modal = document.getElementById('accountCenterModal');
             if (!modal) return;
             const isEn = appState.lang === 'en';
-            let profile = { name: isEn ? 'Guest Visitor' : 'زائر كريم', email: '', provider: 'guest', isRegistered: false };
+            modal.dir = isEn ? 'ltr' : 'rtl';
+            
+            let profile = { name: isEn ? 'Guest User' : 'زائر كريم', email: '', provider: 'guest', isRegistered: false };
             try {
                 const raw = SafeStorage.getItem('motorCare_UserProfile');
                 if (raw) profile = JSON.parse(raw);
@@ -471,7 +503,13 @@ function doPost(e) {
             const avatarEl = document.getElementById('accountModalAvatarImg');
             const upgradeBtn = document.getElementById('btnUpgradeAccount');
 
-            if (nameEl) nameEl.innerText = profile.name || (isEn ? 'Guest' : 'زائر');
+            if (nameEl) {
+                if (!profile.name || profile.name === 'زائر كريم' || profile.name === 'Guest Visitor' || profile.name === 'Guest User' || profile.name === 'زائر') {
+                    nameEl.innerText = isEn ? 'Guest User' : 'زائر كريم';
+                } else {
+                    nameEl.innerText = profile.name;
+                }
+            }
             if (emailEl) emailEl.innerText = profile.email || (isEn ? 'Offline Local Browsing' : 'وضع التصفح الحر (أوفلاين)');
             
             if (avatarEl) {
@@ -506,6 +544,10 @@ function doPost(e) {
                     if (upgradeBtn) upgradeBtn.classList.remove('hidden');
                     if (verifyNoticeEl) verifyNoticeEl.classList.add('hidden');
                 }
+            }
+
+            if (typeof applyLanguageSettings === 'function') {
+                applyLanguageSettings();
             }
 
             // تحديث حالة مفتاح وشارة المزامنة السحابية داخل مركز الحساب

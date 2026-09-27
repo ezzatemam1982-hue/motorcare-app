@@ -1,21 +1,27 @@
 const fs = require('fs');
+const path = require('path');
+const vm = require('vm');
 
-['index.html', 'src/index.html'].forEach(filename => {
-    const html = fs.readFileSync(filename, 'utf8');
-    const matches = [...html.matchAll(/<script[\s\S]*?>([\s\S]*?)<\/script>/gi)];
-    let errCount = 0;
-    matches.forEach((m, idx) => {
-        const code = m[1].trim();
-        if (code.length > 0 && !m[0].includes('src=')) {
+console.log('--- Checking JS files for syntax errors ---');
+function checkDirectory(dir) {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            if (file !== 'node_modules' && file !== '.git' && file !== 'dist') {
+                checkDirectory(fullPath);
+            }
+        } else if (file.endsWith('.js')) {
             try {
-                new Function(code);
+                const code = fs.readFileSync(fullPath, 'utf8');
+                new vm.Script(code, { filename: fullPath });
+                console.log('OK:', fullPath);
             } catch (e) {
-                console.error(`[SYNTAX ERROR] in ${filename} script #${idx+1}:`, e.message);
-                errCount++;
+                console.error('SYNTAX ERROR in', fullPath, ':\n', e.message);
             }
         }
-    });
-    if (errCount === 0) {
-        console.log(`[PASS] ${filename}: All inline scripts validated cleanly with 0 syntax errors.`);
     }
-});
+}
+
+checkDirectory('./js');
+checkDirectory('./src/js');

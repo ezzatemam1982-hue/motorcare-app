@@ -14,8 +14,18 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# ==========================================
+# DataStore & Firebase Sessions Protection Rules
+# ==========================================
+-keep class androidx.datastore.** { *; }
+-keep interface androidx.datastore.** { *; }
+-dontwarn androidx.datastore.**
+
+-keep class com.google.firebase.sessions.** { *; }
+-dontwarn com.google.firebase.sessions.**

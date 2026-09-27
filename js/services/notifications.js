@@ -33,8 +33,11 @@
                 container.firstElementChild.remove();
             }
 
+            const isEn = typeof appState !== 'undefined' && appState.lang === 'en';
             const toast = document.createElement('div');
-            toast.className = 'pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl backdrop-blur-md border text-xs font-bold max-w-md w-full sm:w-auto transition-all duration-300 transform translate-y-[-20px] opacity-0';
+            toast.dir = isEn ? 'ltr' : 'rtl';
+            const textDirClass = isEn ? 'text-left' : 'text-right';
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl backdrop-blur-md border text-xs font-bold max-w-md w-full sm:w-auto transition-all duration-300 transform translate-y-[-20px] opacity-0 ${textDirClass}`;
             
             let iconClass = 'fa-solid fa-circle-info';
             let colorClasses = 'bg-white/95 dark:bg-slate-900/95 text-slate-800 dark:text-white border-slate-200 dark:border-slate-800 shadow-sky-500/5';
@@ -58,8 +61,8 @@
             toast.className += ' ' + colorClasses;
             toast.innerHTML = `
                 <i class="${iconClass} ${iconColor} text-base shrink-0"></i>
-                <span class="flex-1 leading-snug">${message}</span>
-                <button type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs p-1 cursor-pointer" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+                <span class="flex-1 leading-snug" dir="auto">${message}</span>
+                <button type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs p-1 cursor-pointer shrink-0" onclick="this.parentElement.remove()" title="${isEn ? 'Close' : 'إغلاق'}"><i class="fa-solid fa-xmark"></i></button>
             `;
 
             // تشغيل الاهتزازات التفاعلية اللطيفة للهواتف الذكية (Subtle Mobile Haptics)
@@ -178,13 +181,105 @@
 
             // 2. قراءة حالة الإذن الحالية
             getPermissionStatus() {
-                if ('Notification' in window) {
-                    return Notification.permission;
+                if ('Notification' in window && Notification.permission) {
+                    if (Notification.permission === 'granted') return 'granted';
+                    if (Notification.permission === 'denied') return 'denied';
+                }
+                if (localStorage.getItem('motorCare_notif_enabled') === 'true') {
+                    return 'granted';
                 }
                 return 'default';
             },
 
-            // 3. طلب إذن الإشعارات من المستخدم
+            updateUI() {
+                const pill = document.getElementById('notifPermissionPill');
+                const hint = document.getElementById('notifPermissionHint');
+                const reqBtn = document.getElementById('btnRequestNotifPermission');
+                const status = this.getPermissionStatus();
+                const isEn = typeof appState !== 'undefined' && appState.lang === 'en';
+
+                if (pill) {
+                    if (status === 'granted' || localStorage.getItem('motorCare_notif_enabled') === 'true') {
+                        pill.className = 'px-2.5 py-1 rounded-full text-[11px] font-black bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300';
+                        pill.innerText = isEn ? 'Enabled & Active ✓' : 'تم التفعيل بنجاح ✓';
+                        if (hint) hint.innerText = isEn 
+                            ? 'Push & Local notifications are authorized on this device. MotorCare checks maintenance and sends smart alerts.' 
+                            : 'الإشعارات مفعلة ومصرح بها على جهازك. يقوم التطبيق بفحص العداد ومواعيد الصيانة دورياً وإرسال تنبيهات ذكية مباشرة لشاشتك.';
+                        if (reqBtn) reqBtn.style.display = 'none';
+                    } else if (status === 'denied') {
+                        pill.className = 'px-2.5 py-1 rounded-full text-[11px] font-black bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300';
+                        pill.innerText = isEn ? 'Blocked in Settings ✕' : 'محظورة في إعدادات المتصفح ✕';
+                        if (hint) hint.innerText = isEn 
+                            ? 'Notifications are blocked. Please click system settings to allow notifications.' 
+                            : 'تم رفض إذن الإشعارات مسبقاً. لتفعيلها، يرجى الفتح من إعدادات المتصفح أو الهاتف.';
+                        if (reqBtn) reqBtn.style.display = 'none';
+                    } else {
+                        pill.className = 'px-2.5 py-1 rounded-full text-[11px] font-black bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300';
+                        pill.innerText = isEn ? 'Permission Required 🔔' : 'في انتظار التفعيل 🔔';
+                        if (hint) hint.innerText = isEn 
+                            ? 'Allow notifications so MotorCare can remind you when your engine oil, belts, or brake pads are due for service.' 
+                            : 'اضغط على زر التفعيل أدناه لمنح MotorCare إذن إرسال تنبيهات الصيانة لسيارتك عند اقتراب أو تجاوز مواعيد تغيير الزيت والقطع.';
+                        if (reqBtn) reqBtn.style.display = 'inline-flex';
+                    }
+                }
+            },
+
+            // فتح إعدادات إشعارات التطبيق الرسمية في الهاتف (Android App Notification Settings)
+            async openSystemSettings() {
+                try {
+                    const NativeSettings = window.Capacitor?.Plugins?.NativeSettings;
+                    if (NativeSettings && typeof NativeSettings.openNotificationSettings === 'function') {
+                        await NativeSettings.openNotificationSettings();
+                        return;
+                    }
+                } catch(e) {
+                    console.warn('[MotorCare Notifications] openSystemSettings error:', e);
+                }
+                const isEn = appState.lang === 'en';
+                showNotification(isEn 
+                    ? 'Please open your phone Settings > Apps > MotorCare > Notifications' 
+                    : 'يرجى فتح إعدادات الهاتف > التطبيقات > تطبيق MotorCare > الإشعارات', 'info', 5000);
+            },
+
+            // إدارة تفضيلات التبديل الأصلية (Native-like Toggle Switches)
+            getNotificationPreferences() {
+                try {
+                    const raw = localStorage.getItem('motorCare_notif_prefs');
+                    if (raw) return JSON.parse(raw);
+                } catch(e) {}
+                return { engine: true, brakes: true, licenses: true, general: true };
+            },
+
+            saveNotificationPreferences(prefs) {
+                try {
+                    localStorage.setItem('motorCare_notif_prefs', JSON.stringify(prefs));
+                } catch(e) {}
+            },
+
+            toggleCategory(category, isEnabled) {
+                const prefs = this.getNotificationPreferences();
+                prefs[category] = !!isEnabled;
+                this.saveNotificationPreferences(prefs);
+                const isEn = appState.lang === 'en';
+                showNotification(isEn ? 'Notification preference updated ✓' : 'تم حفظ تفضيلات التنبيهات بنجاح ✓', 'success', 2500);
+            },
+
+            isCategoryEnabled(itemId) {
+                const prefs = this.getNotificationPreferences();
+                const idLower = String(itemId || '').toLowerCase();
+                if (idLower.includes('oil') || idLower.includes('coolant') || idLower.includes('trans')) {
+                    return prefs.engine !== false;
+                }
+                if (idLower.includes('brake') || idLower.includes('belt') || idLower.includes('timing')) {
+                    return prefs.brakes !== false;
+                }
+                if (idLower.includes('license') || idLower.includes('insur')) {
+                    return prefs.licenses !== false;
+                }
+                return prefs.general !== false;
+            },
+
+            // 3. طلب إذن الإشعارات من المستخدم (Android 13+ POST_NOTIFICATIONS)
             async requestPermission() {
                 if (!this.isSupported()) {
                     showNotification(appState.lang === 'en' ? 'Notifications are not supported on this browser.' : 'الإشعارات غير مدعومة في هذا المتصفح/الجهاز.', 'warning');
@@ -192,10 +287,11 @@
                 }
 
                 try {
-                    // كاباسيتور (Native Android)
+                    // كاباسيتور (Native Android 13+)
                     if (typeof window.Capacitor !== 'undefined' && window.Capacitor.Plugins?.LocalNotifications) {
                         const perm = await window.Capacitor.Plugins.LocalNotifications.requestPermissions();
                         if (perm.display === 'granted') {
+                            localStorage.setItem('motorCare_notif_enabled', 'true');
                             this.updateUI();
                             showNotification(appState.lang === 'en' ? 'Notifications enabled successfully! 🔔' : 'تم تفعيل إشعارات الصيانة بنجاح! 🔔', 'success');
                             this.checkMaintenanceSchedules({ force: true });
@@ -206,12 +302,14 @@
                     // متصفحات الويب و PWA / TWA
                     if ('Notification' in window) {
                         const permission = await Notification.requestPermission();
-                        this.updateUI();
                         if (permission === 'granted') {
+                            localStorage.setItem('motorCare_notif_enabled', 'true');
+                            this.updateUI();
                             showNotification(appState.lang === 'en' ? 'Mobile maintenance notifications enabled! 🔔' : 'تم تفعيل إشعارات الصيانة للموبايل بنجاح! 🔔', 'success');
                             this.checkMaintenanceSchedules({ force: true });
                             return true;
                         } else if (permission === 'denied') {
+                            this.updateUI();
                             showNotification(appState.lang === 'en' ? 'Notifications blocked in browser settings.' : 'تم حظر الإشعارات في إعدادات المتصفح.', 'warning');
                             return false;
                         }
@@ -297,6 +395,7 @@
                 const approachingItems = [];
 
                 car.catalog.forEach(item => {
+                    if (!this.isCategoryEnabled(item.id)) return;
                     const lastKm = Number(item.lastKm) || 0;
                     const kmInterval = Number(item.kmInterval) || 10000;
                     const diffKm = currentOdo - lastKm;
@@ -715,6 +814,19 @@
                     if (reqBtn) reqBtn.style.display = 'inline-flex';
                 }
             }
+
+            // مزامنة حالة مفاتيح التبديل الأصلية
+            try {
+                const prefs = MotorCareNotifications.getNotificationPreferences();
+                const tEng = document.getElementById('notifToggleEngine');
+                const tBrk = document.getElementById('notifToggleBrakes');
+                const tLic = document.getElementById('notifToggleLicenses');
+                const tGen = document.getElementById('notifToggleGeneral');
+                if (tEng) tEng.checked = prefs.engine !== false;
+                if (tBrk) tBrk.checked = prefs.brakes !== false;
+                if (tLic) tLic.checked = prefs.licenses !== false;
+                if (tGen) tGen.checked = prefs.general !== false;
+            } catch(e) {}
 
             renderNotificationsHubList();
         }

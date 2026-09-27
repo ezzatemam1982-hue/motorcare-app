@@ -98,10 +98,21 @@
 
             populateBatteryOemRecommendation();
             onBatteryBrandSelectChanged();
+            if (typeof updateAttachmentUI === 'function') {
+                tempImages['battery'] = (b && b.warrantyImage) ? b.warrantyImage : '';
+                updateAttachmentUI('battery', tempImages['battery']);
+            }
+
             document.getElementById('batteryModal')?.classList.remove('hidden');
         }
 
-        function closeBatteryModal() { document.getElementById('batteryModal')?.classList.add('hidden'); }
+        function closeBatteryModal() {
+            document.getElementById('batteryModal')?.classList.add('hidden');
+            if (typeof updateAttachmentUI === 'function') {
+                tempImages['battery'] = '';
+                updateAttachmentUI('battery', null);
+            }
+        }
 
         function onBatteryBrandSelectChanged() {
             const brandSel = document.getElementById('batteryBrandSelect');

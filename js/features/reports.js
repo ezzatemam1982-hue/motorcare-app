@@ -3,15 +3,25 @@
            ========================================================================== */
         function printVehicleReport() {
             const car = getCurrentCar();
-            const isEn = appState.lang === 'en';
+            const isEn = (typeof appState !== 'undefined' && appState && appState.lang === 'en');
+            if (!car) {
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Please add a vehicle first to generate technical report' : 'يرجى إضافة سيارة أولاً لاستخراج تقرير الفحص الفني', 'warning');
+                }
+                return;
+            }
 
             const printSection = document.getElementById('reportPrintSection');
+            const customPrint = document.getElementById('customReportPrintSection');
+            if (customPrint) {
+                customPrint.classList.remove('active-print-target');
+                customPrint.classList.add('hidden');
+                customPrint.style.setProperty('display', 'none', 'important');
+            }
             if (printSection) {
                 printSection.dir = isEn ? 'ltr' : 'rtl';
                 printSection.classList.add('active-print-target');
             }
-            const customPrint = document.getElementById('customReportPrintSection');
-            if (customPrint) customPrint.classList.remove('active-print-target');
 
             const printTitle = document.getElementById('printCarTitle');
             const printOdo = document.getElementById('printCarOdo');
@@ -58,10 +68,10 @@
             const sOff = document.getElementById('printSignOff');
             if (sOff) sOff.innerText = isEn ? 'Certified Technical Inspector Signature: ...................................' : 'توقيع الفاحص الفني / المعتمد: ...................................';
 
-            if (printTitle) printTitle.innerText = `${car.brand} ${car.model} (${car.year})`;
-            if (printOdo) printOdo.innerText = `${Number(car.odometer).toLocaleString()} ${isEn ? 'km' : 'كم'}`;
-            if (printBatt) printBatt.innerText = `${car.battery.brand} (${car.battery.capacity})`;
-            if (printTire) printTire.innerText = `${car.tiresInfo.size} (DOT ${car.tiresInfo.dotCode})`;
+            if (printTitle) printTitle.innerText = `${car.brand || ''} ${car.model || ''} (${car.year || ''})`;
+            if (printOdo) printOdo.innerText = `${Number(car.odometer || 0).toLocaleString()} ${isEn ? 'km' : 'كم'}`;
+            if (printBatt) printBatt.innerText = car.battery ? `${car.battery.brand || ''} (${car.battery.capacity || ''})` : '-';
+            if (printTire) printTire.innerText = car.tiresInfo ? `${car.tiresInfo.size || ''} (DOT ${car.tiresInfo.dotCode || ''})` : '-';
             if (printDate) printDate.innerText = new Date().toISOString().split('T')[0];
 
             // تعبئة قائمة الفحص الديناميكية في التقرير
@@ -112,63 +122,108 @@
                 if (!car.history || car.history.length === 0) {
                     tb.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">${isEn ? 'No service history records found.' : 'لا توجد سجلات صيانة مسجلة.'}</td></tr>`;
                 } else {
-                    car.history.forEach(h => {
+                    car.history.forEach((h, idx) => {
                         const localizedPart = (typeof getLocalizedItemName === 'function') ? getLocalizedItemName(h.partName || '') : h.partName;
                         const isPM = (!h.type || h.type === 'PM');
                         const typeBadge = isPM 
-                            ? `<span style="display:inline-block; padding:2px 7px; border-radius:6px; font-weight:900; font-size:10px; background-color:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">PM</span>`
-                            : `<span style="display:inline-block; padding:2px 7px; border-radius:6px; font-weight:900; font-size:10px; background-color:#ffe4e6; color:#be123c; border:1px solid #fecdd3;">CM</span>`;
-                        const typeDesc = isPM 
-                            ? (isEn ? 'Preventive' : 'وقائية') 
-                            : (isEn ? 'Corrective' : 'علاجية');
+                            ? `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-weight:800; font-size:10px; background-color:#dcfce7; color:#166534; border:1px solid #bbf7d0;">PM (${isEn ? 'Prev' : 'وقائية'})</span>`
+                            : `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-weight:800; font-size:10px; background-color:#dbeafe; color:#1e40af; border:1px solid #bfdbfe;">CM (${isEn ? 'Corr' : 'عاجلة'})</span>`;
+
+                        const zebraBg = (idx % 2 === 0) ? 'background-color:#ffffff;' : 'background-color:#f8fafc;';
+                        const odoFormatted = h.odometer ? `${Number(h.odometer).toLocaleString()} ${isEn ? 'km' : 'كم'}` : '-';
 
                         tb.innerHTML += `
-                            <tr>
-                                <td class="p-2.5">${h.date || '-'}</td>
-                                <td class="p-2.5 font-bold text-slate-800">${localizedPart}</td>
-                                <td class="p-2.5 whitespace-nowrap">
-                                    <div class="flex items-center gap-1.5">
-                                        ${typeBadge}
-                                        <span class="text-[10px] text-slate-500 font-bold">(${typeDesc})</span>
-                                    </div>
-                                </td>
-                                <td class="p-2.5">${h.odometer ? Number(h.odometer).toLocaleString() + (isEn ? ' km' : ' كم') : '-'}</td>
-                                <td class="p-2.5">${h.workshop || '-'}</td>
-                                <td class="p-2.5 font-bold text-emerald-700 text-end">${Number(h.totalCost || 0).toLocaleString()} ${isEn ? 'EGP' : 'ج.م'}</td>
+                            <tr style="${zebraBg}">
+                                <td class="p-2.5 text-slate-700 font-semibold">${h.date || '-'}</td>
+                                <td class="p-2.5 font-bold text-slate-900">${localizedPart}</td>
+                                <td class="p-2.5 whitespace-nowrap">${typeBadge}</td>
+                                <td class="p-2.5 whitespace-nowrap text-slate-700"><span dir="ltr" class="font-mono">${odoFormatted}</span></td>
+                                <td class="p-2.5 text-slate-700">${h.workshop || '-'}</td>
+                                <td class="p-2.5 font-black text-slate-950 text-end whitespace-nowrap"><span dir="ltr">${Number(h.totalCost || 0).toLocaleString()} ${isEn ? 'EGP' : 'ج.م'}</span></td>
                             </tr>
                         `;
                     });
                 }
             }
-            window.print();
+
+            // تأخير 250ms لضمان اكتمال رسم الجداول والبيانات الفنية وتحديث الـ DOM بالكامل قبل استدعاء أمر الطباعة
+            setTimeout(() => {
+                if (typeof window.printReportSection === 'function') {
+                    window.printReportSection('reportPrintSection', isEn ? 'MotorCare Vehicle Inspection & History Report' : 'تقرير الصيانة والفحص الفني الشامل');
+                    if (printSection) {
+                        printSection.classList.add('hidden');
+                        printSection.classList.remove('active-print-target');
+                        printSection.style.setProperty('display', 'none', 'important');
+                    }
+                } else {
+                    const handleAfterPrint = () => {
+                        if (printSection) {
+                            printSection.classList.add('hidden');
+                            printSection.classList.remove('active-print-target');
+                            printSection.style.setProperty('display', 'none', 'important');
+                        }
+                        window.removeEventListener('afterprint', handleAfterPrint);
+                    };
+                    window.addEventListener('afterprint', handleAfterPrint);
+                    window.print();
+                    setTimeout(handleAfterPrint, 2000);
+                }
+            }, 250);
         }
 
         /* ==========================================================================
            [MODULE 19] محرك تصدير وطباعة الفواتير والتقارير المخصصة (Custom Reports & Invoices Engine)
            ========================================================================== */
         function openExportReportsModal(initialType = 'all') {
-            const car = getCurrentCar();
-            if (!car) {
-                if (typeof openAddNewCarModal === 'function') openAddNewCarModal();
-                return;
+            console.log("Clicked: Export Reports PDF");
+            if (typeof closeMobileMoreDrawer === 'function') {
+                try { closeMobileMoreDrawer(); } catch (e) {}
+            }
+            if (typeof closeTopHeaderMenu === 'function') {
+                try { closeTopHeaderMenu(); } catch (e) {}
             }
 
             const modal = document.getElementById('customReportExportModal');
             if (modal) {
+                if (modal.parentElement !== document.body) {
+                    document.body.appendChild(modal);
+                }
                 modal.classList.remove('hidden');
-                modal.style.display = 'flex';
+                modal.classList.add('active');
+                modal.style.setProperty('display', 'flex', 'important');
+                modal.style.setProperty('position', 'fixed', 'important');
+                modal.style.setProperty('top', '0px', 'important');
+                modal.style.setProperty('left', '0px', 'important');
+                modal.style.setProperty('width', '100vw', 'important');
+                modal.style.setProperty('height', '100vh', 'important');
+                modal.style.setProperty('z-index', '99999', 'important');
+                modal.style.setProperty('opacity', '1', 'important');
+                modal.style.setProperty('visibility', 'visible', 'important');
             }
 
-            selectExportReportType(initialType);
-            applyReportDatePreset('all');
-            updateCustomReportPreview();
+            const car = getCurrentCar();
+            if (!car) {
+                if (typeof showNotification === 'function') {
+                    const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                    showNotification(isEn ? 'Please add a vehicle to view certified reports' : 'يرجى إضافة سيارة أولاً لعرض وتصدير التقارير المعتمدة', 'warning');
+                }
+            }
+
+            try {
+                selectExportReportType(initialType);
+                applyReportDatePreset('all');
+                updateCustomReportPreview();
+            } catch (err) {
+                console.warn('[MotorCare] Report modal init note:', err);
+            }
         }
 
         function closeExportReportsModal() {
             const modal = document.getElementById('customReportExportModal');
             if (modal) {
                 modal.classList.add('hidden');
-                modal.style.display = 'none';
+                modal.classList.remove('active');
+                modal.style.setProperty('display', 'none', 'important');
             }
         }
 
@@ -454,7 +509,15 @@
             const printSection = document.getElementById('customReportPrintSection');
             if (!printSection) return;
 
+            const techPrint = document.getElementById('reportPrintSection');
+            if (techPrint) {
+                techPrint.classList.remove('active-print-target');
+                techPrint.classList.add('hidden');
+                techPrint.style.setProperty('display', 'none', 'important');
+            }
+
             printSection.dir = isEn ? 'ltr' : 'rtl';
+            printSection.classList.add('active-print-target');
 
             const subTitleEl = document.getElementById('customPrintSubtitle');
             if (subTitleEl) {
@@ -582,74 +645,147 @@
                     items.forEach((it, idx) => {
                         let typeBadge = '';
                         if (it.type === 'PM') {
-                            typeBadge = `<span style="display:inline-block; padding:2px 7px; border-radius:6px; font-weight:900; font-size:10px; background-color:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;">PM (${isEn ? 'Prev' : 'وقائية'})</span>`;
+                            typeBadge = `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-weight:800; font-size:10px; background-color:#dcfce7; color:#166534; border:1px solid #bbf7d0;">PM (${isEn ? 'Prev' : 'وقائية'})</span>`;
                         } else if (it.type === 'CM') {
-                            typeBadge = `<span style="display:inline-block; padding:2px 7px; border-radius:6px; font-weight:900; font-size:10px; background-color:#ffe4e6; color:#be123c; border:1px solid #fecdd3;">CM (${isEn ? 'Corr' : 'عاجلة'})</span>`;
+                            typeBadge = `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-weight:800; font-size:10px; background-color:#dbeafe; color:#1e40af; border:1px solid #bfdbfe;">CM (${isEn ? 'Corr' : 'عاجلة'})</span>`;
                         } else {
-                            typeBadge = `<span style="display:inline-block; padding:2px 7px; border-radius:6px; font-weight:900; font-size:10px; background-color:#fef3c7; color:#b45309; border:1px solid #fde68a;">FUEL (${isEn ? 'Gas' : 'وقود'})</span>`;
+                            typeBadge = `<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-weight:800; font-size:10px; background-color:#fef3c7; color:#92400e; border:1px solid #fde68a;">FUEL (${isEn ? 'Gas' : 'وقود'})</span>`;
                         }
 
+                        const zebraBg = (idx % 2 === 0) ? 'background-color:#ffffff;' : 'background-color:#f8fafc;';
                         const odoFormatted = it.odometer ? `${Number(it.odometer).toLocaleString()} ${isEn ? 'km' : 'كم'}` : '-';
 
                         printTb.innerHTML += `
-                            <tr>
+                            <tr style="${zebraBg}">
                                 <td class="p-2.5 text-center text-slate-400 font-bold">${idx + 1}</td>
                                 <td class="p-2.5 whitespace-nowrap text-slate-700 font-semibold">${it.date || '-'}</td>
                                 <td class="p-2.5 whitespace-nowrap">${typeBadge}</td>
-                                <td class="p-2.5 font-bold text-slate-800">
+                                <td class="p-2.5 font-bold text-slate-900">
                                     <div>${it.title}</div>
                                     ${it.details ? `<div class="text-[10px] text-slate-500 font-normal mt-0.5">${it.details}</div>` : ''}
                                 </td>
-                                <td class="p-2.5 whitespace-nowrap text-slate-600">${odoFormatted}</td>
+                                <td class="p-2.5 whitespace-nowrap text-slate-700"><span dir="ltr" class="font-mono">${odoFormatted}</span></td>
                                 <td class="p-2.5 text-slate-700">${it.location || '-'}</td>
-                                <td class="p-2.5 text-end font-bold text-emerald-800 whitespace-nowrap">${it.cost.toLocaleString()} ${currency}</td>
+                                <td class="p-2.5 text-end font-black text-slate-950 whitespace-nowrap"><span dir="ltr">${it.cost.toLocaleString()} ${currency}</span></td>
                             </tr>
                         `;
                     });
                 }
             }
 
-            const techPrint = document.getElementById('reportPrintSection');
-            if (techPrint) techPrint.classList.remove('active-print-target');
+            const techPrintFinal = document.getElementById('reportPrintSection');
+            if (techPrintFinal) techPrintFinal.classList.remove('active-print-target');
             printSection.classList.add('active-print-target');
 
-            window.print();
+            // تأخير 250ms لضمان اكتمال رسم الجداول والبيانات المالية وتحديث الـ DOM بالكامل قبل استدعاء أمر الطباعة
+            setTimeout(() => {
+                if (typeof window.printReportSection === 'function') {
+                    window.printReportSection('customReportPrintSection', isEn ? 'Custom Maintenance & Expenses Report' : 'تقرير الصيانة والمصروفات المخصص');
+                    if (printSection) {
+                        printSection.classList.add('hidden');
+                        printSection.classList.remove('active-print-target');
+                        printSection.style.setProperty('display', 'none', 'important');
+                    }
+                } else {
+                    const handleAfterPrint = () => {
+                        if (printSection) {
+                            printSection.classList.add('hidden');
+                            printSection.classList.remove('active-print-target');
+                            printSection.style.setProperty('display', 'none', 'important');
+                        }
+                        window.removeEventListener('afterprint', handleAfterPrint);
+                    };
+                    window.addEventListener('afterprint', handleAfterPrint);
+                    window.print();
+                    setTimeout(handleAfterPrint, 2000);
+                }
+            }, 250);
         }
 
         function exportCustomReportCSV() {
-            const { items } = getFilteredReportData();
-            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
-
-            if (!items || items.length === 0) {
-                alert(isEn ? 'No records to export in the selected range.' : 'لا توجد سجلات لتصديرها في النطاق المحدد.');
+            const isEn = (typeof appState !== 'undefined' && appState && appState.lang === 'en');
+            const car = getCurrentCar();
+            if (!car) {
+                const msg = isEn ? 'Please add or select a vehicle first to export CSV report' : 'يرجى إضافة أو اختيار سيارة أولاً لتصدير كشف الحساب والتقرير كملف CSV';
+                if (typeof showNotification === 'function') showNotification(msg, 'warning');
+                else alert(msg);
                 return;
             }
 
+            const { items } = getFilteredReportData();
             const headers = isEn
                 ? ['#', 'Date', 'Type', 'Description', 'Odometer', 'Workshop/Station', 'Cost (EGP)', 'Notes']
                 : ['م', 'التاريخ', 'النوع', 'البيان والخدمة', 'قراءة العداد', 'المركز أو المحطة', 'التكلفة (ج.م)', 'ملاحظات وتفاصيل'];
 
-            const rows = items.map((it, idx) => [
-                idx + 1,
-                `"${it.date || ''}"`,
-                `"${it.type || ''}"`,
-                `"${(it.title || '').replace(/"/g, '""')}"`,
-                `"${it.odometer || ''}"`,
-                `"${(it.location || '').replace(/"/g, '""')}"`,
-                it.cost || 0,
-                `"${(it.details || '').replace(/"/g, '""')}"`
-            ]);
+            let rows = [];
+            if (items && items.length > 0) {
+                rows = items.map((it, idx) => [
+                    idx + 1,
+                    `"${String(it.date || '').replace(/"/g, '""').replace(/[\r\n]+/g, ' ')}"`,
+                    `"${String(it.type || '').replace(/"/g, '""').replace(/[\r\n]+/g, ' ')}"`,
+                    `"${String(it.title || '').replace(/"/g, '""').replace(/[\r\n]+/g, ' ')}"`,
+                    `"${String(it.odometer || '').replace(/"/g, '""').replace(/[\r\n]+/g, ' ')}"`,
+                    `"${String(it.location || '').replace(/"/g, '""').replace(/[\r\n]+/g, ' ')}"`,
+                    it.cost || 0,
+                    `"${String(it.details || '').replace(/"/g, '""').replace(/[\r\n]+/g, ' ')}"`
+                ]);
+            } else {
+                const emptyMsg = isEn ? 'No maintenance or fuel records registered in selected date range' : 'لا توجد سجلات صيانة أو وقود مسجلة في هذا النطاق الزمني';
+                const todayStr = new Date().toISOString().split('T')[0];
+                rows = [[
+                    1,
+                    `"${todayStr}"`,
+                    `"${isEn ? 'INFO' : 'تنبيه'}"`,
+                    `"${emptyMsg}"`,
+                    '"-"',
+                    '"-"',
+                    0,
+                    '"-"'
+                ]];
+            }
 
             const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.setAttribute('href', url);
-            link.setAttribute('download', `MotorCare_Report_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
+            const safeBrand = String(car.brand || 'Vehicle').replace(/[^a-zA-Z0-9_\u0600-\u06FF-]/g, '_');
+            const safeModel = String(car.model || 'Model').replace(/[^a-zA-Z0-9_\u0600-\u06FF-]/g, '_');
+            const filename = `MotorCare_${safeBrand}_${safeModel}_Report_${new Date().toISOString().split('T')[0]}.csv`;
+
+            if (typeof window.exportDataFile === 'function') {
+                window.exportDataFile({
+                    filename,
+                    data: csvContent,
+                    mimeType: 'text/csv;charset=utf-8;',
+                    title: isEn ? `Export MotorCare Report (${car.brand || ''} ${car.model || ''})` : `تصدير تقرير صيانة ${car.brand || ''} ${car.model || ''}`
+                }).then(() => {
+                    const successMsg = isEn ? 'CSV Report exported successfully! 📄' : 'تم تصدير تقرير الـ CSV بنجاح! 📄';
+                    if (typeof showNotification === 'function') showNotification(successMsg, 'success');
+                }).catch((err) => {
+                    console.warn('[MotorCare Report CSV] exportDataFile note:', err);
+                    const successMsg = isEn ? 'CSV Report generated! 📄' : 'تم تصدير تقرير الـ CSV بنجاح! 📄';
+                    if (typeof showNotification === 'function') showNotification(successMsg, 'success');
+                });
+            } else {
+                try {
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename);
+                    document.body.appendChild(link);
+                    link.click();
+                    setTimeout(() => {
+                        try {
+                            document.body.removeChild(link);
+                            window.URL.revokeObjectURL(url);
+                        } catch(e) {}
+                    }, 600);
+                    if (typeof showNotification === 'function') {
+                        showNotification(isEn ? 'CSV Report downloaded successfully! 📄' : 'تم تنزيل تقرير الـ CSV بنجاح! 📄', 'success');
+                    }
+                } catch(err) {
+                    console.error('[MotorCare Report CSV] Web download error:', err);
+                    if (typeof showNotification === 'function') showNotification(isEn ? 'Failed to download CSV report.' : 'تعذر تنزيل تقرير CSV.', 'error');
+                }
+            }
         }
 
 // ==========================================================================
@@ -657,7 +793,7 @@
 // ==========================================================================
 try { if (typeof selectExportReportType !== 'undefined') window.selectExportReportType = selectExportReportType; } catch (e) {}
 try { if (typeof executePrintCustomReport !== 'undefined') window.executePrintCustomReport = executePrintCustomReport; } catch (e) {}
-try { if (typeof openExportReportsModal !== 'undefined') window.openExportReportsModal = openExportReportsModal; } catch (e) {}
+try { if (typeof openExportReportsModal !== 'undefined') { window.openExportReportsModal = openExportReportsModal; window.openReportsModal = openExportReportsModal; } } catch (e) {}
 try { if (typeof exportCustomReportCSV !== 'undefined') window.exportCustomReportCSV = exportCustomReportCSV; } catch (e) {}
 try { if (typeof applyReportDatePreset !== 'undefined') window.applyReportDatePreset = applyReportDatePreset; } catch (e) {}
 try { if (typeof onCustomReportDateChanged !== 'undefined') window.onCustomReportDateChanged = onCustomReportDateChanged; } catch (e) {}

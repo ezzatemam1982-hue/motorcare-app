@@ -10,8 +10,11 @@
             const govSelect = document.getElementById('scGovFilter');
             const searchInput = document.getElementById('scSearchInput');
 
-            // 1. Populate brands options dynamically
-            populateServiceCenterBrands();
+            const modal = document.getElementById('serviceCentersModal');
+            if (modal) modal.dir = (typeof appState !== 'undefined' && appState && appState.lang === 'en') ? 'ltr' : 'rtl';
+
+            // 1. Populate filters options dynamically based on current language
+            populateServiceCenterFilters();
 
             // 2. Update smart car header badge
             if (carBadgeEl) {
@@ -42,6 +45,11 @@
             if (govSelect) govSelect.value = 'all';
             if (searchInput) searchInput.value = '';
 
+            // Apply data-i18n translation to static elements inside modal
+            if (typeof applyLanguageSettings === 'function') {
+                applyLanguageSettings();
+            }
+
             // 4. Render matching cards
             renderServiceCenters();
 
@@ -53,9 +61,51 @@
             document.getElementById('serviceCentersModal')?.classList.add('hidden');
         }
 
+        function populateServiceCenterFilters() {
+            const isEn = (typeof appState !== 'undefined' && appState && appState.lang === 'en');
+            
+            // 1. Populate Brands
+            populateServiceCenterBrands();
+
+            // 2. Populate Governorates
+            const govSelect = document.getElementById('scGovFilter');
+            if (govSelect) {
+                const currentGovVal = govSelect.value || 'all';
+                const govs = [
+                    { val: 'all', label: isEn ? 'All Governorates' : 'كل المحافظات' },
+                    { val: 'القاهرة', label: isEn ? 'Cairo' : 'القاهرة' },
+                    { val: 'الجيزة', label: isEn ? 'Giza' : 'الجيزة' },
+                    { val: 'الإسكندرية', label: isEn ? 'Alexandria' : 'الإسكندرية' },
+                    { val: 'القليوبية', label: isEn ? 'Qalyubia' : 'القليوبية' },
+                    { val: 'الغربية', label: isEn ? 'Gharbia (Tanta)' : 'الغربية (طنطا)' },
+                    { val: 'الدقهلية', label: isEn ? 'Dakahlia (Mansoura)' : 'الدقهلية (المنصورة)' },
+                    { val: 'الشرقية', label: isEn ? 'Sharqia' : 'الشرقية' },
+                    { val: 'أسيوط', label: isEn ? 'Asyut & Upper Egypt' : 'أسيوط والصعيد' },
+                    { val: 'البحر الأحمر', label: isEn ? 'Red Sea' : 'البحر الأحمر' }
+                ];
+                govSelect.innerHTML = govs.map(g => `<option value="${g.val}">${g.label}</option>`).join('');
+                govSelect.value = currentGovVal;
+            }
+
+            // 3. Populate Types
+            const typeSelect = document.getElementById('scTypeFilter');
+            if (typeSelect) {
+                const currentTypeVal = typeSelect.value || 'all';
+                const types = [
+                    { val: 'all', label: isEn ? 'All Types' : 'كل الأنواع' },
+                    { val: 'official_dealership', label: isEn ? 'Authorized Dealerships & Distributors 🏢' : 'توكيلات وموزعون معتمدون 🏢' },
+                    { val: 'authorized_center', label: isEn ? 'Authorized Service Centers 🛡️' : 'مراكز خدمة وضمان معتمدة 🛡️' },
+                    { val: 'quick_service', label: isEn ? 'Quick Service & Lube ⚡' : 'صيانة سريعة وزيوت ⚡' }
+                ];
+                typeSelect.innerHTML = types.map(t => `<option value="${t.val}">${t.label}</option>`).join('');
+                typeSelect.value = currentTypeVal;
+            }
+        }
+
         function populateServiceCenterBrands() {
             const brandSelect = document.getElementById('scBrandFilter');
-            if (!brandSelect || brandSelect.options.length > 5) return;
+            if (!brandSelect) return;
+            const currentVal = brandSelect.value || 'all';
 
             const centers = window.MOTORCARE_SERVICE_CENTERS || [];
             const brandSet = new Set();
@@ -72,14 +122,236 @@
             }
 
             const sortedBrands = Array.from(brandSet).sort((a, b) => a.localeCompare(b));
+            const isEn = (typeof appState !== 'undefined' && appState && appState.lang === 'en');
             
-            brandSelect.innerHTML = `<option value="all">${appState.lang === 'en' ? 'All Brands' : 'جميع الماركات (All Brands)'}</option>`;
+            brandSelect.innerHTML = `<option value="all">${isEn ? 'All Brands' : 'جميع الماركات'}</option>`;
             sortedBrands.forEach(b => {
                 const opt = document.createElement('option');
                 opt.value = b;
                 opt.innerText = b;
                 brandSelect.appendChild(opt);
             });
+            brandSelect.value = currentVal;
+        }
+
+        function getLocalizedGov(gov, govEn) {
+            if (typeof appState !== 'undefined' && appState && appState.lang !== 'en') return gov || '';
+            if (govEn) return govEn;
+            const g = (gov || '').trim();
+            const map = {
+                'القاهرة': 'Cairo',
+                'الجيزة': 'Giza',
+                'الإسكندرية': 'Alexandria',
+                'القليوبية': 'Qalyubia',
+                'الغربية': 'Gharbia',
+                'الدقهلية': 'Dakahlia',
+                'الشرقية': 'Sharqia',
+                'أسيوط': 'Asyut',
+                'البحر الأحمر': 'Red Sea',
+                'أسوان': 'Aswan',
+                'الأقصر': 'Luxor',
+                'سوهاج': 'Sohag',
+                'المنيا': 'Minya',
+                'بني سويف': 'Beni Suef',
+                'الفيوم': 'Fayoum',
+                'الإسماعيلية': 'Ismailia',
+                'السويس': 'Suez',
+                'بورسعيد': 'Port Said',
+                'دمياط': 'Damietta',
+                'البحيرة': 'Beheira',
+                'المنوفية': 'Monufia',
+                'كفر الشيخ': 'Kafr El Sheikh',
+                'مطروح': 'Matrouh',
+                'قنا': 'Qena'
+            };
+            for (let key in map) {
+                if (g.includes(key)) return map[key];
+            }
+            return g;
+        }
+
+        function getLocalizedAgency(agency) {
+            if (typeof appState !== 'undefined' && appState && appState.lang !== 'en') return agency || '';
+            let str = (agency || '').trim();
+            if (!str) return 'Official Agency';
+
+            if (str.includes('EIT') || str.includes('كيا مصر')) return 'Kia Egypt (EIT Official Dealership)';
+            if (str.includes('البافارية') || str.includes('BMW')) return 'Bavarian Auto Group (BMW Egypt)';
+            if (str.includes('أبو غالي') || str.includes('Abou Ghaly')) return 'Abou Ghaly Motors';
+            if (str.includes('غبور') || str.includes('GB Auto')) return 'GB Auto (Ghabbour Automotive)';
+            if (str.includes('المنصور') || str.includes('Mansour')) return 'Al Mansour Automotive';
+            if (str.includes('ألكان') || str.includes('Alkan')) return 'Egyptian & Alkan Automotive';
+            if (str.includes('القصراوي') || str.includes('Kasrawy')) return 'Kasrawy Group';
+            if (str.includes('الكرنك') || str.includes('Karnak')) return 'El Karnak Co.';
+            if (str.includes('دايموند') || str.includes('Diamond')) return 'Diamond Motors (Mitsubishi)';
+            if (str.includes('نيسان مصر') || str.includes('Nissan')) return 'Nissan Motor Egypt';
+            if (str.includes('تويوتا مصر') || str.includes('Toyota')) return 'Toyota Egypt';
+            if (str.includes('أوتو جميل') || str.includes('Auto Jameel')) return 'Auto Jameel (Ford Egypt)';
+            if (str.includes('السبع') || str.includes('El Sebaey')) return 'El Sebaey Automotive';
+            if (str.includes('عربيات') || str.includes('Arabiat')) return 'Arabiat Motors';
+
+            return str
+                .replace(/الشركة/g, 'Co.')
+                .replace(/موزع معتمد/g, 'Authorized Dealer')
+                .replace(/توكيل رسمي/g, 'Official Dealership')
+                .replace(/الوكيل الرسمي/g, 'Official Agency')
+                .replace(/مركز معتمد/g, 'Authorized Center')
+                .replace(/مبيعات وخدمات/g, 'Sales & Services')
+                .replace(/قطع غيار/g, 'Spare Parts');
+        }
+
+        function getLocalizedCenterName(name, nameEn) {
+            if (typeof appState !== 'undefined' && appState && appState.lang !== 'en') return name || '';
+            if (nameEn && !/[\u0600-\u06FF]/.test(nameEn)) return nameEn;
+            
+            let str = (name || '').trim();
+            return str
+                .replace(/مركز كيا المعتمد/g, 'Authorized Kia Service Center')
+                .replace(/مركز خدمة وضمان معتمد/g, 'Authorized Service & Warranty Center')
+                .replace(/مركز خدمة معتمد/g, 'Authorized Service Center')
+                .replace(/مركز صيانة معتمد/g, 'Authorized Maintenance Center')
+                .replace(/مركز صيانة/g, 'Service Center')
+                .replace(/مركز خدمة/g, 'Service Center')
+                .replace(/مركز/g, 'Service Center')
+                .replace(/توكيل/g, 'Dealership')
+                .replace(/معرض مبيعات/g, 'Sales Showroom')
+                .replace(/موزع معتمد/g, 'Authorized Dealer')
+                .replace(/موزع/g, 'Dealer')
+                .replace(/فرع/g, 'Branch')
+                .replace(/شركة/g, 'Co.')
+                .replace(/قطع غيار/g, 'Spare Parts')
+                .replace(/المنطقة الصناعية/g, 'Industrial Zone')
+                .replace(/الرئيسي/g, 'Main');
+        }
+
+        function getLocalizedArea(area) {
+            if (typeof appState !== 'undefined' && appState && appState.lang !== 'en') return area || '';
+            let str = (area || '').trim();
+            return str
+                .replace(/أبو رواش|أبورواش/g, 'Abu Rawash')
+                .replace(/المنطقة الصناعية/g, 'Industrial Zone')
+                .replace(/التجمع الخامس/g, '5th Settlement')
+                .replace(/التجمع/g, 'New Cairo')
+                .replace(/العبور/g, 'El Obour')
+                .replace(/مدينة نصر/g, 'Nasr City')
+                .replace(/مصر الجديدة/g, 'Heliopolis')
+                .replace(/المعادي/g, 'Maadi')
+                .replace(/6 أكتوبر|أكتوبر/g, '6th of October')
+                .replace(/الشيخ زايد/g, 'Sheikh Zayed')
+                .replace(/طنطا/g, 'Tanta')
+                .replace(/المنصورة/g, 'Mansoura')
+                .replace(/الزقازيق/g, 'Zagazig')
+                .replace(/سموحة/g, 'Smouha')
+                .replace(/محرم بك/g, 'Moharam Bek')
+                .replace(/العامريات|العامرية/g, 'Amriya');
+        }
+
+        function getLocalizedAddress(address) {
+            if (typeof appState !== 'undefined' && appState && appState.lang !== 'en') return address || '';
+            let str = (address || '').trim();
+            return str
+                .replace(/الكيلو/g, 'KM')
+                .replace(/طريق مصر إسكندرية الصحراوي/g, 'Cairo-Alexandria Desert Road')
+                .replace(/طريق مصر اسكندرية الصحراوي/g, 'Cairo-Alexandria Desert Road')
+                .replace(/المنطقة الصناعية الجديدة/g, 'New Industrial Zone')
+                .replace(/المنطقة الصناعية/g, 'Industrial Zone')
+                .replace(/الصحراوي/g, 'Desert Road')
+                .replace(/طريق الخزان/g, 'El Khazan Road')
+                .replace(/طريق/g, 'Road')
+                .replace(/شارع/g, 'St.')
+                .replace(/قطعة/g, 'Plot')
+                .replace(/خلف/g, 'Behind')
+                .replace(/بجوار/g, 'Next to')
+                .replace(/أمام/g, 'In front of')
+                .replace(/مقابل/g, 'Opposite')
+                .replace(/القرية الذكية/g, 'Smart Village')
+                .replace(/أبو رواش|أبورواش/g, 'Abu Rawash')
+                .replace(/العبور/g, 'El Obour')
+                .replace(/مدينة نصر/g, 'Nasr City')
+                .replace(/مصر الجديدة/g, 'Heliopolis')
+                .replace(/المعادي/g, 'Maadi')
+                .replace(/6 أكتوبر|أكتوبر/g, '6th of October')
+                .replace(/الشيخ زايد/g, 'Sheikh Zayed')
+                .replace(/القاهرة/g, 'Cairo')
+                .replace(/الجيزة/g, 'Giza')
+                .replace(/الإسكندرية|اسكندرية/g, 'Alexandria')
+                .replace(/أسوان/g, 'Aswan');
+        }
+
+        function getLocalizedHours(hours) {
+            if (typeof appState !== 'undefined' && appState && appState.lang !== 'en') return hours || '';
+            let str = (hours || '').trim();
+            return str
+                .replace(/السبت/g, 'Sat')
+                .replace(/الأحد/g, 'Sun')
+                .replace(/الإثنين|الاثنين/g, 'Mon')
+                .replace(/الثلاثاء/g, 'Tue')
+                .replace(/الأربعاء/g, 'Wed')
+                .replace(/الخميس/g, 'Thu')
+                .replace(/الجمعة/g, 'Fri')
+                .replace(/طوال الأسبوع/g, 'All Week')
+                .replace(/24 ساعة/g, '24 Hours')
+                .replace(/من/g, 'From ')
+                .replace(/حتى|إلى/g, ' to ')
+                .replace(/صباحًا|صباحا/g, ' AM')
+                .replace(/مساءً|مساء/g, ' PM')
+                .replace(/(\d+(?:\.\d+)?)\s*ص/g, '$1 AM')
+                .replace(/(\d+(?:\.\d+)?)\s*م/g, '$1 PM')
+                .replace(/عطلة|إجازة/g, 'Closed');
+        }
+
+        function getLocalizedServiceTag(service) {
+            if (typeof appState !== 'undefined' && appState && appState.lang !== 'en') return service || '';
+            let str = (service || '').trim();
+
+            const exactMap = {
+                'صيانة دورية وضمان معتمد من كيا': 'Kia Routine Maintenance & Warranty',
+                'قطع غيار كيا أصلية': 'Genuine Kia Spare Parts',
+                'ميكانيكا وعفشة وكهرباء': 'Mechanics, Suspension & Electrical',
+                'فحص كمبيوتر معتمد': 'Certified Computer Diagnostics',
+                'سمكرة ودهان وفرن معتمد': 'Body Work, Paint & Oven Chamber',
+                'ميكانيكا وكهرباء وتكييف': 'Mechanics, Electrical & AC',
+                'قطع غيار كيا أصلية بالضمان': 'Genuine Kia Parts with Warranty',
+                'صيانة دورية وضمان كيا الرسمي': 'Kia Official Routine Service & Warranty',
+                'فحص وتشخيص أعطال بالكمبيوتر': 'Computer Diagnostics & Troubleshooting',
+                'تعديل واختبار كمبيوتر وتحديث برمجيات الوكيل الرسمي': 'Computer Testing & Official ECU Software Update',
+                'أصلية بضمان سنتين BMW قطع غيار': 'Genuine BMW Parts with 2-Year Warranty',
+                'قطع غيار BMW أصلية بضمان سنتين': 'Genuine BMW Parts with 2-Year Warranty',
+                'صيانة دورية وسريعة لكافة فئات BMW': 'Routine & Quick Maintenance for All BMW Series',
+                'صيانة دورية وسريعة لكافة فئات': 'Routine & Quick Maintenance for All Models',
+                'مبيعات سيارات ميتسوبيشي': 'Mitsubishi New Car Sales',
+                'قطع غيار ميتسوبيشي أصلية': 'Genuine Mitsubishi Spare Parts',
+                'تسليم فوري': 'Immediate Delivery',
+                'برامج تقسيط': 'Installment Plans',
+                'سمكرة ودهان': 'Bodywork & Painting',
+                'زيوت وفلاتر': 'Oil & Filters',
+                'شحن تكييف': 'AC Gas Refill',
+                'بطاريات وإطارات': 'Batteries & Tires',
+                'غسيل وتلميع': 'Car Wash & Detailing'
+            };
+
+            if (exactMap[str]) return exactMap[str];
+
+            return str
+                .replace(/صيانة دورية وسريعة/g, 'Routine & Quick Service')
+                .replace(/صيانة دورية/g, 'Routine Maintenance')
+                .replace(/صيانة/g, 'Service')
+                .replace(/قطع غيار أصلية/g, 'Genuine Parts')
+                .replace(/قطع غيار/g, 'Spare Parts')
+                .replace(/بالضمان/g, 'with Warranty')
+                .replace(/ضمان/g, 'Warranty')
+                .replace(/فحص كمبيوتر/g, 'Computer Diagnostics')
+                .replace(/فحص وتشخيص أعطال/g, 'Diagnostics & Troubleshooting')
+                .replace(/ميكانيكا/g, 'Mechanics')
+                .replace(/كهرباء/g, 'Electrical')
+                .replace(/تكييف/g, 'AC Service')
+                .replace(/عفشة/g, 'Suspension')
+                .replace(/سمكرة/g, 'Body Repair')
+                .replace(/دهان/g, 'Paint')
+                .replace(/وفرن معتمد/g, '& Oven')
+                .replace(/تحديث برمجيات الوكيل الرسمي/g, 'Official Software Update')
+                .replace(/تعديل واختبار كمبيوتر/g, 'Computer Tuning & Testing')
+                .replace(/تغير زيت|تغيير زيت/g, 'Oil Change');
         }
 
         function resetServiceCenterFilters() {
@@ -140,7 +412,7 @@
         }
 
         /**
-         * فتح موقع المركز في تطبيق خرائط جوجل الأصلي على الهاتف (geo URI intent) أو في المتصفح مع اسم النشاط والفرع المعتمد
+         * فتح موقع المركز بالبحث الدلالي الجغرافي المباشر (الاسم + المحافظة + العنوان الفعلي) لمنع توجيه فروع المحافظات إلى القاهرة
          */
         function openServiceCenterMap(centerId) {
             const centers = window.MOTORCARE_SERVICE_CENTERS || [];
@@ -153,32 +425,27 @@
                 if (raw) userCorr = JSON.parse(raw)[center.id];
             } catch(e) {}
 
-            const webUrl = getServiceCenterMapsUrl(center, userCorr);
-            const brand = (center.brand || (center.brands && center.brands[0]) || (Array.isArray(center.brands) ? center.brands.join(' ') : '') || '').trim();
-            const officialAgencyName = (center.agency || '').trim();
-            const branchName = (center.name || '').trim();
-            const city = (center.city || center.gov || center.area || 'مصر').trim();
-            const fullLabel = [brand, officialAgencyName, branchName, city].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
-
-            // Detect native Capacitor / Android environment
-            const isNative = typeof window !== 'undefined' &&
-                             window.Capacitor &&
-                             typeof window.Capacitor.isNativePlatform === 'function' &&
-                             window.Capacitor.isNativePlatform();
-
-            if (isNative) {
-                // Support geo: URI intent with business metadata:
-                const geoUri = `geo:0,0?q=${encodeURIComponent(fullLabel)}`;
-                try {
-                    window.location.href = geoUri;
-                    setTimeout(() => {
-                        window.open(webUrl, '_system');
-                    }, 600);
-                } catch(e) {
-                    window.open(webUrl, '_system');
-                }
+            let targetUrl = '';
+            if (userCorr && userCorr.newMapsUrl && typeof userCorr.newMapsUrl === 'string' && userCorr.newMapsUrl.startsWith('http')) {
+                targetUrl = userCorr.newMapsUrl;
             } else {
-                window.open(webUrl, '_blank', 'noopener,noreferrer');
+                // البحث الدلالي الجغرافي بالاسم والمحافظة والعنوان الفعلي عبر رابط بحث Google Maps الرسمي
+                const brand = (center.brand || (center.brands && center.brands[0]) || '').trim();
+                const branchName = (center.name || '').trim();
+                const gov = (center.gov || '').trim();
+                const address = (center.address || center.area || '').trim();
+                const queryParts = [branchName, gov, address].filter(Boolean);
+                const queryStr = queryParts.join(' ').replace(/\s+/g, ' ').trim();
+                targetUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryStr)}`;
+            }
+
+            // الفتح السلس عبر إضافة المتصفح الأصلي لـ Capacitor أو متصفح النظام الخارجي
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+                window.Capacitor.Plugins.Browser.open({ url: targetUrl }).catch(() => {
+                    window.open(targetUrl, '_system');
+                });
+            } else {
+                window.open(targetUrl, '_system');
             }
         }
 
@@ -192,7 +459,7 @@
             const govVal = (document.getElementById('scGovFilter')?.value || 'all').toLowerCase();
             const typeVal = (document.getElementById('scTypeFilter')?.value || 'all');
             const searchVal = (document.getElementById('scSearchInput')?.value || '').trim().toLowerCase();
-            const isEn = appState.lang === 'en';
+            const isEn = (typeof appState !== 'undefined' && appState && appState.lang === 'en');
 
             // تحميل تعديلات المستخدمين المحفوظة محلياً (Offline-First User Corrections)
             let userCorrections = {};
@@ -314,12 +581,23 @@
                         ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
                         : 'bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800');
 
+                const badgeText = isEn 
+                    ? (isOfficial ? 'Certified Main Dealer' : (c.type === 'quick_service' ? 'Quick Service & Lube' : 'Authorized Service Center'))
+                    : c.typeLabel;
+
+                const cardName = getLocalizedCenterName(c.name, c.nameEn);
+                const cardAgency = getLocalizedAgency(c.agency);
+                const cardGov = getLocalizedGov(c.gov, c.govEn);
+                const cardArea = getLocalizedArea(c.area);
+                const cardAddress = getLocalizedAddress(c.address);
+                const cardHours = getLocalizedHours(c.hours);
+
                 const servicesHtml = (c.services || []).map(s => 
-                    `<span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-bold rounded-md">${s}</span>`
+                    `<span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-bold rounded-md">${getLocalizedServiceTag(s)}</span>`
                 ).join(' ');
 
                 const phoneToCall = c.hotline || c.phone;
-                const phoneDisplay = c.hotline ? `الخط الساخن: ${c.hotline}` : (c.phone || '');
+                const phoneDisplay = c.hotline ? (isEn ? `Hotline: ${c.hotline}` : `الخط الساخن: ${c.hotline}`) : (c.phone ? (isEn ? `Call: ${c.phone}` : `اتصال: ${c.phone}`) : '');
 
                 // التحقق من وجود تصحيح محلي مسجل من قبل المستخدم لهذا المركز
                 const userCorr = userCorrections[c.id];
@@ -339,21 +617,16 @@
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center gap-1.5 flex-wrap mb-0.5">
-                                    <h4 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug">${c.name}</h4>
-                                    ${isVerifiedBranch ? `
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shadow-2xs shrink-0">
-                                        <i class="fa-solid fa-circle-check text-[10px] text-emerald-500"></i>
-                                        <span>${isEn ? '✓ Verified Official' : '✓ فرع موثّق ورسمي'}</span>
-                                    </span>` : ''}
+                                    <h4 class="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug">${cardName}</h4>
                                 </div>
                                 <div class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-0.5 flex items-center gap-2 flex-wrap">
-                                    <span class="flex items-center gap-1 text-sky-600 dark:text-sky-400"><i class="fa-solid fa-certificate text-[10px]"></i> <span class="truncate">${c.agency}</span></span>
+                                    <span class="flex items-center gap-1 text-sky-600 dark:text-sky-400"><i class="fa-solid fa-certificate text-[10px]"></i> <span class="truncate">${cardAgency}</span></span>
                                     <span class="text-slate-300 dark:text-slate-600">•</span>
                                     <span class="text-amber-500 font-black flex items-center gap-1 text-[11px]"><i class="fa-solid fa-star text-[10px]"></i> <span>${c.rating || '4.8'}</span></span>
                                 </div>
                             </div>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-black border ${typeBadgeClass} shrink-0">
-                                ${c.typeLabel}
+                                ${badgeText}
                             </span>
                         </div>
 
@@ -361,15 +634,15 @@
                         <div class="space-y-1 text-xs text-slate-600 dark:text-slate-300">
                             <div class="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
                                 <i class="fa-solid fa-location-dot text-rose-500 shrink-0 text-sm"></i>
-                                <span>${c.gov} - ${c.area}</span>
+                                <span>${cardGov} - ${cardArea}</span>
                             </div>
                             <div class="text-[11px] text-slate-500 dark:text-slate-400 ps-4 leading-relaxed">
-                                ${c.address}
+                                ${cardAddress}
                             </div>
-                            ${c.hours ? `
+                            ${cardHours ? `
                             <div class="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 ps-4 pt-0.5">
                                 <i class="fa-regular fa-clock text-amber-500 shrink-0"></i>
-                                <span>${c.hours}</span>
+                                <span>${cardHours}</span>
                             </div>` : ''}
                         </div>
 
@@ -378,7 +651,7 @@
                         <div class="flex items-center justify-between gap-2 px-2.5 py-1 rounded-xl bg-amber-50/90 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-[11px] text-amber-800 dark:text-amber-200">
                             <div class="flex items-center gap-1.5 truncate">
                                 <i class="fa-solid fa-location-crosshairs text-amber-500 shrink-0"></i>
-                                <span class="font-bold">تم تصحيح الموقع محلياً:</span>
+                                <span class="font-bold">${isEn ? 'Locally Corrected:' : 'تم تصحيح الموقع محلياً:'}</span>
                                 <code class="font-mono text-[10px] font-bold text-amber-700 dark:text-amber-300 truncate">${activeLat ? Number(activeLat).toFixed(5) : '-'}, ${activeLng ? Number(activeLng).toFixed(5) : '-'}</code>
                             </div>
                             <span class="px-1.5 py-0.5 rounded-md bg-amber-200/60 dark:bg-amber-900/60 text-[9px] font-black text-amber-900 dark:text-amber-100 shrink-0">Offline-First ⚡</span>
@@ -392,14 +665,14 @@
                         <!-- أزرار الإجراءات (الاتصال، GPS، ونظام التحقق والتصحيح المجتمعي) -->
                         <div class="flex items-center gap-1.5 pt-1 flex-wrap sm:flex-nowrap">
                             ${phoneToCall ? `
-                            <a href="tel:${phoneToCall}" class="flex-1 min-w-[110px] py-2 px-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-emerald-200 dark:border-emerald-800 transition-all active:scale-95" title="اتصال مباشر بالمركز">
+                            <a href="tel:${phoneToCall}" class="flex-1 min-w-[110px] py-2 px-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-emerald-200 dark:border-emerald-800 transition-all active:scale-95" title="${isEn ? 'Direct Call' : 'اتصال مباشر بالمركز'}">
                                 <i class="fa-solid fa-phone text-xs"></i>
                                 <span class="truncate">${phoneDisplay}</span>
                             </a>` : ''}
 
-                            <a href="${verifiedMapsUrl}" onclick="event.preventDefault(); openServiceCenterMap('${c.id}');" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] py-2 px-2.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all cursor-pointer" title="فتح ملف الفرع المعتمد في خرائط جوجل GPS">
+                            <a href="${verifiedMapsUrl}" onclick="event.preventDefault(); openServiceCenterMap('${c.id}');" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] py-2 px-2.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all cursor-pointer" title="${isEn ? 'Open in Google Maps GPS' : 'فتح ملف الفرع المعتمد في خرائط جوجل GPS'}">
                                 <i class="fa-solid fa-diamond-turn-right text-xs"></i>
-                                <span>فتح في الخرائط GPS 📍</span>
+                                <span>${isEn ? 'Open in GPS Maps 📍' : 'فتح في الخرائط GPS 📍'}</span>
                             </a>
 
                             <button type="button" onclick="openBranchVerificationModal('${c.id}')" class="py-2 px-2.5 ${isUserCorrected ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-amber-50 dark:bg-slate-800 dark:hover:bg-amber-950/40 text-slate-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-amber-300 border border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-700'} rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0" title="${isEn ? 'Report Error or Verify Branch Location' : '🚩 الإبلاغ عن خطأ / تحديث اللوكيشن أو تأكيد دقة الفرع'}">
@@ -414,7 +687,7 @@
             const noticeHtml = `
                 <div class="p-2.5 sm:p-3 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/50 text-[11px] text-amber-800 dark:text-amber-200 flex items-center gap-2 mt-2">
                     <i class="fa-solid fa-circle-info text-amber-600 dark:text-amber-400 text-xs shrink-0"></i>
-                    <span>*تنبيه: يمكن للمواعيد أن تتغير أحياناً في العطلات أو حسب الفرع، وللتأكد يرجى الاتصال بالأرقام الموضحة قبل التوجه للفرع.</span>
+                    <span>${isEn ? '*Note: Working hours may vary on holidays or by branch. Please call the numbers listed before visiting.' : '*تنبيه: يمكن للمواعيد أن تتغير أحياناً في العطلات أو حسب الفرع، وللتأكد يرجى الاتصال بالأرقام الموضحة قبل التوجه للفرع.'}</span>
                 </div>
             `;
 
@@ -625,7 +898,7 @@
             }, 1200);
         }
 
-        function captureCurrentGpsForCorrection() {
+        async function captureCurrentGpsForCorrection() {
             const btn = document.getElementById('scGpsCaptureBtn');
             const btnText = document.getElementById('scGpsCaptureBtnText');
             const badge = document.getElementById('scGpsAccuracyBadge');
@@ -635,57 +908,82 @@
             const coordsPreviewBox = document.getElementById('scManualCoordsPreview');
             const coordsSummary = document.getElementById('scCorrectionCoordsSummary');
 
-            if (!navigator.geolocation) {
+            if (btnText) btnText.textContent = 'جاري تحديد موقعك الفعلي عبر الأقمار الصناعية 🛰️...';
+            if (btn) btn.classList.add('opacity-75', 'pointer-events-none');
+
+            const onLocationSuccess = (lat, lng, acc) => {
+                if (latInput) latInput.value = lat;
+                if (lngInput) lngInput.value = lng;
+                const centerId = document.getElementById('scCorrectionCenterId')?.value;
+                const curCenter = (window.MOTORCARE_SERVICE_CENTERS || []).find(c => String(c.id) === String(centerId));
+                if (mapsUrlInput) {
+                    mapsUrlInput.value = getServiceCenterMapsUrl({ ...(curCenter || {}), lat, lng });
+                }
+                if (coordsSummary) coordsSummary.textContent = `${lat}, ${lng}`;
+                if (coordsPreviewBox) coordsPreviewBox.classList.remove('hidden');
+
+                if (badge) {
+                    badge.classList.remove('hidden');
+                    badge.className = 'text-[11px] font-bold text-emerald-600 dark:text-emerald-400 text-center animate-fade-in';
+                    badge.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> تم التقاط إحداثياتك بنجاح: <code>${lat}, ${lng}</code> (دقة: ±${acc} متر)`;
+                }
+
+                if (btnText) btnText.textContent = 'استخدام موقعي الحالي إذا كنت تقف أمام الفرع الآن (GPS)';
+                if (btn) btn.classList.remove('opacity-75', 'pointer-events-none');
+            };
+
+            const onLocationError = (errMsg) => {
                 if (badge) {
                     badge.classList.remove('hidden');
                     badge.className = 'text-[11px] font-bold text-rose-500 text-center';
-                    badge.textContent = 'خاصية تحديد الموقع (GPS) غير مدعومة في جهازك أو متصفحك.';
+                    badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-1"></i> ${errMsg}`;
                 }
-                return;
+                if (btnText) btnText.textContent = 'استخدام موقعي الحالي إذا كنت تقف أمام الفرع الآن (GPS)';
+                if (btn) btn.classList.remove('opacity-75', 'pointer-events-none');
+            };
+
+            // 1. فحص دعم Capacitor Geolocation الأصلي للأندرويد
+            const Geolocation = window.Capacitor?.Plugins?.Geolocation;
+            if (Geolocation && typeof Geolocation.getCurrentPosition === 'function') {
+                try {
+                    const perm = await Geolocation.checkPermissions();
+                    if (perm.location !== 'granted') {
+                        const req = await Geolocation.requestPermissions();
+                        if (req.location !== 'granted') {
+                            onLocationError('تم رفض إذن تحديد الموقع من نظام أندرويد. يرجى تفعيله من إعدادات الهاتف.');
+                            return;
+                        }
+                    }
+                    const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 15000 });
+                    const lat = parseFloat(pos.coords.latitude.toFixed(6));
+                    const lng = parseFloat(pos.coords.longitude.toFixed(6));
+                    const acc = Math.round(pos.coords.accuracy || 10);
+                    onLocationSuccess(lat, lng, acc);
+                    return;
+                } catch(e) {
+                    console.warn('[MotorCare GPS] Native Geolocation error, falling back:', e);
+                }
             }
 
-            if (btnText) btnText.textContent = 'جاري تحديد موقعك الفعلي عبر الأقمار الصناعية 🛰️...';
-            if (btn) btn.classList.add('opacity-75', 'pointer-events-none');
+            // 2. بديل متصفح الويب القياسي (Web Fallback)
+            if (!navigator.geolocation) {
+                onLocationError('خاصية تحديد الموقع (GPS) غير مدعومة في جهازك.');
+                return;
+            }
 
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     const lat = parseFloat(pos.coords.latitude.toFixed(6));
                     const lng = parseFloat(pos.coords.longitude.toFixed(6));
                     const acc = Math.round(pos.coords.accuracy);
-
-                    if (latInput) latInput.value = lat;
-                    if (lngInput) lngInput.value = lng;
-                    const centerId = document.getElementById('scCorrectionCenterId')?.value;
-                    const curCenter = (window.MOTORCARE_SERVICE_CENTERS || []).find(c => String(c.id) === String(centerId));
-                    if (mapsUrlInput) {
-                        mapsUrlInput.value = getServiceCenterMapsUrl({ ...(curCenter || {}), lat, lng });
-                    }
-                    if (coordsSummary) coordsSummary.textContent = `${lat}, ${lng}`;
-                    if (coordsPreviewBox) coordsPreviewBox.classList.remove('hidden');
-
-                    if (badge) {
-                        badge.classList.remove('hidden');
-                        badge.className = 'text-[11px] font-bold text-emerald-600 dark:text-emerald-400 text-center animate-fade-in';
-                        badge.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i> تم التقاط إحداثياتك بنجاح: <code>${lat}, ${lng}</code> (دقة: ±${acc} متر)`;
-                    }
-
-                    if (btnText) btnText.textContent = 'استخدام موقعي الحالي إذا كنت تقف أمام الفرع الآن (GPS)';
-                    if (btn) btn.classList.remove('opacity-75', 'pointer-events-none');
+                    onLocationSuccess(lat, lng, acc);
                 },
                 (err) => {
                     console.warn('[Branch Verification] Geolocation error:', err);
-                    let msg = 'تعذر الحصول على الموقع الجغرافي. يرجى التأكد من تفعيل خدمة الـ GPS وإعطاء الإذن للمتصفح.';
-                    if (err.code === 1) msg = 'تم رفض إذن تحديد الموقع الجغرافي. يرجى تفعيله من إعدادات المتصفح.';
-                    if (err.code === 3) msg = 'انتهت مهلة البحث عن إشارة GPS. يرجى المحاولة في مكان مفتوح أو إدخال الإحداثيات يدوياً.';
-
-                    if (badge) {
-                        badge.classList.remove('hidden');
-                        badge.className = 'text-[11px] font-bold text-rose-500 text-center';
-                        badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-1"></i> ${msg}`;
-                    }
-
-                    if (btnText) btnText.textContent = 'استخدام موقعي الحالي إذا كنت تقف أمام الفرع الآن (GPS)';
-                    if (btn) btn.classList.remove('opacity-75', 'pointer-events-none');
+                    let msg = 'تعذر الحصول على الموقع الجغرافي. يرجى التأكد من تفعيل خدمة الـ GPS وإعطاء الإذن.';
+                    if (err.code === 1) msg = 'تم رفض إذن تحديد الموقع الجغرافي.';
+                    if (err.code === 3) msg = 'انتهت مهلة البحث عن إشارة GPS. يرجى المحاولة في مكان مفتوح.';
+                    onLocationError(msg);
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
             );

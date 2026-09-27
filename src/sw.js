@@ -21,7 +21,7 @@ const PRECACHE_ASSETS = [
   './logo.png',
   './logo-wide.png',
   './Reports_And_App_Headers.png',
-  './logo-tight.jpg',
+  './logo-tight.png',
   './icon.png',
   './icon.svg',
   './icon-192.png',

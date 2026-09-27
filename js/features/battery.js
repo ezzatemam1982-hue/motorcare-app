@@ -64,13 +64,18 @@
             const genSel = document.getElementById('catalogGenSelect');
             if (!genSel) return;
             genSel.innerHTML = '';
+            const isEn = appState.lang === 'en';
 
             if (brand && model && CAR_BRANDS_CATALOG[brand] && CAR_BRANDS_CATALOG[brand].models && CAR_BRANDS_CATALOG[brand].models[model]) {
                 const gens = CAR_BRANDS_CATALOG[brand].models[model].generations || [];
                 gens.forEach((g, idx) => {
                     const opt = document.createElement('option');
                     opt.value = idx;
-                    opt.innerText = g.name || `جيل ${idx + 1}`;
+                    let name = g.name || (isEn ? `Gen ${idx + 1}` : `جيل ${idx + 1}`);
+                    if (isEn) {
+                        name = name.replace(/أوتوماتيك/g, 'Automatic').replace(/مانيوال/g, 'Manual').replace(/جيل/g, 'Gen');
+                    }
+                    opt.innerText = name;
                     genSel.appendChild(opt);
                 });
 
@@ -94,11 +99,15 @@
             const brand = document.getElementById('catalogBrandSelect')?.value;
             const model = document.getElementById('catalogModelSelect')?.value;
             const genIdx = parseInt(document.getElementById('catalogGenSelect')?.value) || 0;
+            const isEn = appState.lang === 'en';
+
+            const modal = document.getElementById('batteryCatalogModal');
+            if (modal) modal.dir = isEn ? 'ltr' : 'rtl';
 
             if (!brand || !model || !CAR_BRANDS_CATALOG[brand] || !CAR_BRANDS_CATALOG[brand].models[model]) {
                 card.innerHTML = `
                     <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-center text-xs text-slate-500">
-                        اختر الموديل لعرض تفاصيل ومواصفات البطارية المعتمدة.
+                        ${isEn ? 'Select car model to view certified battery OEM specifications.' : 'اختر الموديل لعرض تفاصيل ومواصفات البطارية المعتمدة.'}
                     </div>
                 `;
                 return;
@@ -111,9 +120,24 @@
             const cap = gen.batteryCapacity || '60 Ah';
             const tech = gen.batteryTech || 'SMF';
             const din = gen.batteryDIN || 'DIN60 (L2)';
-            const polarity = gen.batteryPolarity || 'L (سالب يسار / موجب يمين)';
-            const startStop = !!gen.startStop;
-            const notes = gen.batteryNotes || 'المواصفة القياسية الموصى بها من المصنع';
+            let polarity = gen.batteryPolarity || 'L (سالب يسار / موجب يمين)';
+            let notes = gen.batteryNotes || 'المواصفة القياسية الموصى بها من المصنع';
+
+            if (isEn) {
+                if (polarity.includes('سالب يسار') || polarity.includes('L')) {
+                    polarity = 'Terminal Orientation: Left Negative (L)';
+                } else if (polarity.includes('موجب يسار') || polarity.includes('R')) {
+                    polarity = 'Terminal Orientation: Right Negative (R)';
+                } else {
+                    polarity = 'Terminal Orientation: Left Negative (L)';
+                }
+                notes = 'Recommended OEM Factory Specification';
+            }
+
+            let genName = gen.name || '';
+            if (isEn) {
+                genName = genName.replace(/أوتوماتيك/g, 'Automatic').replace(/مانيوال/g, 'Manual').replace(/جيل/g, 'Gen');
+            }
 
             card.innerHTML = `
                 <div class="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50/50 dark:from-amber-950/30 dark:to-slate-800/60 border border-amber-200/80 dark:border-amber-800/60 space-y-3 shadow-sm">
@@ -123,37 +147,36 @@
                             ${typeof getCarBrandLogoHtml === 'function' ? getCarBrandLogoHtml(brand, 'w-6 h-6') : '<i class="fa-solid fa-car text-amber-500"></i>'}
                             <div>
                                 <h5 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">${brand} ${model}</h5>
-                                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">${gen.name || ''}</p>
+                                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">${genName}</p>
                             </div>
                         </div>
                         <button type="button" onclick="applyCatalogSpecToCurrentCar('${brand}', '${model}', ${genIdx})" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-black shadow-xs transition-all cursor-pointer flex items-center gap-1.5">
                             <i class="fa-solid fa-bolt"></i>
-                            <span>تطبيق لسيارتي ⚡</span>
+                            <span>${isEn ? 'Apply to My Car ⚡' : 'تطبيق لسيارتي ⚡'}</span>
                         </button>
                     </div>
 
                     <!-- شبكة المواصفات الأساسية -->
                     <div class="grid grid-cols-3 gap-2 text-center">
                         <div class="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-100 dark:border-amber-900/40 shadow-2xs">
-                            <span class="block text-[10px] text-slate-400 font-bold mb-0.5">السعة الموصى بها</span>
+                            <span class="block text-[10px] text-slate-400 font-bold mb-0.5">${isEn ? 'Recommended Capacity' : 'السعة الموصى بها'}</span>
                             <span class="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400">${cap}</span>
                         </div>
                         <div class="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-100 dark:border-amber-900/40 shadow-2xs">
-                            <span class="block text-[10px] text-slate-400 font-bold mb-0.5">التقنية المطلوبة</span>
+                            <span class="block text-[10px] text-slate-400 font-bold mb-0.5">${isEn ? 'Required Tech' : 'التقنية المطلوبة'}</span>
                             <span class="text-xs sm:text-sm font-black text-sky-600 dark:text-sky-400">${tech}</span>
                         </div>
                         <div class="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-amber-100 dark:border-amber-900/40 shadow-2xs">
-                            <span class="block text-[10px] text-slate-400 font-bold mb-0.5">المقاس القياسي</span>
+                            <span class="block text-[10px] text-slate-400 font-bold mb-0.5">${isEn ? 'Standard Size' : 'المقاس القياسي'}</span>
                             <span class="text-[11px] font-black text-slate-800 dark:text-slate-200">${din}</span>
                         </div>
-
                     </div>
 
                     <!-- تفاصيل الأقطاب والملاحظات الفنية -->
                     <div class="p-3 bg-white/90 dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 space-y-1.5 text-[11px]">
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-arrows-left-right text-amber-500"></i>
-                            <span class="font-bold text-slate-600 dark:text-slate-300">اتجاه الأقطاب:</span>
+                            <span class="font-bold text-slate-600 dark:text-slate-300">${isEn ? '' : 'اتجاه الأقطاب:'}</span>
                             <strong class="text-slate-800 dark:text-slate-100 font-black">${polarity}</strong>
                         </div>
                         <div class="flex items-start gap-2 pt-1 border-t border-slate-100 dark:border-slate-800 text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -162,14 +185,14 @@
                         </div>
                     </div>
 
-                    <!-- أشهر الماركات المتوافقة في مصر -->
+                    <!-- أشهر الماركات المتوافقة في السوق -->
                     <div class="p-2.5 bg-amber-100/50 dark:bg-amber-950/30 rounded-xl flex items-center justify-between text-[11px]">
-                        <span class="font-bold text-amber-900 dark:text-amber-200">الماركات الموصى بها في السوق:</span>
+                        <span class="font-bold text-amber-900 dark:text-amber-200">${isEn ? 'Recommended Brands:' : 'الماركات الموصى بها في السوق:'}</span>
                         <div class="flex items-center gap-1.5 font-bold text-[10px] text-slate-700 dark:text-slate-300">
-                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">كلورايد</span>
-                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">فارتا</span>
-                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">إيه سي ديلكو</span>
-                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">سولايت</span>
+                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">Solite</span>
+                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">AC Delco</span>
+                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">Varta</span>
+                            <span class="px-1.5 py-0.5 bg-white dark:bg-slate-800 rounded">Chloride</span>
                         </div>
                     </div>
                 </div>
@@ -259,6 +282,11 @@
                 syncDotCodeFromSelectors();
             }
 
+            if (typeof updateAttachmentUI === 'function') {
+                tempImages['tires'] = (t && t.warrantyImage) ? t.warrantyImage : '';
+                updateAttachmentUI('tires', tempImages['tires']);
+            }
+
             document.getElementById('tiresDetailModal')?.classList.remove('hidden');
         }
 
@@ -286,7 +314,13 @@
             }
         }
 
-        function closeTiresDetailModal() { document.getElementById('tiresDetailModal')?.classList.add('hidden'); }
+        function closeTiresDetailModal() {
+            document.getElementById('tiresDetailModal')?.classList.add('hidden');
+            if (typeof updateAttachmentUI === 'function') {
+                tempImages['tires'] = '';
+                updateAttachmentUI('tires', null);
+            }
+        }
 
         function saveTiresDetails() {
             const car = getCurrentCar();

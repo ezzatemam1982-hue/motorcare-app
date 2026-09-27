@@ -70,25 +70,69 @@
             nearbyServices: [
                 {
                     id: 'towing',
-                    queryAr: 'ونش انقاذ سيارات',
-                    queryEn: 'car towing service'
+                    queryAr: 'أقرب ونش إنقاذ سيارات من موقعي',
+                    queryEn: 'nearest towing service'
                 },
                 {
                     id: 'gas_station',
-                    queryAr: 'محطة وقود بنزينة',
-                    queryEn: 'gas station petrol'
+                    queryAr: 'أقرب محطة بنزين من موقعي',
+                    queryEn: 'nearest gas station'
                 },
                 {
                     id: 'tire_repair',
-                    queryAr: 'تصليح كاوتش بنشر سيارات',
-                    queryEn: 'tire repair shop flat tire'
+                    queryAr: 'أقرب تصليح كاوتش وإطارات من موقعي',
+                    queryEn: 'nearest tire repair shop'
                 },
                 {
                     id: 'mechanic',
-                    queryAr: 'كهربائي سيارات ميكانيكي طوارئ',
-                    queryEn: 'auto electrician car mechanic'
+                    queryAr: 'أقرب كهربائي وميكانيكي سيارات من موقعي',
+                    queryEn: 'nearest auto repair mechanic'
                 }
             ],
+
+            /**
+             * معادلة Haversine لحساب المسافة الدقيقة بالكيلومتر بين إحداثيات المستخدم والخدمات
+             */
+            getDistance(lat1, lon1, lat2, lon2) {
+                if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) return Infinity;
+                const R = 6371; // نصف قطر الأرض بالكيلومتر
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c;
+            },
+
+            /**
+             * فرز مصفوفة الخدمات الداخلية تصاعدياً بناءً على المسافة من موقع المستخدم الحالي
+             */
+            sortServicesByDistance(servicesList, userLat, userLng) {
+                if (!userLat || !userLng || !Array.isArray(servicesList)) return servicesList;
+                servicesList.forEach(item => {
+                    if (item.lat != null && item.lng != null) {
+                        item.distance = this.getDistance(userLat, userLng, item.lat, item.lng);
+                    } else {
+                        item.distance = Infinity;
+                    }
+                });
+                servicesList.sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
+                return servicesList;
+            },
+
+            /**
+             * تنسيق نص المسافة التقديرية (مثال: "على بُعد 1.2 كم" / "1.2 km away")
+             */
+            formatDistance(distKm) {
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                if (distKm == null || distKm === Infinity || isNaN(distKm)) return '';
+                if (distKm < 1) {
+                    const meters = Math.round(distKm * 1000);
+                    return isEn ? `${meters} m away` : `على بُعد ${meters} متر`;
+                }
+                return isEn ? `${distKm.toFixed(1)} km away` : `على بُعد ${distKm.toFixed(1)} كم`;
+            },
 
             switchSection(sectionId) {
                 this.activeSection = sectionId;
@@ -175,7 +219,7 @@
                             badgeEl.innerText = `${this.currentCoords.lat.toFixed(3)}, ${this.currentCoords.lng.toFixed(3)}`;
                             badgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300';
                         }
-                        if (descEl) descEl.innerText = isEn ? 'Location ready! Clicking any service below will target nearby spots around you.' : 'موقعك جاهز ومربوط! بالنقر على أي خدمة أدناه سيتم توجيهك لأقرب الأماكن في محيطك فوراً.';
+                        if (descEl) descEl.innerText = isEn ? 'Location ready! Clicking any service below will target nearest spots sorted by distance.' : 'تم تحديد الموقع بنجاح! بالنقر على أي خدمة أدناه سيتم توجيهك لأقرب الأماكن في محيطك مرتبة بالمسافة.';
                         if (btnText) btnText.innerText = isEn ? 'تحديث الـ GPS 🔄' : 'تحديث الـ GPS 🔄';
                         if (actionBtn) actionBtn.classList.remove('opacity-70', 'pointer-events-none');
                         if (viewBtn) viewBtn.classList.remove('hidden');
@@ -221,24 +265,55 @@
             },
 
             findNearby(serviceId) {
-                const isEn = appState.lang === 'en';
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
                 const srv = this.nearbyServices.find(s => s.id === serviceId) || this.nearbyServices[0];
-                const query = isEn ? srv.queryEn : srv.queryAr;
+                const searchQuery = isEn ? srv.queryEn : srv.queryAr;
 
-                if (typeof showNotification === 'function') {
-                    showNotification(isEn ? `Opening Google Maps for nearest ${query}...` : `جاري فتح خرائط جوجل لأقرب ${srv.queryAr}... 🗺️`, 'info');
-                }
+                const openMapsWithLocation = (coords) => {
+                    if (typeof showNotification === 'function') {
+                        showNotification(isEn ? `Opening Google Maps for ${srv.queryEn}... 🗺️` : `جاري فتح خرائط جوجل لـ ${srv.queryAr}... 🗺️`, 'info');
+                    }
 
-                if (this.currentCoords && this.currentCoords.lat) {
-                    // البحث القياسي المعتمد في خرائط جوجل بحسب إحداثيات موقعك الحي
-                    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}&center=${this.currentCoords.lat},${this.currentCoords.lng}`;
-                    this.safelyOpenUrl(url);
+                    if (coords && coords.lat && coords.lng) {
+                        const userLat = coords.lat;
+                        const userLng = coords.lng;
+                        const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}/@${userLat},${userLng},16.5z`;
+                        
+                        // فحص إذا كان التطبيق يعمل على بيئة أندرويد الأصلية عبر Capacitor
+                        const isNativeAndroid = typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
+                        if (isNativeAndroid) {
+                            try {
+                                const geoUrl = `geo:${userLat},${userLng}?q=${encodeURIComponent(searchQuery)}&z=17`;
+                                if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+                                    window.Capacitor.Plugins.Browser.open({ url: mapsUrl }).catch(() => {
+                                        window.open(geoUrl, '_system');
+                                    });
+                                } else {
+                                    window.open(geoUrl, '_system');
+                                }
+                                return;
+                            } catch (geoErr) {
+                                console.warn('[MotorCare Emergency] Native geo URI error, falling back to web mapsUrl:', geoErr);
+                            }
+                        }
+
+                        this.safelyOpenUrl(mapsUrl);
+                    } else {
+                        const fallbackUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchQuery)}`;
+                        this.safelyOpenUrl(fallbackUrl);
+                    }
+                };
+
+                if (this.currentCoords && this.currentCoords.lat && this.currentCoords.lng) {
+                    openMapsWithLocation(this.currentCoords);
                 } else {
-                    // البحث عن الخدمة الأقرب في محيط المستخدم مباشرة
-                    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query + (isEn ? ' near me' : ' بالقرب مني'))}`;
-                    this.safelyOpenUrl(url);
-                    // تفعيل سحب الإحداثيات في الخلفية
-                    this.requestGpsLocation(false);
+                    if (typeof showNotification === 'function') {
+                        showNotification(isEn ? 'Fetching GPS location to target nearest services...' : 'جاري سحب موقعك الجغرافي لترتيب والوصول للخدمة الأقرب... 🛰️', 'info');
+                    }
+                    this.requestGpsLocation(false, (coords) => {
+                        openMapsWithLocation(coords);
+                    });
                 }
             },
 
@@ -300,7 +375,7 @@
             },
 
             async pickDeviceContact() {
-                const isEn = appState.lang === 'en';
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
                 this.toggleAddContactForm(true);
 
                 // فحص دعم Contact Picker API في متصفحات الموبايل (Chrome Android / PWA)
@@ -324,26 +399,28 @@
                             }
                         }
                     } catch (err) {
-                        console.log('[MotorCare] Contact picker dismissed or error:', err);
+                        console.log('[MotorCare] Contact picker dismissed or cancelled:', err);
                     }
                 } else {
-                    // بديل متوافق للأجهزة التي لا تدعم Contact Picker API (اختيار ملف .vcf أو إدخال يدوي)
-                    const vcfInput = document.getElementById('emergencyVcfFileInput');
-                    if (vcfInput) {
-                        if (typeof showNotification === 'function') {
-                            showNotification(isEn ? 'Opening contact card (.vcf) picker...' : 'سحب جهات الاتصال التلقائي يعمل في متصفح كروم وتطبيق الهاتف، يمكنك اختيار كارت جهة الاتصال (.vcf) أو إدخاله يدوياً 📇', 'info');
-                        }
-                        vcfInput.click();
-                    } else if (typeof showNotification === 'function') {
-                        showNotification(isEn ? 'Direct contact access is available on Mobile Chrome / Android PWA.' : 'ميزة سحب جهات الاتصال المباشرة مدعومة على متصفح كروم بالهاتف وتطبيق PWA.', 'info');
+                    // في حال عدم دعم النظام للخاصية إظهار تنبيه لطيف للمستخدم بدلاً من تعليق الزر
+                    if (typeof showNotification === 'function') {
+                        showNotification(
+                            isEn 
+                                ? 'Direct contact access is not supported on this browser/device. Please enter the number manually ✍️' 
+                                : 'خاصية سحب جهات الاتصال التلقائي غير مدعومة في جهازك/متصفحك الحالي، يرجى كتابة الرقم والاسم يدوياً ✍️', 
+                            'info', 
+                            4500
+                        );
                     }
+                    const phoneInput = document.getElementById('emergencyContactPhoneInput');
+                    if (phoneInput) phoneInput.focus();
                 }
             },
 
             handleVcfImport(event) {
                 const file = event.target.files && event.target.files[0];
                 if (!file) return;
-                const isEn = appState.lang === 'en';
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const text = e.target.result;
@@ -375,6 +452,7 @@
             toggleAddContactForm(show = null) {
                 const form = document.getElementById('emergencyAddContactForm');
                 const btnText = document.getElementById('btnToggleAddContactText');
+                const list = document.getElementById('emergencyPersonalList');
                 if (!form) return;
                 const isCurrentlyHidden = form.classList.contains('hidden');
                 const shouldShow = (show === null) ? isCurrentlyHidden : show;
@@ -382,11 +460,18 @@
                 if (shouldShow) {
                     form.classList.remove('hidden');
                     if (btnText) btnText.innerText = 'إغلاق النموذج ✕';
+                    // إخفاء كارت "لم تقم بحفظ أي أرقام بعد" تلقائياً عند فتح نموذج الإدخال
+                    if (list && this.getPersonalContacts().length === 0) {
+                        list.classList.add('hidden');
+                    }
                     const nameInput = document.getElementById('emergencyContactNameInput');
                     if (nameInput) nameInput.focus();
                 } else {
                     form.classList.add('hidden');
                     if (btnText) btnText.innerText = 'إضافة رقم ➕';
+                    if (list) {
+                        list.classList.remove('hidden');
+                    }
                 }
             },
 
@@ -461,8 +546,15 @@
                 if (!container) return;
                 const isEn = appState.lang === 'en';
                 const contacts = this.getPersonalContacts();
+                const form = document.getElementById('emergencyAddContactForm');
+                const isFormOpen = form && !form.classList.contains('hidden');
 
                 if (contacts.length === 0) {
+                    if (isFormOpen) {
+                        container.classList.add('hidden');
+                    } else {
+                        container.classList.remove('hidden');
+                    }
                     container.innerHTML = `
                         <div class="p-6 text-center rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-500 flex items-center justify-center mx-auto text-xl">
@@ -475,13 +567,9 @@
                                     : 'أضف أرقام الميكانيكي الخاص بك، ونش تثق به، أو كهربائي سيارتك ليكونوا دائماً بضغطة زر واحدة عند حدوث أي طارئ على الطريق.'}
                             </p>
                             <div class="mt-2.5 flex items-center justify-center gap-2 flex-wrap">
-                                <button type="button" onclick="MotorCareEmergency.pickDeviceContact()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-xs inline-flex items-center gap-1.5 active:scale-95">
-                                    <i class="fa-solid fa-address-book"></i>
-                                    <span>${isEn ? 'Import From Phone 📱' : 'سحب من الهاتف 📱'}</span>
-                                </button>
-                                <button type="button" onclick="MotorCareEmergency.toggleAddContactForm(true)" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold cursor-pointer transition-all shadow-xs inline-flex items-center gap-1.5 active:scale-95">
+                                <button type="button" onclick="MotorCareEmergency.toggleAddContactForm(true)" class="px-5 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-xs inline-flex items-center gap-1.5 active:scale-95">
                                     <i class="fa-solid fa-plus"></i>
-                                    <span>${isEn ? 'Manual Entry ✍️' : 'إدخال يدوي ✍️'}</span>
+                                    <span>${isEn ? 'Add Emergency Number ➕' : 'إضافة رقم طوارئ ➕'}</span>
                                 </button>
                             </div>
                         </div>
@@ -489,6 +577,7 @@
                     return;
                 }
 
+                container.classList.remove('hidden');
                 let html = '';
                 contacts.forEach(c => {
                     const safeName = MotorCareSecurity.escapeHtml(c.name || '');

@@ -134,7 +134,7 @@
                 list.innerHTML += `
                     <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs">
                         <div class="flex items-center gap-2.5 min-w-0">
-                            ${getCarBrandLogoHtml(c.brand, 'w-9 h-9')}
+                            ${c.photo ? `<img src="${c.photo}" class="w-9 h-9 rounded-xl object-cover border border-sky-400 shrink-0 cursor-pointer" onclick="openImageViewer('${c.photo}', '${c.brand} ${getCleanCarDisplayName(c.model)}')">` : getCarBrandLogoHtml(c.brand, 'w-9 h-9')}
                             <div class="min-w-0 truncate">
                                 <strong class="text-slate-900 dark:text-white">${c.brand} ${getCleanCarDisplayName(c.model)}</strong> (${c.year})
                                 ${isCurrent ? `<span class="mx-2 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">${activeBadgeTxt}</span>` : ''}
@@ -217,6 +217,14 @@
                 if (el) el.dispatchEvent(new Event('input'));
             });
 
+            if (typeof tempImages === 'undefined') tempImages = {};
+            if (typeof window.tempImages === 'undefined') window.tempImages = {};
+            tempImages['edit_car_photo'] = car.photo || '';
+            window.tempImages['edit_car_photo'] = car.photo || '';
+            if (typeof updateAttachmentUI === 'function') {
+                updateAttachmentUI('edit_car_photo', car.photo || '');
+            }
+
             document.getElementById('editCarModal')?.classList.remove('hidden');
         }
 
@@ -290,6 +298,10 @@
             car.vin = vinRaw;
             car.notes = MotorCareSecurity.sanitizeText(document.getElementById('editCarNotesInput')?.value || car.notes, 500);
 
+            if (typeof tempImages !== 'undefined' && tempImages['edit_car_photo'] !== undefined) {
+                car.photo = tempImages['edit_car_photo'];
+            }
+
             saveAppState('car_edited');
             closeEditCarModal();
             renderDashboard();
@@ -300,6 +312,12 @@
             closeGarageModal();
             const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
             const hasCar = (typeof getCurrentCar === 'function' && !!getCurrentCar()) || (typeof appState !== 'undefined' && Array.isArray(appState.cars) && appState.cars.length > 0);
+
+            if (typeof tempImages !== 'undefined') tempImages['car_photo'] = '';
+            if (typeof window.tempImages !== 'undefined') window.tempImages['car_photo'] = '';
+            if (typeof updateAttachmentUI === 'function') {
+                updateAttachmentUI('car_photo', null);
+            }
 
             const searchInput = document.getElementById('brandSearchInput');
             if (searchInput) searchInput.value = '';

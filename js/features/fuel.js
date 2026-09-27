@@ -30,6 +30,7 @@
                     document.getElementById('fuelCostInput').value = log.cost || '';
                     if (log.receiptImage) {
                         tempImages['fuel'] = log.receiptImage;
+                        if (typeof updateAttachmentUI === 'function') updateAttachmentUI('fuel', log.receiptImage);
                         if (badge) badge.classList.remove('hidden');
                         if (previewBox) previewBox.classList.remove('hidden');
                         if (previewThumb) previewThumb.src = log.receiptImage;
@@ -45,103 +46,282 @@
                 document.getElementById('fuelCostInput').value = '';
                 clearFuelImageAttached();
             }
-            document.getElementById('fuelModal').classList.remove('hidden');
+            const modal = document.getElementById('fuelModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            }
         }
 
         function closeFuelModal() { 
             editingFuelId = null;
-            document.getElementById('fuelModal').classList.add('hidden'); 
+            if (typeof tempImages !== 'undefined') tempImages['fuel'] = '';
+            if (typeof window.tempImages !== 'undefined') window.tempImages['fuel'] = '';
+
+            // تصفير الصورة المرفقة وعناصر المعاينة
+            if (typeof clearFuelImageAttached === 'function') {
+                clearFuelImageAttached();
+            }
+            if (typeof clearAttachedImage === 'function') {
+                clearAttachedImage('fuel');
+            }
+            try { sessionStorage.removeItem('motorCare_tempImage_fuel'); } catch(e) {}
+
+            // تصفير حقول النموذج بالكامل
+            const odoInput = document.getElementById('fuelOdometerInput');
+            if (odoInput) odoInput.value = '';
+            const litersInput = document.getElementById('fuelLitersInput');
+            if (litersInput) litersInput.value = '';
+            const costInput = document.getElementById('fuelCostInput');
+            if (costInput) costInput.value = '';
+            const octaneSelect = document.getElementById('fuelOctaneSelect');
+            if (octaneSelect) octaneSelect.value = 'بنزين 92';
+            const dateInput = document.getElementById('fuelDateInput');
+            if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+
+            // إخفاء النافذة وتصفير State
+            const modal = document.getElementById('fuelModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+                modal.classList.remove('active', 'flex');
+            }
+
+            const saveBtn = document.getElementById('saveFuelBtn');
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
+                saveBtn.innerHTML = isEn ? 'Save' : 'حفظ';
+            }
         }
 
-        function saveFuelLog() {
+        async function saveFuelLog() {
             const car = getCurrentCar();
             if (!car) return;
-            const isEn = appState.lang === 'en';
+            const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
 
-            const odoRaw = document.getElementById('fuelOdometerInput')?.value;
-            const odo = MotorCareSecurity.parsePositiveInt(odoRaw, car.odometer, 0, 5000000);
+            const saveBtn = document.getElementById('saveFuelBtn');
+            const restoreSaveBtn = () => {
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    saveBtn.innerHTML = isEn ? 'Save' : 'حفظ';
+                }
+            };
 
-            const litersRaw = document.getElementById('fuelLitersInput')?.value;
-            const liters = MotorCareSecurity.parsePositiveFloat(litersRaw, 0, 0, 1000);
-
-            const costRaw = document.getElementById('fuelCostInput')?.value;
-            const cost = MotorCareSecurity.parsePositiveFloat(costRaw, 0, 0, 500000);
-
-            if (liters <= 0) {
-                alert(isEn ? 'Please enter a valid positive fuel amount in liters.' : 'يرجى إدخال كمية بنزين موجبة وصحيحة باللتر.');
-                document.getElementById('fuelLitersInput')?.focus();
-                return;
+            // 1. تفعيل وضع التحميل وتعطيل الزر فوراً لمنع التكرار عند الضغط المتعدد
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin ml-1"></i> <span>${isEn ? 'Saving...' : 'جاري الحفظ...'}</span>`;
             }
 
-            if (cost < 0) {
-                alert(isEn ? 'Fuel cost cannot be negative.' : 'لا يمكن أن تكون تكلفة البنزين قيمة سالبة.');
-                document.getElementById('fuelCostInput')?.focus();
-                return;
-            }
+            try {
+                const odoRaw = document.getElementById('fuelOdometerInput')?.value;
+                const odo = MotorCareSecurity.parsePositiveInt(odoRaw, car.odometer, 0, 5000000);
 
-            const octaneRaw = document.getElementById('fuelOctaneSelect')?.value || 'بنزين 92';
-            const octane = MotorCareSecurity.sanitizeText(octaneRaw, 40);
-            const dateVal = document.getElementById('fuelDateInput')?.value || new Date().toISOString().split('T')[0];
-            const receiptImg = tempImages['fuel'] || '';
+                const litersRaw = document.getElementById('fuelLitersInput')?.value;
+                const liters = MotorCareSecurity.parsePositiveFloat(litersRaw, 0, 0, 1000);
 
-            const currentOdometer = Number(car.odometer) || 0;
+                const costRaw = document.getElementById('fuelCostInput')?.value;
+                const cost = MotorCareSecurity.parsePositiveFloat(costRaw, 0, 0, 500000);
 
-            // 1. Universal Ceiling Validation: عند تعديل تفويلة بنزين سابقة، لا يمكن أن تتجاوز القراءة عداد السيارة الحالي
-            if (editingFuelId && odo > currentOdometer) {
-                const msg = isEn
-                    ? `Reading Error: Past fuel reading cannot be greater than the current vehicle odometer (${currentOdometer.toLocaleString()} km).`
-                    : `خطأ في القراءة: لا يمكن أن تكون قراءة تفويلة الوقود السابقة أكبر من قراءة عداد السيارة الحالي (${currentOdometer.toLocaleString()} كم).`;
+                if (liters <= 0) {
+                    alert(isEn ? 'Please enter a valid positive fuel amount in liters.' : 'يرجى إدخال كمية بنزين موجبة وصحيحة باللتر.');
+                    restoreSaveBtn();
+                    document.getElementById('fuelLitersInput')?.focus();
+                    return;
+                }
+
+                if (cost < 0) {
+                    alert(isEn ? 'Fuel cost cannot be negative.' : 'لا يمكن أن تكون تكلفة البنزين قيمة سالبة.');
+                    restoreSaveBtn();
+                    document.getElementById('fuelCostInput')?.focus();
+                    return;
+                }
+
+                const octaneRaw = document.getElementById('fuelOctaneSelect')?.value || 'بنزين 92';
+                const octane = MotorCareSecurity.sanitizeText(octaneRaw, 40);
+                const dateVal = document.getElementById('fuelDateInput')?.value || new Date().toISOString().split('T')[0];
+                let receiptImg = (typeof tempImages !== 'undefined' && tempImages['fuel']) ? tempImages['fuel'] : '';
+
+                const currentOdometer = Number(car.odometer) || 0;
+
+                // 2. التحقق الذكي 1: منع إدخال قراءة عداد أقل من آخر قراءة مسجلة للسيارة عند إضافة تفويلة جديدة
+                if (!editingFuelId && currentOdometer > 0 && odo < currentOdometer) {
+                    const msg = isEn
+                        ? `Reading Error: Odometer reading cannot be lower than the vehicle's last recorded reading (${currentOdometer.toLocaleString()} km).`
+                        : `خطأ في القراءة: لا يمكن إدخال قراءة عداد (${odo.toLocaleString()} كم) أقل من آخر قراءة مسجلة للسيارة (${currentOdometer.toLocaleString()} كم).`;
+                    if (typeof showNotification === 'function') {
+                        showNotification(msg, 'error', 5500);
+                    } else {
+                        alert(msg);
+                    }
+                    restoreSaveBtn();
+                    document.getElementById('fuelOdometerInput')?.focus();
+                    return;
+                }
+
+                // سقف التعديل: عند تعديل تفويلة بنزين سابقة، لا يمكن أن تتجاوز القراءة عداد السيارة الحالي
+                if (editingFuelId && odo > currentOdometer) {
+                    const msg = isEn
+                        ? `Reading Error: Past fuel reading cannot be greater than current vehicle odometer (${currentOdometer.toLocaleString()} km).`
+                        : `خطأ في القراءة: لا يمكن أن تكون قراءة تفويلة الوقود السابقة أكبر من قراءة عداد السيارة الحالي (${currentOdometer.toLocaleString()} كم).`;
+                    if (typeof showNotification === 'function') {
+                        showNotification(msg, 'error', 5500);
+                    } else {
+                        alert(msg);
+                    }
+                    restoreSaveBtn();
+                    document.getElementById('fuelOdometerInput')?.focus();
+                    return;
+                }
+
+                // 3. التحقق الذكي 2: منع تكرار حفظ التفويلة عند نفس قراءة العداد المسجلة مسبقاً
+                const isDuplicateOdo = (car.fuelLogs || []).some(f => (!editingFuelId || f.id !== editingFuelId) && Number(f.odometer) === odo);
+                if (isDuplicateOdo) {
+                    const msg = isEn
+                        ? `A fuel log with this exact odometer reading (${odo.toLocaleString()} km) is already registered.`
+                        : `توجد تفويلة مسجلة مسبقاً بنفس قراءة العداد (${odo.toLocaleString()} كم). يرجى التأكد من القراءة لمنع التكرار.`;
+                    if (typeof showNotification === 'function') {
+                        showNotification(msg, 'warning', 5500);
+                    } else {
+                        alert(msg);
+                    }
+                    restoreSaveBtn();
+                    document.getElementById('fuelOdometerInput')?.focus();
+                    return;
+                }
+
+                // 4. التحقق الذكي 3: منع الأخطاء الطباعية الفادحة (إذا تجاوزت الزيادة عن آخر تفويلة أكثر من 1500 كم)
+                const lastRecordedLogOdo = (car.fuelLogs && car.fuelLogs.length > 0) ? Number(car.fuelLogs[0].odometer) || currentOdometer : currentOdometer;
+                const distanceDiff = odo - lastRecordedLogOdo;
+                if (!editingFuelId && lastRecordedLogOdo > 0 && distanceDiff > 1500) {
+                    const confirmMsg = isEn
+                        ? `The distance difference is very large (+${distanceDiff.toLocaleString()} km). Are you sure this reading is correct?`
+                        : `فرق المسافة كبير جداً (+${distanceDiff.toLocaleString()} كم)، هل أنت متأكد من صحة القراءة؟`;
+
+                    if (typeof showCustomConfirm === 'function') {
+                        showCustomConfirm(
+                            confirmMsg,
+                            () => {
+                                // تأكيد من المستخدم: إكمال الحفظ
+                                executeFinalSaveFuelLog(car, odo, liters, cost, octane, dateVal, receiptImg, currentOdometer, isEn);
+                            },
+                            () => {
+                                // تعديل: إلغاء الحفظ وإعادة التركيز على خانة العداد
+                                restoreSaveBtn();
+                                document.getElementById('fuelOdometerInput')?.focus();
+                            },
+                            {
+                                title: isEn ? 'Large Distance Difference Warning' : 'تنبيه فرق مسافة كبير جداً',
+                                confirmText: isEn ? 'Confirm' : 'تأكيد',
+                                cancelText: isEn ? 'Edit' : 'تعديل'
+                            }
+                        );
+                        return;
+                    }
+                }
+
+                // إذا لم يكن هناك قفزة تتجاوز 1500 كم، احفظ مباشرة
+                await executeFinalSaveFuelLog(car, odo, liters, cost, octane, dateVal, receiptImg, currentOdometer, isEn);
+
+            } catch (err) {
+                console.error('[MotorCare] Error in saveFuelLog:', err);
                 if (typeof showNotification === 'function') {
-                    showNotification(msg, 'error', 5500);
+                    showNotification(isEn ? 'An error occurred while saving fuel log.' : 'حدث خطأ أثناء حفظ التفويلة، يرجى المحاولة مرة أخرى.', 'error');
+                }
+                restoreSaveBtn();
+                closeFuelModal();
+            }
+        }
+
+        async function executeFinalSaveFuelLog(car, odo, liters, cost, octane, dateVal, receiptImg, currentOdometer, isEn) {
+            try {
+                // ضغط صور الإيصالات قبل تحويلها وحفظها لتجنب امتلاء التخزين LocalStorage QuotaExceededError
+                if (receiptImg && typeof receiptImg === 'string' && receiptImg.startsWith('data:image')) {
+                    try {
+                        if (typeof compressBase64Image === 'function') {
+                            receiptImg = await compressBase64Image(receiptImg, 1000, 0.65);
+                        } else if (typeof compressAndResizeImage === 'function') {
+                            receiptImg = await compressAndResizeImage(receiptImg, 1000, 0.65);
+                        }
+                    } catch (compErr) {
+                        console.warn('[MotorCare] Receipt compression notice:', compErr);
+                    }
+                }
+
+                // تحديث عداد السيارة تلقائياً إذا كانت قراءة التفويلة الجديدة أكبر
+                let odometerAutoUpdated = false;
+                if (!editingFuelId && odo > currentOdometer) {
+                    car.odometer = odo;
+                    odometerAutoUpdated = true;
+                }
+
+                if (editingFuelId) {
+                    const index = car.fuelLogs.findIndex(f => f.id === editingFuelId);
+                    if (index !== -1) {
+                        car.fuelLogs[index].odometer = odo;
+                        car.fuelLogs[index].liters = liters;
+                        car.fuelLogs[index].cost = cost;
+                        car.fuelLogs[index].octane = octane;
+                        car.fuelLogs[index].date = dateVal;
+                        if (receiptImg) car.fuelLogs[index].receiptImage = receiptImg;
+                    }
                 } else {
-                    alert(msg);
+                    if (!car.fuelLogs) car.fuelLogs = [];
+                    car.fuelLogs.unshift({ 
+                        id: 'f_' + Date.now(), 
+                        odometer: odo, 
+                        liters, 
+                        cost, 
+                        octane,
+                        date: dateVal,
+                        receiptImage: receiptImg
+                    });
                 }
-                document.getElementById('fuelOdometerInput')?.focus();
-                return;
-            }
 
-            // 2. Dynamic Auto-Update on New Operations: عند تسجيل تفويلة جديدة بقراءة أعلى، يتم تحديث عداد السيارة تلقائياً
-            let odometerAutoUpdated = false;
-            if (!editingFuelId && odo > currentOdometer) {
-                car.odometer = odo;
-                odometerAutoUpdated = true;
-            }
-
-            if (editingFuelId) {
-                const index = car.fuelLogs.findIndex(f => f.id === editingFuelId);
-                if (index !== -1) {
-                    car.fuelLogs[index].odometer = odo;
-                    car.fuelLogs[index].liters = liters;
-                    car.fuelLogs[index].cost = cost;
-                    car.fuelLogs[index].octane = octane;
-                    car.fuelLogs[index].date = dateVal;
-                    if (receiptImg) car.fuelLogs[index].receiptImage = receiptImg;
+                // حفظ البيانات محلياً مع معالجة خطأ امتلاء المساحة QuotaExceededError
+                try {
+                    SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
+                } catch (quotaErr) {
+                    console.warn('[MotorCare] LocalStorage write error, attempting without heavy images:', quotaErr);
+                    if (car.fuelLogs && car.fuelLogs[0]) {
+                        car.fuelLogs[0].receiptImage = ''; // تفريغ الصورة لتفادي انهيار الحفظ
+                    }
+                    try {
+                        SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
+                    } catch (e2) {}
                 }
-            } else {
-                car.fuelLogs.unshift({ 
-                    id: 'f_' + Date.now(), 
-                    odometer: odo, 
-                    liters, 
-                    cost, 
-                    octane,
-                    date: dateVal,
-                    receiptImage: receiptImg
-                });
-            }
 
-            tempImages['fuel'] = '';
-            editingFuelId = null;
-            SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
-            syncUserDataToCloud('fuel_saved');
-            closeFuelModal();
-            renderDashboard();
+                if (typeof syncUserDataToCloud === 'function') {
+                    syncUserDataToCloud('fuel_saved');
+                }
 
-            if (odometerAutoUpdated && typeof showNotification === 'function') {
-                showNotification(isEn
-                    ? `Vehicle odometer automatically updated to ${odo.toLocaleString()} km for this new fuel entry ✓`
-                    : `تم تحديث قراءة عداد السيارة تلقائياً إلى (${odo.toLocaleString()} كم) لمواكبة تفويلة الوقود الجديدة ✓`,
-                    'info', 4500
-                );
+                if (typeof renderDashboard === 'function') {
+                    renderDashboard();
+                }
+
+                if (odometerAutoUpdated && typeof showNotification === 'function') {
+                    showNotification(isEn
+                        ? `Vehicle odometer automatically updated to ${odo.toLocaleString()} km for this new fuel entry ✓`
+                        : `تم تحديث قراءة عداد السيارة تلقائياً إلى (${odo.toLocaleString()} كم) لمواكبة تفويلة الوقود الجديدة ✓`,
+                        'info', 4500
+                    );
+                } else if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Fuel log saved successfully! ⛽' : 'تم حفظ تفويلة البنزين بنجاح! ⛽', 'success', 3000);
+                }
+            } catch (saveErr) {
+                console.error('[MotorCare] Final save fuel log error:', saveErr);
+                if (typeof showNotification === 'function') {
+                    showNotification(isEn ? 'Failed to save fuel log.' : 'تعذر حفظ بيانات التفويلة.', 'error');
+                }
+            } finally {
+                // ضمان تصفير النموذج وإغلاق النافذة دائماً دون تجميد
+                if (typeof tempImages !== 'undefined') tempImages['fuel'] = '';
+                editingFuelId = null;
+                closeFuelModal();
             }
         }
 

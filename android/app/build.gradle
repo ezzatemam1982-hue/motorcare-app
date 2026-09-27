@@ -5,19 +5,26 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.motorcare.app"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 23
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile file('motorcare-release-key.jks')
+            storePassword 'MotorCare@2026'
+            keyAlias 'motorcare'
+            keyPassword 'MotorCare@2026'
         }
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -25,8 +32,25 @@ android {
 }
 
 repositories {
-    flatDir{
+    flatDir {
         dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+// حل مشكلة سحب نسخ الـ JVM بدلاً من نسخ Android
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "androidx.datastore") {
+            if (requested.name == "datastore-preferences-jvm" || requested.name == "datastore-preferences") {
+                useTarget("androidx.datastore:datastore-preferences-android:1.1.1")
+            }
+            if (requested.name == "datastore-core-jvm" || requested.name == "datastore-core") {
+                useTarget("androidx.datastore:datastore-core-android:1.1.1")
+            }
+            if (requested.name == "datastore-jvm" || requested.name == "datastore") {
+                useTarget("androidx.datastore:datastore-android:1.1.1")
+            }
+        }
     }
 }
 
@@ -36,19 +60,26 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
+
+    // نسخ أندرويد الصريحة لمكتبة DataStore
+    implementation "androidx.datastore:datastore-preferences-android:1.1.1"
+    implementation "androidx.datastore:datastore-core-android:1.1.1"
+    implementation "androidx.datastore:datastore-android:1.1.1"
+
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+    dependencies {
+        // Import the BoM for the Firebase platform
+        implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
+
+
+        implementation("com.google.firebase:firebase-perf")
+    }
 }
 
 apply from: 'capacitor.build.gradle'
 
-try {
-    def servicesJSON = file('google-services.json')
-    if (servicesJSON.text) {
-        apply plugin: 'com.google.gms.google-services'
-    }
-} catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
-}
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'

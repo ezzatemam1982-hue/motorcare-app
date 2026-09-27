@@ -105,6 +105,11 @@
                     </div>
                 `;
             });
+
+            const inspImg = (car.inspectionChecklist && car.inspectionChecklist.image) || (typeof tempImages !== 'undefined' ? tempImages['inspection'] : '') || '';
+            if (typeof updateAttachmentUI === 'function') {
+                updateAttachmentUI('inspection', inspImg);
+            }
         }
 
         function saveInspectionChecklist() {
@@ -119,6 +124,10 @@
                     notes: notesInput ? notesInput.value.trim() : ''
                 };
             });
+
+            if (typeof tempImages !== 'undefined' && tempImages['inspection'] !== undefined) {
+                car.inspectionChecklist.image = tempImages['inspection'];
+            }
 
             SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
             syncUserDataToCloud('inspection_updated');

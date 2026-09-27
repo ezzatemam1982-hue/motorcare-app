@@ -104,7 +104,7 @@ const assert = require('assert');
     console.log('   All cards have labeled Google Maps links:', cardsValidation.allHaveLabels);
     console.log('   All cards have openServiceCenterMap action handler:', cardsValidation.allHaveOpenAction);
     cardsValidation.samples.forEach((s, idx) => {
-        console.log(`   Sample [${idx+1}]: ${s.title}`);
+        console.log(`   Sample [${idx + 1}]: ${s.title}`);
         console.log(`     href: ${s.href}`);
         console.log(`     onclick: ${s.onclick}`);
     });

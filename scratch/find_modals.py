@@ -1,14 +1,11 @@
-import re
+import sys
+
+sys.stdout.reconfigure(encoding='utf-8')
 
 with open('index.html', 'r', encoding='utf-8') as f:
-    content = f.read()
+    lines = f.readlines()
 
-modal_ids = re.findall(r'id=["\']([^"\']*[Mm]odal[^"\']*)["\']', content)
-print("Found modals:", len(modal_ids))
-for m in sorted(set(modal_ids)):
-    print("-", m)
-
-drawers = re.findall(r'id=["\']([^"\']*[Dd]rawer[^"\']*)["\']', content)
-print("Found drawers:", len(drawers))
-for d in sorted(set(drawers)):
-    print("-", d)
+for i, line in enumerate(lines, 1):
+    l = line.strip()
+    if any(k in l for k in ['type="file"', 'accept="image', 'handleImageInput', 'CameraSource', 'openImageAttachmentActionSheet']):
+        print(f"L{i}: {l[:150]}")

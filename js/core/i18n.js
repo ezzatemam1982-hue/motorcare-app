@@ -35,8 +35,16 @@
             document.documentElement.lang = appState.lang;
             document.documentElement.dir = isEn ? 'ltr' : 'rtl';
 
+            ['mobileMoreDrawerModal', 'accountCenterModal', 'topHeaderDropdownMenu', 'trafficFinesModal', 'batteryCatalogModal', 'serviceCentersModal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.dir = isEn ? 'ltr' : 'rtl';
+            });
+
             const langBtn = document.getElementById('langBtnText');
             if (langBtn) langBtn.innerText = isEn ? 'العربية' : 'EN';
+            document.querySelectorAll('.langBtnText').forEach(el => {
+                el.innerText = isEn ? 'العربية' : 'EN';
+            });
             const landingLangBtn = document.getElementById('landingLangBtnText');
             if (landingLangBtn) landingLangBtn.innerText = isEn ? 'العربية' : 'EN';
             const sText = document.getElementById('authSubmitBtnText');
@@ -111,6 +119,22 @@
                 if (typeof updateDriverToolsLanguage === 'function') updateDriverToolsLanguage();
                 if (typeof renderDriverToolsData === 'function') renderDriverToolsData();
             }
+
+            const bcModal = document.getElementById('batteryCatalogModal');
+            if (bcModal && !bcModal.classList.contains('hidden')) {
+                if (typeof renderCatalogBatteryResult === 'function') renderCatalogBatteryResult();
+            }
+
+            const scModal = document.getElementById('serviceCentersModal');
+            if (scModal && !scModal.classList.contains('hidden')) {
+                if (typeof populateServiceCenterFilters === 'function') populateServiceCenterFilters();
+                if (typeof renderServiceCenters === 'function') renderServiceCenters();
+            }
+
+            const tfModal = document.getElementById('trafficFinesModal');
+            if (tfModal && !tfModal.classList.contains('hidden')) {
+                if (typeof openTrafficFinesModal === 'function') openTrafficFinesModal();
+            }
         }
 
 // ==========================================================================
@@ -119,3 +143,4 @@
 try { if (typeof getLocalizedItemName !== 'undefined') window.getLocalizedItemName = getLocalizedItemName; } catch (e) {}
 try { if (typeof toggleLanguage !== 'undefined') window.toggleLanguage = toggleLanguage; } catch (e) {}
 try { if (typeof applyLanguageSettings !== 'undefined') window.applyLanguageSettings = applyLanguageSettings; } catch (e) {}
+try { window.applyLanguage = function(lang) { if (lang && typeof appState !== 'undefined') appState.lang = lang; applyLanguageSettings(); }; } catch (e) {}

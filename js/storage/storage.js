@@ -409,46 +409,58 @@
             };
         }
 
+        function compressBase64Image(dataUrl, maxDimension = 1000, quality = 0.65) {
+            return new Promise((resolve) => {
+                if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image')) {
+                    return resolve(dataUrl);
+                }
+                const img = new Image();
+                img.onload = function() {
+                    let width = img.naturalWidth || img.width;
+                    let height = img.naturalHeight || img.height;
+
+                    if (width > maxDimension || height > maxDimension) {
+                        if (width > height) {
+                            height = Math.round((height * maxDimension) / width);
+                            width = maxDimension;
+                        } else {
+                            width = Math.round((width * maxDimension) / height);
+                            height = maxDimension;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) return resolve(dataUrl);
+
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressed = canvas.toDataURL('image/jpeg', quality);
+                    resolve(compressed);
+                };
+                img.onerror = () => resolve(dataUrl);
+                img.src = dataUrl;
+            });
+        }
+
         function compressAndResizeImage(file, maxDimension = 1200, quality = 0.75) {
             return new Promise((resolve, reject) => {
-                if (!file || !file.type.startsWith('image/')) {
+                if (typeof file === 'string' && file.startsWith('data:image')) {
+                    return compressBase64Image(file, maxDimension, quality).then(resolve).catch(reject);
+                }
+                if (!file || !file.type || !file.type.startsWith('image/')) {
                     return reject(new Error('Selected file is not an image'));
                 }
                 const reader = new FileReader();
                 reader.onerror = reject;
                 reader.onload = function(e) {
-                    const img = new Image();
-                    img.onerror = reject;
-                    img.onload = function() {
-                        let width = img.naturalWidth || img.width;
-                        let height = img.naturalHeight || img.height;
-
-                        if (width > maxDimension || height > maxDimension) {
-                            if (width > height) {
-                                height = Math.round((height * maxDimension) / width);
-                                width = maxDimension;
-                            } else {
-                                width = Math.round((width * maxDimension) / height);
-                                height = maxDimension;
-                            }
-                        }
-
-                        const canvas = document.createElement('canvas');
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        if (!ctx) {
-                            return resolve(e.target.result);
-                        }
-
-                        ctx.imageSmoothingEnabled = true;
-                        ctx.imageSmoothingQuality = 'high';
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-                        resolve(compressedDataUrl);
-                    };
-                    img.src = e.target.result;
+                    compressBase64Image(e.target.result, maxDimension, quality)
+                        .then(resolve)
+                        .catch(() => resolve(e.target.result));
                 };
                 reader.readAsDataURL(file);
             });
@@ -463,3 +475,4 @@ try { if (typeof validateAndSanitizeAppState !== 'undefined') window.validateAnd
 try { if (typeof saveAppState !== 'undefined') window.saveAppState = saveAppState; } catch (e) {}
 try { if (typeof debounce !== 'undefined') window.debounce = debounce; } catch (e) {}
 try { if (typeof compressAndResizeImage !== 'undefined') window.compressAndResizeImage = compressAndResizeImage; } catch (e) {}
+try { if (typeof compressBase64Image !== 'undefined') window.compressBase64Image = compressBase64Image; } catch (e) {}

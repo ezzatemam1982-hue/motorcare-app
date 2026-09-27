@@ -276,6 +276,7 @@
                     el.setAttribute('spellcheck', 'false');
 
                     el.addEventListener('input', function() {
+                        const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
                         const raw = this.value;
                         const hasArabic = /[\u0600-\u06FF]/.test(raw);
                         const hasForbidden = /[IOQioq]/.test(raw);
@@ -292,27 +293,37 @@
                         if (badgeEl) badgeEl.innerText = `${clean.length}/17`;
 
                         if (hasArabic) {
-                            if (msgEl) msgEl.innerHTML = '<span class="text-rose-500 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> ممنوع الحروف العربية في رقم الشاسيه</span>';
+                            if (msgEl) msgEl.innerHTML = isEn 
+                                ? '<span class="text-rose-500 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Arabic characters not allowed in VIN</span>'
+                                : '<span class="text-rose-500 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> ممنوع الحروف العربية في رقم الشاسيه</span>';
                             MotorCareSecurity.shakeElement(this);
                         } else if (hasForbidden) {
-                            if (msgEl) msgEl.innerHTML = '<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-info"></i> تم استبعاد الحروف (I, O, Q) طبقاً لمواصفات ISO 3779</span>';
+                            if (msgEl) msgEl.innerHTML = isEn
+                                ? '<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-info"></i> Letters (I, O, Q) excluded per ISO 3779 standard</span>'
+                                : '<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-info"></i> تم استبعاد الحروف (I, O, Q) طبقاً لمواصفات ISO 3779</span>';
                         } else if (clean.length === 17) {
                             this.classList.remove('border-rose-500', 'border-amber-500', 'ring-rose-500/40', 'ring-amber-500/40');
                             this.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
-                            if (msgEl) msgEl.innerHTML = '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-circle-check"></i> رقم شاسيه قياسي مطابق 100% (ISO 3779)</span>';
+                            if (msgEl) msgEl.innerHTML = isEn
+                                ? '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-circle-check"></i> Standard 17-character VIN (ISO 3779)</span>'
+                                : '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-circle-check"></i> رقم شاسيه قياسي مطابق 100% (ISO 3779)</span>';
                             if (badgeEl) {
                                 badgeEl.className = 'font-mono font-bold px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400';
                             }
                         } else if (clean.length > 0) {
                             this.classList.remove('border-rose-500', 'border-emerald-500', 'ring-emerald-500/30');
                             this.classList.add('border-amber-500', 'ring-1', 'ring-amber-500/30');
-                            if (msgEl) msgEl.innerHTML = `<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> يتبقى ${17 - clean.length} رمزاً لاكتمال الشاسيه</span>`;
+                            if (msgEl) msgEl.innerHTML = isEn
+                                ? `<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> ${17 - clean.length} characters remaining</span>`
+                                : `<span class="text-amber-500 font-bold"><i class="fa-solid fa-circle-notch fa-spin text-[9px]"></i> يتبقى ${17 - clean.length} رمزاً لاكتمال الشاسيه</span>`;
                             if (badgeEl) {
                                 badgeEl.className = 'font-mono font-bold px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400';
                             }
                         } else {
                             this.classList.remove('border-rose-500', 'border-amber-500', 'border-emerald-500', 'ring-2', 'ring-1', 'ring-emerald-500/30', 'ring-amber-500/30', 'ring-rose-500/40');
-                            if (msgEl) msgEl.innerHTML = '<span class="text-slate-400 font-medium">17 خانة قياسية دولية (ISO 3779) - استبعاد I, O, Q</span>';
+                            if (msgEl) msgEl.innerHTML = isEn
+                                ? '<span class="text-slate-400 font-medium">17-character international standard (ISO 3779) - Exclude I, O, Q</span>'
+                                : '<span class="text-slate-400 font-medium">17 خانة قياسية دولية (ISO 3779) - استبعاد (I, O, Q) والحروف العربية</span>';
                             if (badgeEl) {
                                 badgeEl.className = 'font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500';
                             }
@@ -326,23 +337,30 @@
                     if (!el) return;
                     const prefix = id === 'newCarOdoInput' ? 'newCarOdo' : (id === 'editCarOdoInput' ? 'editCarOdo' : 'quickOdo');
                     el.addEventListener('input', function() {
+                        const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
                         const val = this.value.trim();
                         const msgEl = document.getElementById(prefix + 'Msg');
                         if (!msgEl) return;
                         if (!val) {
-                            msgEl.innerHTML = '<span class="text-slate-400 font-medium">أرقام موجبة فقط (مثال: 45000 كم)</span>';
+                            msgEl.innerHTML = isEn
+                                ? '<span class="text-slate-400 font-medium">Positive numbers only (e.g. 45,000 km)</span>'
+                                : '<span class="text-slate-400 font-medium">أرقام موجبة فقط (مثال: 45000 كم)</span>';
                             el.classList.remove('border-rose-500', 'border-emerald-500', 'ring-2', 'ring-rose-500/40', 'ring-emerald-500/30');
                             return;
                         }
                         const num = parseInt(val, 10);
                         if (isNaN(num) || num < 0) {
-                            msgEl.innerHTML = '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> قراءة عداد غير صحيحة</span>';
+                            msgEl.innerHTML = isEn
+                                ? '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> Invalid odometer reading</span>'
+                                : '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> قراءة عداد غير صحيحة</span>';
                             el.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/40');
                         } else if (num > 2000000) {
-                            msgEl.innerHTML = '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> قراءة غير واقعية (> 2,000,000 كم)</span>';
+                            msgEl.innerHTML = isEn
+                                ? '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> Unrealistic reading (> 2,000,000 km)</span>'
+                                : '<span class="text-rose-500 font-bold"><i class="fa-solid fa-circle-exclamation"></i> قراءة غير واقعية (> 2,000,000 كم)</span>';
                             el.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/40');
                         } else {
-                            msgEl.innerHTML = `<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> ${num.toLocaleString()} كم</span>`;
+                            msgEl.innerHTML = `<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> ${num.toLocaleString()} ${isEn ? 'km' : 'كم'}</span>`;
                             el.classList.remove('border-rose-500', 'ring-rose-500/40');
                             el.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
                         }
@@ -355,6 +373,7 @@
                     if (!el) return;
                     const prefix = id === 'newCarLicenseInput' ? 'newCarLicense' : 'editCarLicense';
                     el.addEventListener('input', function() {
+                        const isEn = (typeof appState !== 'undefined' && appState.lang === 'en');
                         const raw = this.value;
                         // منع الرموز الضارة والخاصة
                         const clean = raw.replace(/[<>{}\[\]=;()&$%*+~^`"'\\]/g, '').slice(0, 15);
@@ -364,13 +383,17 @@
                         const msgEl = document.getElementById(prefix + 'Msg');
                         if (!msgEl) return;
                         if (!clean) {
-                            msgEl.innerHTML = '<span class="text-slate-400 font-medium">أرقام وحروف اللوحة فقط (مثال: س ق د 1234)</span>';
+                            msgEl.innerHTML = isEn
+                                ? '<span class="text-slate-400 font-medium">License plate numbers and letters only (e.g. 1234 ABC)</span>'
+                                : '<span class="text-slate-400 font-medium">أرقام وحروف اللوحة فقط (مثال: س ق د 1234)</span>';
                             el.classList.remove('border-rose-500', 'border-emerald-500', 'ring-2', 'ring-rose-500/40', 'ring-emerald-500/30');
                             return;
                         }
                         const res = MotorCareSecurity.validateLicensePlate(clean);
                         if (res.isValid) {
-                            msgEl.innerHTML = '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> تنسيق لوحة سليم</span>';
+                            msgEl.innerHTML = isEn
+                                ? '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> Valid license plate format</span>'
+                                : '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> تنسيق لوحة سليم</span>';
                             el.classList.remove('border-rose-500', 'ring-rose-500/40');
                             el.classList.add('border-emerald-500', 'ring-2', 'ring-emerald-500/30');
                         } else {

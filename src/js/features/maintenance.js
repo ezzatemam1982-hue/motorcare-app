@@ -614,7 +614,9 @@
                 // ألوان شريط التقدم والبادج
                 let barColor = '#10b981';
                 let badgeClass = 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80';
-                if (evalResult.isOverdue) {
+                if (item.isDeferred && !evalResult.isOverdue) {
+                    badgeClass = 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-300/80 dark:border-amber-700/80';
+                } else if (evalResult.isOverdue) {
                     barColor = '#f43f5e';
                     badgeClass = 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 animate-pulse';
                 } else if (evalResult.isApproaching) {
@@ -627,61 +629,100 @@
                 const isCustomItem = item.category === 'other' || String(item.id).startsWith('c_') || String(item.id).startsWith('cm_');
 
                 cardsHtml += `
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-md transition-all">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-2xl p-3 sm:p-3.5 flex flex-col justify-between space-y-3 shadow-xs hover:shadow-sm transition-all card-compact">
                         <!-- هيدر البطاقة: الأيقونة، الاسم، والنوع والبادج -->
-                        <div class="space-y-2.5">
+                        <div class="space-y-2">
                             <div class="flex items-start justify-between gap-2">
-                                <div class="flex items-center gap-2.5 min-w-0">
-                                    <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm shrink-0 shadow-2xs">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <div class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs shrink-0 shadow-2xs">
                                         ${iconHtml}
                                     </div>
                                     <div class="min-w-0">
                                         <div class="flex items-center gap-1.5">
-                                            <span class="px-1.5 py-0.2 rounded text-[9px] font-black ${isCM ? 'bg-rose-600 text-white' : 'bg-sky-600 text-white'}">${isCM ? 'CM' : 'PM'}</span>
+                                            <span class="px-1.5 py-0.2 rounded text-[9px] font-black ${isCM ? 'bg-rose-600 text-white' : 'bg-sky-600 text-white'} badge-compact">${isCM ? 'CM' : 'PM'}</span>
                                             <h4 class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate" title="${itemName}">${itemName}</h4>
                                         </div>
-                                        <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block truncate mt-0.5">${reasonTxt}</span>
+                                        <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 block truncate mt-0.5">${reasonTxt}</span>
                                     </div>
                                 </div>
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-black shrink-0 ${badgeClass}">
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-black shrink-0 ${badgeClass} badge-compact">
                                     ${statusBadgeTxt}
                                 </span>
                             </div>
 
                             ${!isCM ? `
                             <!-- شريط التقدم ومؤشر الاستهلاك -->
-                            <div class="space-y-1 pt-1">
+                            <div class="space-y-1 pt-0.5">
                                 <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
                                     <span>${isEn ? 'Consumption:' : 'نسبة الاستهلاك:'} ${evalResult.percent}%</span>
                                     <span>${evalResult.isOverdue ? (isEn ? 'Service Overdue' : 'مستحق الآن') : (isEn ? `${evalResult.remainingKm.toLocaleString()} ${unitStr} left` : `متبقي ${evalResult.remainingKm.toLocaleString()} ${unitStr}`)}</span>
                                 </div>
-                                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
                                     <div class="h-full rounded-full transition-all duration-500" style="width: ${evalResult.percent}%; background-color: ${barColor};"></div>
                                 </div>
                             </div>
                             ` : ''}
 
                             <!-- تفاصيل الفواصل وآخر صيانة -->
-                            <div class="maintenance-last-service-box bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2.5 grid grid-cols-2 gap-2 text-[11px] border border-slate-100 dark:border-slate-800/80 transition-all duration-300">
+                            <div class="maintenance-last-service-box bg-slate-50 dark:bg-slate-800/60 rounded-xl p-2 grid grid-cols-2 gap-2 text-[10px] border border-slate-100 dark:border-slate-800/80 transition-all duration-300">
                                 <div>
-                                    <span class="text-slate-400 block text-[10px] font-medium">${isEn ? 'Last Service:' : 'آخر صيانة:'}</span>
-                                    <strong class="text-slate-700 dark:text-slate-200 font-bold block truncate font-mono">${lastKm.toLocaleString()} ${unitStr}</strong>
+                                    <span class="text-slate-400 block text-[9px] font-medium">${isEn ? 'Last Service:' : 'آخر صيانة:'}</span>
+                                    <strong class="text-slate-700 dark:text-slate-200 font-bold block truncate font-mono text-[11px]">${lastKm.toLocaleString()} ${unitStr}</strong>
                                     <span class="text-slate-400 text-[9px] block">${lastDateStr}</span>
                                 </div>
                                 <div>
-                                    <span class="text-slate-400 block text-[10px] font-medium">${isEn ? 'Service Interval:' : 'فاصل التغيير:'}</span>
+                                    <span class="text-slate-400 block text-[9px] font-medium">${isEn ? 'Service Interval:' : 'فاصل التغيير:'}</span>
                                     ${isCM ? `
-                                        <strong class="text-rose-600 dark:text-rose-400 font-bold block">${isEn ? 'Urgent / Corrective' : 'عطل طارئ عاجل'}</strong>
+                                        <strong class="${item.isDeferred ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400'} font-bold block text-[11px]">${item.isDeferred ? (isEn ? `Deferred (${Number(item.deferredTargetKm).toLocaleString()} km)` : `مؤجل (${Number(item.deferredTargetKm).toLocaleString()} كم)`) : (isEn ? 'Urgent / Corrective' : 'عطل طارئ عاجل')}</strong>
                                     ` : `
-                                        <strong class="text-slate-700 dark:text-slate-200 font-bold block truncate font-mono">${kmInterval.toLocaleString()} ${unitStr}</strong>
+                                        <strong class="text-slate-700 dark:text-slate-200 font-bold block truncate font-mono text-[11px]">${kmInterval.toLocaleString()} ${unitStr}</strong>
                                         <span class="text-slate-400 text-[9px] block">${item.monthInterval || 12} ${isEn ? 'months' : 'شهر'}</span>
                                     `}
                                 </div>
                             </div>
+
+                            ${(isCM && item.inspectionNotes) ? `
+                            <!-- كرت توثيق وملاحظات الفحص -->
+                            <div class="mt-2 p-2.5 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 text-start">
+                                <div class="flex items-center justify-between gap-1.5">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[10px] font-black px-2 py-0.5 rounded-md ${
+                                            item.inspectionNotes.urgency === 'high' ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800' :
+                                            item.inspectionNotes.urgency === 'medium' ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800' :
+                                            'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                                        }">
+                                            ${item.inspectionNotes.urgency === 'high' ? (isEn ? '🔴 High Urgency' : '🔴 حرجة') :
+                                              item.inspectionNotes.urgency === 'medium' ? (isEn ? '🟡 Medium' : '🟡 متوسطة') :
+                                              (isEn ? '🟢 Low Urgency' : '🟢 منخفضة')}
+                                        </span>
+                                        <span class="text-[10px] text-slate-400 font-semibold">${isEn ? 'Inspection Notes' : 'ملاحظات الفحص'}</span>
+                                    </div>
+                                    ${item.isDeferred ? `<span class="text-[9px] font-bold text-amber-600 dark:text-amber-400">⏳ ${isEn ? `At ${Number(item.deferredTargetKm).toLocaleString()} km` : `عند ${Number(item.deferredTargetKm).toLocaleString()} كم`}</span>` : ''}
+                                </div>
+                                ${item.inspectionNotes.notes ? `<p class="text-xs text-slate-700 dark:text-slate-200 font-medium leading-snug">${item.inspectionNotes.notes}</p>` : ''}
+                                ${item.inspectionNotes.photo ? `
+                                <div class="pt-1">
+                                    <img src="${item.inspectionNotes.photo}" alt="Inspection Photo" onclick="window.open('${item.inspectionNotes.photo}', '_blank')" class="w-14 h-14 rounded-lg object-cover border border-slate-200 dark:border-slate-700 cursor-pointer hover:opacity-90 transition-opacity shadow-2xs" title="${isEn ? 'Click to view full photo' : 'انقر لعرض الصورة بحجم كامل'}">
+                                </div>
+                                ` : ''}
+                            </div>
+                            ` : ''}
                         </div>
 
                         <!-- أزرار الإجراءات السريعة في أسفل البطاقة -->
                         <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                            ${isCM ? `
+                            <button type="button" onclick="openDeferInspectionModal('${item.id}')" class="px-2.5 py-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 rounded-xl text-xs font-bold transition-all shadow-2xs flex items-center justify-center gap-1 cursor-pointer active:scale-95" title="${isEn ? 'Defer to Next Oil Service & Document Inspection' : 'تأجيل لصيانة الزيت القادمة وتوثيق الفحص'}">
+                                <i class="fa-solid fa-clock-rotate-left text-[11px]"></i>
+                                <span>${item.isDeferred ? (isEn ? 'Edit Deferral' : 'تعديل التأجيل والملاحظات') : (isEn ? '⏳ تأجيل لصيانة الزيت القادمة' : '⏳ تأجيل لصيانة الزيت القادمة')}</span>
+                            </button>
+                            ${item.isDeferred ? `
+                            <button type="button" onclick="cancelDeferral('${item.id}')" class="p-2 text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all border border-slate-200 dark:border-slate-700 cursor-pointer shrink-0" title="${isEn ? 'Cancel Deferral' : 'إلغاء التأجيل'}">
+                                <i class="fa-solid fa-arrow-rotate-left text-xs"></i>
+                            </button>
+                            ` : ''}
+                            ` : ''}
+
                             <button type="button" onclick="openRecordModal('${item.id}')" class="flex-1 py-2 px-3 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
                                 <i class="fa-solid fa-circle-check text-[11px]"></i>
                                 <span>${isEn ? 'Log Service' : 'تسجيل صيانة'}</span>
@@ -1258,8 +1299,13 @@
                     const plugSel = document.getElementById('sparkPlugsTypeSelect');
                     if (plugSel) plugSel.value = existingRecord.plugType;
                 }
+
+                tempImages['invoice'] = existingRecord.invoiceImage || '';
+                if (typeof updateAttachmentUI === 'function') updateAttachmentUI('invoice', existingRecord.invoiceImage || '');
             } else {
                 editingRecordId = null;
+                tempImages['invoice'] = '';
+                if (typeof updateAttachmentUI === 'function') updateAttachmentUI('invoice', null);
                 if (targetCatalogItem && targetCatalogItem.type === 'CM') {
                     if (cmRadio) cmRadio.checked = true;
                     const customInput = document.getElementById('recordCustomPartInput');
@@ -1317,13 +1363,40 @@
 
             toggleMaintenanceType();
             modal.classList.remove('hidden');
+            modal.style.display = 'flex';
         }
 
         function closeRecordModal() { 
             editingRecordId = null;
             currentRecordingCatalogPartId = null;
+            tempImages['invoice'] = '';
+            try {
+                sessionStorage.removeItem('motorCare_cameraParentModal');
+                sessionStorage.removeItem('motorCare_cameraActiveTarget');
+            } catch (e) {}
+            if (typeof updateAttachmentUI === 'function') updateAttachmentUI('invoice', null);
+            
             const modal = document.getElementById('recordModal');
-            if (modal) modal.classList.add('hidden'); 
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+                modal.style.removeProperty('display');
+            }
+
+            // تفريغ كافة الحقول وإعادة التعيين بالكامل (Form Reset)
+            const customInput = document.getElementById('recordCustomPartInput');
+            if (customInput) customInput.value = '';
+            const wInput = document.getElementById('recordWorkshopInput');
+            if (wInput) wInput.value = '';
+            const pInput = document.getElementById('recordPhoneInput');
+            if (pInput) pInput.value = '';
+            const partsInput = document.getElementById('recordPartsCostInput');
+            if (partsInput) partsInput.value = '';
+            const laborInput = document.getElementById('recordLaborCostInput');
+            if (laborInput) laborInput.value = '';
+            const pmRadio = document.querySelector('input[name="maintenanceType"][value="PM"]');
+            if (pmRadio) pmRadio.checked = true;
+            toggleMaintenanceType();
         }
 
         function toggleMaintenanceType() {
@@ -1492,64 +1565,110 @@
             const plugSel = document.getElementById('sparkPlugsTypeSelect');
             const plugVal = (partId === 'spark_plugs' || partId.includes('spark_plugs')) && plugSel ? plugSel.value : '';
 
-            if (editingRecordId) {
-                const idx = car.history.findIndex(h => h.id === editingRecordId);
-                if (idx !== -1) {
-                    car.history[idx].type = isCM ? 'CM' : 'PM';
-                    car.history[idx].partId = partId;
-                    car.history[idx].partName = pName;
-                    car.history[idx].category = category;
-                    car.history[idx].workshop = workshop;
-                    car.history[idx].phone = phone;
-                    car.history[idx].odometer = odo;
-                    car.history[idx].partsCost = parts;
-                    car.history[idx].laborCost = labor;
-                    car.history[idx].totalCost = parts + labor;
-                    car.history[idx].date = date;
-                    if (plugVal) car.history[idx].plugType = plugVal;
-                    if (attachedInvoice) car.history[idx].invoiceImage = attachedInvoice;
+            const commitRecord = () => {
+                if (editingRecordId) {
+                    const idx = car.history.findIndex(h => h.id === editingRecordId);
+                    if (idx !== -1) {
+                        car.history[idx].type = isCM ? 'CM' : 'PM';
+                        car.history[idx].partId = partId;
+                        car.history[idx].partName = pName;
+                        car.history[idx].category = category;
+                        car.history[idx].workshop = workshop;
+                        car.history[idx].phone = phone;
+                        car.history[idx].odometer = odo;
+                        car.history[idx].partsCost = parts;
+                        car.history[idx].laborCost = labor;
+                        car.history[idx].totalCost = parts + labor;
+                        car.history[idx].date = date;
+                        if (plugVal) car.history[idx].plugType = plugVal;
+                        if (attachedInvoice) car.history[idx].invoiceImage = attachedInvoice;
+                    }
+                } else {
+                    car.history.unshift({
+                        id: 'h_' + Date.now(),
+                        type: isCM ? 'CM' : 'PM',
+                        partId,
+                        partName: pName,
+                        category: category,
+                        workshop,
+                        phone,
+                        odometer: odo,
+                        partsCost: parts,
+                        laborCost: labor,
+                        totalCost: parts + labor,
+                        date,
+                        plugType: plugVal,
+                        invoiceImage: attachedInvoice
+                    });
                 }
-            } else {
-                car.history.unshift({
-                    id: 'h_' + Date.now(),
-                    type: isCM ? 'CM' : 'PM',
-                    partId,
-                    partName: pName,
-                    category: category,
-                    workshop,
-                    phone,
-                    odometer: odo,
-                    partsCost: parts,
-                    laborCost: labor,
-                    totalCost: parts + labor,
-                    date,
-                    plugType: plugVal,
-                    invoiceImage: attachedInvoice
+
+                tempImages['invoice'] = '';
+                editingRecordId = null;
+                SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
+                syncUserDataToCloud('maintenance_saved');
+
+                if (odometerAutoUpdated) {
+                    if (typeof showNotification === 'function') {
+                        showNotification(
+                            isEn
+                                ? `Vehicle odometer automatically updated to ${odo.toLocaleString()} km for this new service entry ✓`
+                                : `تم تحديث قراءة عداد السيارة تلقائياً إلى (${odo.toLocaleString()} كم) لمواكبة الصيانة الجديدة ✓`,
+                            'info', 4500
+                        );
+                    }
+                } else {
+                    if (typeof showNotification === 'function') {
+                        showNotification(
+                            isEn ? 'Maintenance record saved successfully! ✓' : 'تم حفظ سجل الصيانة بنجاح! ✓',
+                            'success', 3500
+                        );
+                    }
+                }
+                if (partId && typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.clearItemNotification) {
+                    MotorCareNotifications.clearItemNotification(partId);
+                }
+                closeRecordModal();
+                renderDashboard();
+            };
+
+            // 3. Smart Duplicate Detection (منع تكرار تسجيل الصيانات لنفس البند ونفس العداد بدون تهنيج)
+            if (!editingRecordId && Array.isArray(car.history)) {
+                const targetName = String(pName || '').trim().toLowerCase();
+                const targetId = String(partId || '').trim().toLowerCase();
+                const isDuplicate = car.history.some(h => {
+                    if (!h) return false;
+                    const hOdo = Number(h.odometer) || 0;
+                    if (hOdo !== odo) return false;
+                    const hName = String(h.partName || '').trim().toLowerCase();
+                    const hId = String(h.partId || '').trim().toLowerCase();
+                    return (targetId && hId && targetId === hId) || (targetName && hName && targetName === hName);
                 });
-            }
 
-            tempImages['invoice'] = '';
-            editingRecordId = null;
-            SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
-            syncUserDataToCloud('maintenance_saved');
-
-            if (odometerAutoUpdated) {
-                if (typeof showNotification === 'function') {
-                    showNotification(
-                        isEn
-                            ? `Vehicle odometer automatically updated to ${odo.toLocaleString()} km for this new service entry ✓`
-                            : `تم تحديث قراءة عداد السيارة تلقائياً إلى (${odo.toLocaleString()} كم) لمواكبة الصيانة الجديدة ✓`,
-                        'info', 4500
-                    );
+                if (isDuplicate) {
+                    const confirmMsg = isEn 
+                        ? `Alert: A maintenance record already exists for (${pName}) at ${odo.toLocaleString()} km! Do you want to proceed and save this duplicate entry or cancel?`
+                        : `تنبيه: يوجد سجل صيانة سابق لنفس البند (${pName}) عند نفس قراءة العداد (${odo.toLocaleString()} كم)! هل تريد المتابعة وحفظ السجل المكرر أم الإلغاء؟`;
+                    
+                    if (typeof showCustomConfirm === 'function') {
+                        showCustomConfirm(
+                            confirmMsg,
+                            () => commitRecord(),
+                            () => {},
+                            {
+                                title: isEn ? 'Duplicate Maintenance Detected' : 'تنبيه: تكرار تسجيل صيانة',
+                                confirmText: isEn ? 'Proceed' : 'متابعة',
+                                cancelText: isEn ? 'Cancel' : 'إلغاء',
+                                confirmBtnClass: 'px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold cursor-pointer shadow-md transition-all'
+                            }
+                        );
+                    } else if (confirm(confirmMsg)) {
+                        commitRecord();
+                    }
+                    return;
                 }
             }
-            if (partId && typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.clearItemNotification) {
-                MotorCareNotifications.clearItemNotification(partId);
-            }
-            closeRecordModal();
-            renderDashboard();
-            renderCatalogItems();
-            if (typeof renderHistoryList === 'function') renderHistoryList();
+
+            commitRecord();
         }
 
         function deleteHistoryRecord(id) {
@@ -1625,6 +1744,255 @@
             cont.innerHTML = html;
         }
 
+        // ==========================================================================
+        // [CM DEFERRAL & INSPECTION NOTES FUNCTIONS]
+        // ==========================================================================
+        function getNextOilChangeInfo(car) {
+            const currentOdo = (typeof parseSafeNumber === 'function') ? parseSafeNumber(car?.odometer) : Number(car?.odometer || 0);
+            let targetKm = 0;
+            let targetDateStr = '';
+
+            if (car && Array.isArray(car.catalog)) {
+                const oilItem = car.catalog.find(i => 
+                    i.type !== 'CM' && (
+                        String(i.id).toLowerCase() === 'oil' || 
+                        String(i.category).toLowerCase() === 'oil' || 
+                        String(i.category).toLowerCase() === 'engine' ||
+                        String(i.name).includes('زيت') ||
+                        String(i.name).toLowerCase().includes('oil')
+                    )
+                );
+
+                if (oilItem) {
+                    const lastKm = (typeof parseSafeNumber === 'function') ? parseSafeNumber(oilItem.lastKm) : Number(oilItem.lastKm || 0);
+                    const kmInterval = ((typeof parseSafeNumber === 'function') ? parseSafeNumber(oilItem.kmInterval) : Number(oilItem.kmInterval)) || 10000;
+                    targetKm = lastKm + kmInterval;
+                    
+                    if (targetKm <= currentOdo) {
+                        const elapsed = Math.max(0, currentOdo - lastKm);
+                        const cycles = Math.floor(elapsed / kmInterval) + 1;
+                        targetKm = lastKm + (cycles * kmInterval);
+                    }
+
+                    if (oilItem.lastDate) {
+                        const months = ((typeof parseSafeNumber === 'function') ? parseSafeNumber(oilItem.monthInterval) : Number(oilItem.monthInterval)) || 6;
+                        const d = new Date(oilItem.lastDate);
+                        d.setMonth(d.getMonth() + months);
+                        if (!isNaN(d.getTime())) {
+                            targetDateStr = d.toISOString().split('T')[0];
+                        }
+                    }
+                }
+            }
+
+            if (!targetKm || targetKm <= currentOdo) {
+                targetKm = Math.ceil((currentOdo + 500) / 5000) * 5000;
+                if (targetKm <= currentOdo) targetKm = currentOdo + 5000;
+            }
+
+            return {
+                targetKm: targetKm,
+                targetDateStr: targetDateStr
+            };
+        }
+
+        function openDeferInspectionModal(itemId) {
+            const car = getCurrentCar();
+            if (!car || !car.catalog) return;
+
+            const item = car.catalog.find(i => String(i.id) === String(itemId));
+            if (!item) return;
+
+            const isEn = appState.lang === 'en';
+            const modal = document.getElementById('deferInspectionModal');
+            if (!modal) return;
+
+            document.getElementById('deferModalItemId').value = itemId;
+
+            const subtitleEl = document.getElementById('deferModalItemSubtitle');
+            const itemName = (typeof getLocalizedItemName === 'function') ? getLocalizedItemName(item) : item.name;
+            if (subtitleEl) subtitleEl.innerText = itemName;
+
+            const oilInfo = getNextOilChangeInfo(car);
+            const targetTextEl = document.getElementById('deferNextOilTargetText');
+            if (targetTextEl) {
+                targetTextEl.innerText = isEn 
+                    ? `Target Odometer: ${oilInfo.targetKm.toLocaleString()} km${oilInfo.targetDateStr ? ' (' + oilInfo.targetDateStr + ')' : ''}`
+                    : `العداد المستهدف: ${oilInfo.targetKm.toLocaleString()} كم${oilInfo.targetDateStr ? ' (' + oilInfo.targetDateStr + ')' : ''}`;
+            }
+
+            const notesObj = item.inspectionNotes || {};
+            const urgency = notesObj.urgency || 'low';
+            const radios = document.getElementsByName('deferUrgency');
+            for (let r of radios) {
+                r.checked = (r.value === urgency);
+            }
+
+            const notesText = document.getElementById('deferInspectionNotesText');
+            if (notesText) notesText.value = notesObj.notes || '';
+
+            const photoContainer = document.getElementById('deferPhotoPreviewContainer');
+            const photoImg = document.getElementById('deferPhotoPreviewImg');
+            if (notesObj.photo) {
+                if (photoImg) photoImg.src = notesObj.photo;
+                if (photoContainer) photoContainer.classList.remove('hidden');
+            } else {
+                if (photoImg) photoImg.src = '';
+                if (photoContainer) photoContainer.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeDeferInspectionModal() {
+            const modal = document.getElementById('deferInspectionModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function appendDeferQuickTag(tagText) {
+            const textarea = document.getElementById('deferInspectionNotesText');
+            if (!textarea) return;
+            const current = textarea.value.trim();
+            if (current.includes(tagText)) return;
+            textarea.value = current ? `${current} - [${tagText}]` : `[${tagText}]`;
+        }
+
+        function handleDeferInspectionPhotoUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600;
+                    const MAX_HEIGHT = 600;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    const photoContainer = document.getElementById('deferPhotoPreviewContainer');
+                    const photoImg = document.getElementById('deferPhotoPreviewImg');
+                    if (photoImg) photoImg.src = compressedDataUrl;
+                    if (photoContainer) photoContainer.classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearDeferInspectionPhoto() {
+            const photoContainer = document.getElementById('deferPhotoPreviewContainer');
+            const photoImg = document.getElementById('deferPhotoPreviewImg');
+            const photoInput = document.getElementById('deferInspectionPhotoInput');
+            if (photoImg) photoImg.src = '';
+            if (photoInput) photoInput.value = '';
+            if (photoContainer) photoContainer.classList.add('hidden');
+        }
+
+        function saveDeferInspectionModal() {
+            const itemId = document.getElementById('deferModalItemId')?.value;
+            if (!itemId) return;
+
+            const car = getCurrentCar();
+            if (!car || !car.catalog) return;
+
+            const item = car.catalog.find(i => String(i.id) === String(itemId));
+            if (!item) return;
+
+            const currentOdo = (typeof parseSafeNumber === 'function') ? parseSafeNumber(car.odometer) : Number(car.odometer || 0);
+            const oilInfo = getNextOilChangeInfo(car);
+            const targetKm = oilInfo.targetKm;
+            const isEn = appState.lang === 'en';
+
+            let urgency = 'low';
+            const radios = document.getElementsByName('deferUrgency');
+            for (let r of radios) {
+                if (r.checked) {
+                    urgency = r.value;
+                    break;
+                }
+            }
+
+            const notesText = document.getElementById('deferInspectionNotesText')?.value.trim() || '';
+            const photoImg = document.getElementById('deferPhotoPreviewImg');
+            const photoSrc = (photoImg && !document.getElementById('deferPhotoPreviewContainer')?.classList.contains('hidden')) ? photoImg.src : '';
+
+            item.isDeferred = true;
+            item.deferredTargetKm = targetKm;
+            item.deferredTargetDate = oilInfo.targetDateStr || '';
+            item.inspectionNotes = {
+                urgency: urgency,
+                notes: notesText,
+                photo: photoSrc,
+                deferredAtKm: currentOdo,
+                deferredTargetKm: targetKm,
+                updatedAt: new Date().toISOString()
+            };
+
+            if (typeof SafeStorage !== 'undefined' && typeof appState !== 'undefined') {
+                SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
+            }
+            if (typeof syncUserDataToCloud === 'function') {
+                try { syncUserDataToCloud('cm_item_deferred'); } catch (e) {}
+            }
+
+            if (typeof showNotification === 'function') {
+                showNotification(isEn 
+                    ? `⏳ Item deferred to next oil service at ${targetKm.toLocaleString()} km` 
+                    : `⏳ تم تأجيل فحص البند إلى صيانة الزيت القادمة عند ${targetKm.toLocaleString()} كم`, 'success', 3000);
+            }
+
+            closeDeferInspectionModal();
+            renderCatalogItems();
+            if (typeof renderDashboard === 'function') renderDashboard();
+        }
+
+        function cancelDeferral(itemId) {
+            const car = getCurrentCar();
+            if (!car || !car.catalog) return;
+
+            const item = car.catalog.find(i => String(i.id) === String(itemId));
+            if (!item) return;
+
+            const isEn = appState.lang === 'en';
+            item.isDeferred = false;
+            delete item.deferredTargetKm;
+            delete item.deferredTargetDate;
+
+            if (typeof SafeStorage !== 'undefined' && typeof appState !== 'undefined') {
+                SafeStorage.setItem('motorCare_AppState_v140', JSON.stringify(appState));
+            }
+            if (typeof syncUserDataToCloud === 'function') {
+                try { syncUserDataToCloud('cm_item_undeferred'); } catch (e) {}
+            }
+
+            if (typeof showNotification === 'function') {
+                showNotification(isEn ? 'Deferral canceled. Item restored to urgent list.' : 'تم إلغاء التأجيل وإعادة البند لقائمة المهام الطارئة.', 'info', 2200);
+            }
+
+            renderCatalogItems();
+            if (typeof renderDashboard === 'function') renderDashboard();
+        }
+
 // ==========================================================================
 // [EXPLICIT GLOBAL SCOPE BINDINGS]
 // ==========================================================================
@@ -1658,3 +2026,11 @@ try { if (typeof saveQuickCalibration !== 'undefined') window.saveQuickCalibrati
 try { if (typeof setCalibrationToCurrentOdo !== 'undefined') window.setCalibrationToCurrentOdo = setCalibrationToCurrentOdo; } catch (e) {}
 try { if (typeof startQuickCalibration !== 'undefined') window.startQuickCalibration = startQuickCalibration; } catch (e) {}
 try { if (typeof highlightCalibrationTargets !== 'undefined') window.highlightCalibrationTargets = highlightCalibrationTargets; } catch (e) {}
+try { if (typeof getNextOilChangeInfo !== 'undefined') window.getNextOilChangeInfo = getNextOilChangeInfo; } catch (e) {}
+try { if (typeof openDeferInspectionModal !== 'undefined') window.openDeferInspectionModal = openDeferInspectionModal; } catch (e) {}
+try { if (typeof closeDeferInspectionModal !== 'undefined') window.closeDeferInspectionModal = closeDeferInspectionModal; } catch (e) {}
+try { if (typeof appendDeferQuickTag !== 'undefined') window.appendDeferQuickTag = appendDeferQuickTag; } catch (e) {}
+try { if (typeof handleDeferInspectionPhotoUpload !== 'undefined') window.handleDeferInspectionPhotoUpload = handleDeferInspectionPhotoUpload; } catch (e) {}
+try { if (typeof clearDeferInspectionPhoto !== 'undefined') window.clearDeferInspectionPhoto = clearDeferInspectionPhoto; } catch (e) {}
+try { if (typeof saveDeferInspectionModal !== 'undefined') window.saveDeferInspectionModal = saveDeferInspectionModal; } catch (e) {}
+try { if (typeof cancelDeferral !== 'undefined') window.cancelDeferral = cancelDeferral; } catch (e) {}

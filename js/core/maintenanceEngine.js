@@ -1,12 +1,19 @@
         /* ==========================================================================
            محرك تقييم حالة بند الصيانة بدقة (Maintenance Item Evaluation Engine)
            ========================================================================== */
+        function parseSafeNumber(val) {
+            if (val === null || val === undefined) return 0;
+            const cleaned = String(val).replace(/,/g, '').trim();
+            const n = parseFloat(cleaned);
+            return isNaN(n) ? 0 : n;
+        }
+
         function evaluateMaintenanceItem(item, currentOdo = 0, car = null) {
             if (!item) return { isOverdue: false, isApproaching: false, percent: 0, statusBadgeAr: '', statusBadgeEn: '', reasonTextAr: '', reasonTextEn: '' };
 
-            const lastKm = Number(item.lastKm) || 0;
-            const kmInterval = Number(item.kmInterval) || 10000;
-            const odo = Math.max(0, Number(currentOdo) || 0);
+            const lastKm = parseSafeNumber(item.lastKm);
+            const kmInterval = parseSafeNumber(item.kmInterval) || 10000;
+            const odo = parseSafeNumber(currentOdo);
 
             // Calculation Safeguards: diffKm cannot be negative if lastKm erroneously exceeded current odometer
             const diffKm = Math.max(0, odo - lastKm);
@@ -19,19 +26,46 @@
             // نوع البند عاجل طارئ (CM)
             if (item.type === 'CM') {
                 const isResolved = !!item.isResolved;
+                const isDeferred = !isResolved && !!item.isDeferred;
+                const targetKm = parseSafeNumber(item.deferredTargetKm) || 0;
+
+                let isOverdue = !isResolved;
+                let statusAr = isResolved ? 'تم الإصلاح ✓' : 'مستحق فوراً (عطل طارئ)';
+                let statusEn = isResolved ? 'Resolved ✓' : 'Urgent (CM Task)';
+                let reasonAr = isResolved ? 'تم تسجيل وإصلاح هذا العطل' : 'عطل مسجل يتطلب الصيانة الفورية';
+                let reasonEn = isResolved ? 'Issue resolved and logged' : 'Requires immediate corrective service';
+
+                if (isDeferred && targetKm > 0) {
+                    if (odo < targetKm) {
+                        isOverdue = false;
+                        const targetKmFormatted = targetKm.toLocaleString();
+                        statusAr = `مؤجل لصيانة الزيت القادمة (عند ${targetKmFormatted} كم)`;
+                        statusEn = `Deferred to Next Oil Service (at ${targetKmFormatted} km)`;
+                        reasonAr = `تم تأجيل البند وتوثيق الفحص للتحقق في الصيانة القادمة (عند ${targetKmFormatted} كم)`;
+                        reasonEn = `Item deferred & documented for next oil service (at ${targetKmFormatted} km)`;
+                    } else {
+                        isOverdue = true;
+                        statusAr = 'مستحق للفحص الآن (صيانة الزيت)';
+                        statusEn = 'Due for Re-inspection Now';
+                        reasonAr = 'وصلت صيانة الزيت المستهدفة، يرجى فحص وإصلاح هذا البند';
+                        reasonEn = 'Reached target oil service milestone; please inspect item';
+                    }
+                }
+
                 return {
-                    isOverdue: !isResolved,
-                    isApproaching: false,
-                    isCritical: true,
-                    percent: isResolved ? 0 : 100,
+                    isOverdue: isOverdue,
+                    isApproaching: isDeferred && !isOverdue && (targetKm - odo <= 1000),
+                    isCritical: !isDeferred,
+                    isDeferred: isDeferred,
+                    percent: isResolved ? 0 : (isDeferred && !isOverdue ? 50 : 100),
                     diffKm: 0,
                     kmInterval: 0,
-                    remainingKm: 0,
+                    remainingKm: isDeferred && !isOverdue ? Math.max(0, targetKm - odo) : 0,
                     overdueKm: 0,
-                    statusBadgeAr: isResolved ? 'تم الإصلاح ✓' : 'مستحق فوراً (عطل طارئ)',
-                    statusBadgeEn: isResolved ? 'Resolved ✓' : 'Urgent (CM Task)',
-                    reasonTextAr: isResolved ? 'تم تسجيل وإصلاح هذا العطل' : 'عطل مسجل يتطلب الصيانة الفورية',
-                    reasonTextEn: isResolved ? 'Issue resolved and logged' : 'Requires immediate corrective service'
+                    statusBadgeAr: statusAr,
+                    statusBadgeEn: statusEn,
+                    reasonTextAr: reasonAr,
+                    reasonTextEn: reasonEn
                 };
             }
 
@@ -69,8 +103,13 @@
             let reasonTextEn = `${remainingKm.toLocaleString()} km remaining`;
 
             if (isOverdue) {
-                statusBadgeAr = 'مستحق الآن ⚠️';
-                statusBadgeEn = 'Overdue ⚠️';
+                if (overdueKm > 0 || dateOverdue) {
+                    statusBadgeAr = 'متأخر جداً 🚨';
+                    statusBadgeEn = 'Severely Overdue 🚨';
+                } else {
+                    statusBadgeAr = 'مستحق الآن ⚠️';
+                    statusBadgeEn = 'Overdue ⚠️';
+                }
                 if (dateOverdue && overdueKm > 0) {
                     reasonTextAr = `تجاوز الموعد بـ ${overdueKm.toLocaleString()} كم وتجاوز التاريخ الموصى به`;
                     reasonTextEn = `Overdue by ${overdueKm.toLocaleString()} km & past recommended date`;
@@ -115,11 +154,13 @@
             const car = getCurrentCar();
             const container = document.getElementById('urgentAlertsContainer');
             const list = document.getElementById('urgentAlertsList');
+            const countSpan = document.getElementById('urgentAlertsCount');
             if (!container || !list) return;
 
             if (!car || !car.catalog) {
                 container.classList.add('hidden');
                 list.innerHTML = '';
+                if (countSpan) countSpan.innerText = '0';
                 if (typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.updateUI) {
                     MotorCareNotifications.updateUI(0);
                 }
@@ -127,10 +168,14 @@
             }
 
             const isEn = appState.lang === 'en';
-            const clickTxt = isEn ? 'Click here to log this service / repair' : 'اضغط هنا لتسجيل إنجاز هذا البند الآن';
+            const clickTxt = isEn ? 'Log service now' : 'تسجيل إنجاز فوري';
 
             const currentOdo = Number(car.odometer) || 0;
             const overdue = car.catalog.filter(i => evaluateMaintenanceItem(i, currentOdo, car).isOverdue);
+
+            if (countSpan) {
+                countSpan.innerText = overdue.length;
+            }
 
             if (overdue.length > 0) {
                 list.innerHTML = '';
@@ -141,16 +186,16 @@
                     const overdueReasonSub = isEn ? evalResult.reasonTextEn : evalResult.reasonTextAr;
 
                     list.innerHTML += `
-                        <div onclick="openRecordModal('${item.id}')" class="p-3 ${isCM ? 'bg-rose-100/90 dark:bg-rose-950/70 border-rose-300 dark:border-rose-800' : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60'} border rounded-2xl flex justify-between items-center text-xs cursor-pointer hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all shadow-xs">
-                            <div class="space-y-0.5">
-                                <div class="flex items-center gap-1.5">
-                                    ${isCM ? '<span class="px-1.5 py-0.5 rounded bg-rose-600 text-white font-black text-[9px]">CM</span>' : '<span class="px-1.5 py-0.5 rounded bg-sky-600 text-white font-black text-[9px]">PM</span>'}
-                                    <span class="font-bold text-rose-700 dark:text-rose-300 block">${getLocalizedItemName(item)}</span>
+                        <div onclick="openRecordModal('${item.id}')" class="p-2.5 ${isCM ? 'bg-rose-100/90 dark:bg-rose-950/70 border-rose-300 dark:border-rose-800' : 'bg-white/90 dark:bg-slate-900/90 border-rose-200 dark:border-rose-900/60'} border rounded-xl flex justify-between items-center text-xs cursor-pointer hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all shadow-2xs active:scale-98">
+                            <div class="space-y-0.5 min-w-0 pr-1">
+                                <div class="flex items-center gap-1.5 truncate">
+                                    <span class="px-1.5 py-0.5 rounded-md ${isCM ? 'bg-rose-600' : 'bg-sky-600'} text-white font-black text-[9px] shrink-0">${isCM ? 'CM' : 'PM'}</span>
+                                    <span class="font-bold text-slate-800 dark:text-slate-100 truncate">${getLocalizedItemName(item)}</span>
                                 </div>
-                                <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold block">${overdueReasonSub}</span>
-                                <span class="text-[9px] text-rose-400 block">${clickTxt}</span>
+                                <span class="text-[10px] text-rose-600 dark:text-rose-400 font-semibold block truncate">${overdueReasonSub}</span>
+                                <span class="text-[9px] text-sky-600 dark:text-sky-400 font-bold block">${clickTxt}</span>
                             </div>
-                            <span class="text-[10px] font-black px-2.5 py-1 rounded-full ${isCM ? 'bg-rose-600 text-white' : 'bg-rose-200 dark:bg-rose-900 text-rose-800 dark:text-rose-200'} shrink-0">${overdueBadgeTxt}</span>
+                            <span class="text-[9px] font-black px-2 py-0.5 rounded-lg ${isCM ? 'bg-rose-600 text-white' : 'bg-rose-100 dark:bg-rose-900/80 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800'} shrink-0">${overdueBadgeTxt}</span>
                         </div>
                     `;
                 });
@@ -160,6 +205,16 @@
             }
             if (typeof MotorCareNotifications !== 'undefined' && MotorCareNotifications.updateUI) {
                 MotorCareNotifications.updateUI(overdue.length);
+            }
+        }
+
+        function toggleUrgentAlertsAccordion() {
+            const wrapper = document.getElementById('urgentAlertsListWrapper');
+            const chevron = document.getElementById('urgentAlertsChevron');
+            if (!wrapper) return;
+            const isHidden = wrapper.classList.toggle('hidden');
+            if (chevron) {
+                chevron.style.transform = isHidden ? 'rotate(-90deg)' : 'rotate(0deg)';
             }
         }
 
@@ -636,6 +691,7 @@
 // ==========================================================================
 try { if (typeof evaluateMaintenanceItem !== 'undefined') window.evaluateMaintenanceItem = evaluateMaintenanceItem; } catch (e) {}
 try { if (typeof renderUrgentAlerts !== 'undefined') window.renderUrgentAlerts = renderUrgentAlerts; } catch (e) {}
+try { if (typeof toggleUrgentAlertsAccordion !== 'undefined') window.toggleUrgentAlertsAccordion = toggleUrgentAlertsAccordion; } catch (e) {}
 try { if (typeof calculateFuelEconomy !== 'undefined') window.calculateFuelEconomy = calculateFuelEconomy; } catch (e) {}
 try { if (typeof updateDocumentsSummaryCard !== 'undefined') window.updateDocumentsSummaryCard = updateDocumentsSummaryCard; } catch (e) {}
 try { if (typeof getBatteryStatus !== 'undefined') window.getBatteryStatus = getBatteryStatus; } catch (e) {}
